@@ -5,6 +5,8 @@ import type { app } from "../content/vi";
 import { api, errText, post } from "../lib/client";
 import CountUp from "./CountUp";
 import WeekBars from "./WeekBars";
+import ModelUsage from "./ModelUsage";
+import type { ModelUsageRow } from "../lib/models";
 
 type T = typeof app.dash;
 interface Data {
@@ -13,6 +15,7 @@ interface Data {
   weekly: { label: string; count: number }[];
   recent: { scenario: string; at: number; minutes: number; exported: boolean }[];
   baselines: Record<string, number>;
+  models: ModelUsageRow[];
 }
 interface Props { t: T; scenarios: { id: string; name: string; ref: number }[] }
 
@@ -87,6 +90,7 @@ export default function Dashboard({ t, scenarios }: Props) {
               ))}
             </ul>
           </section>
+          <ModelUsage title={t.models} t={t.usage} rows={d.models} />
           <section className="panel p-6" aria-labelledby="bl">
             <h2 id="bl" className="text-[1.1rem]">{t.baseline.title}</h2>
             <p className="mt-1 text-[0.85rem] text-ink-2">{t.baseline.lead}</p>

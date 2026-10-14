@@ -44,12 +44,34 @@ export interface ExecuteResponse {
   result: RunResult; kind: ScenarioPublic["output"]["kind"];
   /** cùng kết quả nhưng còn nhãn – để hiệu ứng đổi nhãn → tên thật */
   result_masked: RunResult;
-  masked_items: number; via_trial: boolean; trial_left: number | null; provider: string; seconds: number;
+  masked_items: number; via_trial: boolean; trial_left: number | null; provider: string; model: string; seconds: number;
 }
 export interface MeResponse {
   user: { id: string; email: string; name: string | null };
   org: { id: string; name: string; plan: string; role: "admin" | "member"; seats: number };
-  ai: { source: string; provider: string; key_last4: string; verified_at: number | null } | null;
+  /** null khi chưa kết nối AI nào */
+  ai: {
+    keys: { source: string; provider: string; key_last4: string; verified_at: number | null }[];
+    /** null khi chưa chọn mô hình */
+    choice: ModelChoiceOut | null;
+  } | null;
   trial_left: number;
+  /** mô hình nhóm chọn cho lượt dùng thử (null khi chạy mô phỏng) */
+  trial_model: string | null;
   mock: boolean;
+}
+
+import type { ModelInfo } from "../lib/models";
+export type { ModelInfo };
+export interface ModelChoiceOut { provider: string; model: string; allow_fallback: boolean; fallback_provider: string | null; fallback_model: string | null }
+export interface ModelsResponse {
+  /** các AI khách đã kết nối */
+  providers: string[];
+  /** mô hình của mọi AI đó, gộp và sắp theo tên */
+  models: ModelInfo[];
+  /** AI nào chưa lấy được danh sách (key hết hạn, nhà cung cấp lỗi…) */
+  errors: { provider: string; message: string }[];
+  usd_vnd: number;
+  current: ModelChoiceOut | null;
+  can_edit: boolean;
 }

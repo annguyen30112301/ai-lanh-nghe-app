@@ -5,6 +5,8 @@ SESSION_SECRET=
 RESEND_API_KEY=
 MAIL_FROM=AI Lành Nghề <onboarding@resend.dev>
 TRIAL_PROVIDER=openrouter
+# mô hình cho 5 lượt dùng thử (khách tự chọn mô hình của mình sau khi kết nối)
+TRIAL_MODEL=anthropic/claude-sonnet-5.5
 TRIAL_API_KEY=
 APP_ORIGIN=http://localhost:4321
 # 1 = khi không có key AI, trả kết quả mẫu (chỉ dùng để chạy thử giao diện ở máy)

@@ -14,6 +14,6 @@ const demo: Record<string, string[]> = {
 <AppShell page="work" title={t.title} description={t.description}>
   <div class="shell py-8 sm:py-12">
     <a href="/app/tinh-huong/" class="inline-flex min-h-11 items-center gap-1.5 text-[0.88rem] font-semibold no-underline"><Icon name="back" size={18} weight="bold" />{t.back}</a>
-    <div class="mt-4"><WorkPage client:load list={publicScenarios()} t={t} demo={demo} /></div>
+    <div class="mt-4"><WorkPage client:load list={publicScenarios()} t={t} tm={app.connect.models} demo={demo} /></div>
   </div>
 </AppShell>

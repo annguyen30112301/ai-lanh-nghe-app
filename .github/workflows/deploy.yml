@@ -17,14 +17,22 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm test
-      - name: Chọn nhà cung cấp AI cho lượt thử / mô hình OpenRouter
+      - name: Chọn nhà cung cấp + mô hình cho lượt dùng thử
+        # Khách tự chọn mô hình của mình; chỉ 5 lượt thử (key của nhóm) dùng TRIAL_MODEL.
+        # OPENROUTER_MODEL cũ vẫn được nhận làm TRIAL_MODEL để không đổi hành vi bản đang chạy.
         env:
           TP: ${{ vars.TRIAL_PROVIDER || secrets.TRIAL_PROVIDER }}
+          TM: ${{ vars.TRIAL_MODEL || secrets.TRIAL_MODEL }}
+          TF: ${{ vars.TRIAL_FALLBACK_MODEL || secrets.TRIAL_FALLBACK_MODEL }}
           OM: ${{ vars.OPENROUTER_MODEL || secrets.OPENROUTER_MODEL }}
         run: |
+          if [ -z "$TM" ]; then
+            if [ "$TP" = "gemini" ]; then TM="gemini-3.8-flash"; TF="${TF:-gemini-3.7-flash}"; elif [ -n "$OM" ]; then TM="$OM"; fi
+          fi
           if [ -n "$TP" ]; then sed -i "s#\"TRIAL_PROVIDER\": \"[^\"]*\"#\"TRIAL_PROVIDER\": \"$TP\"#" wrangler.jsonc; fi
-          if [ -n "$OM" ]; then sed -i "s#\"OPENROUTER_MODEL\": \"[^\"]*\"#\"OPENROUTER_MODEL\": \"$OM\"#" wrangler.jsonc; fi
-          grep -E "TRIAL_PROVIDER|OPENROUTER_MODEL" wrangler.jsonc
+          if [ -n "$TM" ]; then sed -i "s#\"TRIAL_MODEL\": \"[^\"]*\"#\"TRIAL_MODEL\": \"$TM\"#" wrangler.jsonc; fi
+          if [ -n "$TF" ]; then sed -i "s#\"TRIAL_FALLBACK_MODEL\": \"[^\"]*\"#\"TRIAL_FALLBACK_MODEL\": \"$TF\"#" wrangler.jsonc; fi
+          grep -E "TRIAL_PROVIDER|TRIAL_MODEL|TRIAL_FALLBACK_MODEL" wrangler.jsonc
       - run: npm run build
       - name: Migrate D1
         run: npx wrangler d1 migrations apply DB --remote

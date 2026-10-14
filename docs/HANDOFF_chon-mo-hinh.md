@@ -71,8 +71,21 @@ Không lưu gì thêm về nội dung.
 - `AI_MOCK` vẫn chạy được không cần key.
 
 ## 8. Xong khi
-- [ ] Không còn tên mô hình gắn cứng trong `ai-gateway.ts` (trừ `TRIAL_MODEL` cấu hình).
-- [ ] Kết nối xong phải chọn mô hình mới chạy được; không có lựa chọn sẵn.
-- [ ] Danh sách sắp theo tên, có giá/lượt, nhãn đã kiểm thử, lý do khóa với mô hình không đạt yêu cầu.
-- [ ] `runs.model` có giá trị cho mọi lượt mới.
-- [ ] Test qua, build 0 lỗi, deploy, chạy migration 0003 trên D1 thật.
+- [x] Không còn tên mô hình gắn cứng trong `ai-gateway.ts` (trừ `TRIAL_MODEL` cấu hình).
+- [x] Kết nối xong phải chọn mô hình mới chạy được; không có lựa chọn sẵn.
+- [x] Danh sách sắp theo tên, có giá/lượt, nhãn đã kiểm thử, lý do khóa với mô hình không đạt yêu cầu.
+- [x] `runs.model` có giá trị cho mọi lượt mới.
+- [x] Test qua, build 0 lỗi. Còn lại: deploy (push `main`) — workflow tự chạy migration 0003 trên D1 thật.
+
+## 9. Ghi chú triển khai (14/10/2026)
+- Danh sách chỉ gồm mô hình của nhà cung cấp ứng với key: key Gemini → chỉ `gemini-*`; key OpenAI → chỉ mô hình chat của OpenAI; OpenRouter → nhiều hãng (một key OpenRouter dùng được mọi hãng trên OpenRouter). Lưu mô hình cũng kiểm tra lại theo đúng danh sách đó.
+- Code: `src/lib/models.ts` (chuẩn hóa, giá/lượt, khóa), `src/lib/models-fetch.ts` (gọi API + cache 1 giờ), `src/pages/api/ai/models.ts` (GET), `src/pages/api/ai/model.ts` (POST lưu), `src/islands/ModelPicker.tsx`, `ModelBar.tsx`, `ModelUsage.tsx`.
+- `src/skills/tested-models.json` đang **rỗng**: chưa mô hình nào có nhãn "Đã kiểm thử" cho tới khi nhóm chạy bộ kiểm thử và ghi `{ "id", "date", "passed", "total" }`.
+- `src/lib/model-prices.ts` mới có giá niêm yết một số mô hình Gemini/OpenAI; mô hình khác hiện "—". Nhóm rà lại theo trang giá.
+- Tỷ giá ước tính: `USD_VND` trong `wrangler.jsonc` (26.000).
+- Lượt dùng thử: giữ nguyên hành vi đang chạy. `TRIAL_MODEL` mặc định `anthropic/claude-sonnet-5.5` (OpenRouter); nếu repo đặt `TRIAL_PROVIDER=gemini` thì deploy tự đặt `gemini-3.8-flash` + dự phòng `gemini-3.7-flash`. Muốn theo đề xuất `gemini-3.8-flash` cho mọi trường hợp: đặt Variable `TRIAL_MODEL` (và `TRIAL_PROVIDER`/`TRIAL_API_KEY` tương ứng).
+- Gateway: mô hình không nhận `response_format` → tự gửi lại không có tham số đó; Gemini không nhận `thinkingConfig` → gửi lại không có.
+- **Gói cá nhân** dán được key Gemini và key OpenAI (nguồn `openai_key`); doanh nghiệp dùng "Key công ty" (OpenRouter/Gemini/OpenAI).
+- **Nhiều AI cùng lúc:** mỗi tổ chức kết nối được nhiều AI (mỗi nhà cung cấp một key, bảng `ai_keys`, khóa `(org_id, provider)`). Danh sách mô hình gộp từ mọi AI đã kết nối, sắp theo tên, lọc được theo AI. Mô hình chọn lưu ở `ai_model_choice` gồm cả nhà cung cấp; dự phòng có thể thuộc AI khác. Gắn lại key cùng nhà cung cấp thì thay key cũ, giữ mô hình. Gỡ một AI: nếu mô hình chính thuộc AI đó thì bỏ lựa chọn, nếu dự phòng thuộc AI đó thì tắt dự phòng. Một key lỗi không làm mất danh sách của AI khác.
+- Migration 0003 chuyển dữ liệu `ai_connections` sang `ai_keys` rồi **xóa bảng `ai_connections`**. `runs` thêm `provider` + `model`.
+- Sau migration, các tổ chức **đã kết nối từ trước** chưa có dòng trong `ai_model_choice` nên bị chặn chạy cho tới khi quản trị viên chọn mô hình (đúng nguyên tắc, nhưng cần báo khách cũ).
