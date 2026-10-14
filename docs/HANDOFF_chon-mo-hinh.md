@@ -84,6 +84,7 @@ Không lưu gì thêm về nội dung.
 - `src/lib/model-prices.ts` mới có giá niêm yết một số mô hình Gemini/OpenAI; mô hình khác hiện "—". Nhóm rà lại theo trang giá.
 - Tỷ giá ước tính: `USD_VND` trong `wrangler.jsonc` (26.000).
 - Lượt dùng thử: giữ nguyên hành vi đang chạy. `TRIAL_MODEL` mặc định `anthropic/claude-sonnet-5.5` (OpenRouter); nếu repo đặt `TRIAL_PROVIDER=gemini` thì deploy tự đặt `gemini-3.8-flash` + dự phòng `gemini-3.7-flash`. Muốn theo đề xuất `gemini-3.8-flash` cho mọi trường hợp: đặt Variable `TRIAL_MODEL` (và `TRIAL_PROVIDER`/`TRIAL_API_KEY` tương ứng).
-- Đổi nhà cung cấp (gắn key khác hãng) thì xóa mô hình đã chọn để khách chọn lại; gắn lại key cùng hãng giữ nguyên lựa chọn.
 - Gateway: mô hình không nhận `response_format` → tự gửi lại không có tham số đó; Gemini không nhận `thinkingConfig` → gửi lại không có.
-- Sau migration, các tổ chức **đã kết nối từ trước** có `model = NULL` nên bị chặn chạy cho tới khi quản trị viên chọn mô hình (đúng nguyên tắc, nhưng cần báo khách cũ).
+- **Nhiều AI cùng lúc:** mỗi tổ chức kết nối được nhiều AI (mỗi nhà cung cấp một key, bảng `ai_keys`, khóa `(org_id, provider)`). Danh sách mô hình gộp từ mọi AI đã kết nối, sắp theo tên, lọc được theo AI. Mô hình chọn lưu ở `ai_model_choice` gồm cả nhà cung cấp; dự phòng có thể thuộc AI khác. Gắn lại key cùng nhà cung cấp thì thay key cũ, giữ mô hình. Gỡ một AI: nếu mô hình chính thuộc AI đó thì bỏ lựa chọn, nếu dự phòng thuộc AI đó thì tắt dự phòng. Một key lỗi không làm mất danh sách của AI khác.
+- Migration 0003 chuyển dữ liệu `ai_connections` sang `ai_keys` rồi **xóa bảng `ai_connections`**. `runs` thêm `provider` + `model`.
+- Sau migration, các tổ chức **đã kết nối từ trước** chưa có dòng trong `ai_model_choice` nên bị chặn chạy cho tới khi quản trị viên chọn mô hình (đúng nguyên tắc, nhưng cần báo khách cũ).

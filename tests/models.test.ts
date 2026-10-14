@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatVnd, LOCK, modelUsage, normalizeGemini, normalizeOpenAI, normalizeOpenRouter, pricePerRun } from "../src/lib/models";
+import { formatVnd, LOCK, mergeModels, modelUsage, normalizeGemini, normalizeOpenAI, normalizeOpenRouter, pricePerRun } from "../src/lib/models";
 
 const openrouter = {
   data: [
@@ -66,6 +66,16 @@ describe("normalizeOpenAI", () => {
   });
 });
 
+describe("gộp nhiều AI của khách", () => {
+  it("mỗi mô hình mang nhà cung cấp của key; gộp lại sắp theo tên, không theo hãng", () => {
+    const merged = mergeModels([
+      normalizeOpenRouter(openrouter),
+      normalizeGemini([{ name: "models/gemini-2.5-flash", displayName: "Gemini 2.5 Flash", inputTokenLimit: 1_048_576, supportedGenerationMethods: ["generateContent"] }])
+    ]);
+    expect(merged.map((m) => `${m.provider}:${m.id}`)).toEqual(["openrouter:alpha/plain", "openrouter:beta/structured", "gemini:gemini-2.5-flash", "openrouter:zeta/big-model"]);
+  });
+});
+
 describe("giá mỗi lượt", () => {
   it("(6.000 × giá vào + 2.000 × giá ra) / 1e6 × tỷ giá, làm tròn 10 đ", () => {
     // (6000×3 + 2000×15)/1e6 = 0,048 USD × 26.000 = 1.248 → 1.250
@@ -79,10 +89,10 @@ describe("giá mỗi lượt", () => {
   });
   it("thống kê theo mô hình: chi phí theo token thực dùng, mô hình lạ → null", () => {
     const rows = modelUsage([
-      { model: "a/x", runs: 2, tokens_in: 1_000_000, tokens_out: 100_000 },
-      { model: "mock", runs: 5, tokens_in: 10, tokens_out: null }
-    ], new Map([["a/x", { priceIn: 1, priceOut: 10 }]]), 25_000);
-    expect(rows[0]).toEqual({ model: "mock", runs: 5, tokens_in: 10, tokens_out: 0, cost: null });
+      { provider: "openrouter", model: "a/x", runs: 2, tokens_in: 1_000_000, tokens_out: 100_000 },
+      { provider: "mock", model: "mock", runs: 5, tokens_in: 10, tokens_out: null }
+    ], new Map([["openrouter:a/x", { priceIn: 1, priceOut: 10 }]]), 25_000);
+    expect(rows[0]).toEqual({ provider: "mock", model: "mock", runs: 5, tokens_in: 10, tokens_out: 0, cost: null });
     expect(rows[1].cost).toBe(50_000); // (1 + 1) USD × 25.000
   });
 });

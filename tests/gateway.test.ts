@@ -7,24 +7,26 @@ import { HttpError } from "../src/lib/http";
 const E = env as unknown as Record<string, unknown>;
 const SECRET = btoa("0123456789abcdef0123456789abcdef");
 
-/** D1 giả: trả kết nối AI + số lượt thử đã dùng theo câu SQL. */
-function fakeDb(conn: Record<string, unknown> | null, trialUsed = 0) {
+/** D1 giả: các key AI của tổ chức, mô hình đã chọn, số lượt thử đã dùng. */
+function fakeDb(keys: Record<string, unknown>[], choice: Record<string, unknown> | null = null, trialUsed = 0) {
   return {
     prepare(sql: string) {
       const st = {
         bind: () => st,
-        first: async () => (sql.includes("FROM ai_connections") ? conn : sql.includes("FROM trial_usage") ? { used: trialUsed } : null),
+        first: async () => (sql.includes("FROM ai_model_choice") ? choice : sql.includes("FROM trial_usage") ? { used: trialUsed } : null),
         run: async () => ({ success: true, results: [], meta: {} }),
-        all: async () => ({ success: true, results: [], meta: {} })
+        all: async () => ({ success: true, results: sql.includes("FROM ai_keys") ? keys : [], meta: {} })
       };
       return st;
     }
   };
 }
-async function connection(over: Record<string, unknown> = {}) {
-  const { ciphertext, iv } = await encryptSecret(SECRET, "sk-or-test-key-1234567890");
-  return { provider: "openrouter", key_ciphertext: ciphertext, key_iv: iv, model: "zeta/big-model", allow_fallback: 0, fallback_model: null, ...over };
+async function aiKey(provider: string, plain: string) {
+  const { ciphertext, iv } = await encryptSecret(SECRET, plain);
+  return { provider, key_ciphertext: ciphertext, key_iv: iv };
 }
+const choice = (over: Record<string, unknown> = {}) =>
+  ({ provider: "openrouter", model: "zeta/big-model", allow_fallback: 0, fallback_provider: null, fallback_model: null, ...over });
 
 const ok = (content = '{"ok":true}') => new Response(JSON.stringify({ choices: [{ message: { content } }], usage: { prompt_tokens: 10, completion_tokens: 5 } }), { status: 200 });
 const overloaded = () => new Response(JSON.stringify({ error: { message: "overloaded" } }), { status: 503 });
@@ -38,24 +40,33 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("resolveKey", () => {
-  it("chặn chạy khi đã kết nối nhưng chưa chọn mô hình", async () => {
-    E.DB = fakeDb(await connection({ model: null }));
+  it("chặn chạy khi đã kết nối AI nhưng chưa chọn mô hình", async () => {
+    E.DB = fakeDb([await aiKey("openrouter", "sk-or-1")], null);
     const e = await resolveKey("o1", "u1").catch((x) => x);
     expect(e).toBeInstanceOf(HttpError);
     expect((e as HttpError).code).toBe("no_model");
   });
-  it("dùng mô hình khách đã lưu; chỉ có dự phòng khi khách cho phép", async () => {
-    E.DB = fakeDb(await connection({ fallback_model: "beta/structured" }));
-    expect(await resolveKey("o1", "u1")).toMatchObject({ model: "zeta/big-model", fallback: null, via_trial: false });
-    E.DB = fakeDb(await connection({ allow_fallback: 1, fallback_model: "beta/structured" }));
-    expect(await resolveKey("o1", "u1")).toMatchObject({ model: "zeta/big-model", fallback: "beta/structured" });
+  it("chặn chạy khi mô hình đã chọn thuộc AI không còn kết nối", async () => {
+    E.DB = fakeDb([await aiKey("gemini", "AIza-1")], choice());
+    expect(((await resolveKey("o1", "u1").catch((x) => x)) as HttpError).code).toBe("no_model");
+  });
+  it("dùng đúng key của AI chứa mô hình đã chọn khi khách kết nối nhiều AI", async () => {
+    E.DB = fakeDb([await aiKey("openrouter", "sk-or-1"), await aiKey("gemini", "AIza-1")], choice({ provider: "gemini", model: "gemini-2.5-flash" }));
+    expect(await resolveKey("o1", "u1")).toMatchObject({ provider: "gemini", key: "AIza-1", model: "gemini-2.5-flash", fallback: null, via_trial: false });
+  });
+  it("chỉ có dự phòng khi khách cho phép; dự phòng có thể ở AI khác", async () => {
+    const keys = [await aiKey("openrouter", "sk-or-1"), await aiKey("gemini", "AIza-1")];
+    E.DB = fakeDb(keys, choice({ fallback_provider: "gemini", fallback_model: "gemini-2.5-flash" }));
+    expect((await resolveKey("o1", "u1")).fallback).toBeNull();
+    E.DB = fakeDb(keys, choice({ allow_fallback: 1, fallback_provider: "gemini", fallback_model: "gemini-2.5-flash" }));
+    expect((await resolveKey("o1", "u1")).fallback).toEqual({ provider: "gemini", key: "AIza-1", model: "gemini-2.5-flash" });
   });
   it("lượt dùng thử chạy trên TRIAL_MODEL do nhóm cấu hình", async () => {
-    Object.assign(E, { DB: fakeDb(null), TRIAL_API_KEY: "trial-key", TRIAL_PROVIDER: "gemini", TRIAL_MODEL: "gemini-trial" });
+    Object.assign(E, { DB: fakeDb([]), TRIAL_API_KEY: "trial-key", TRIAL_PROVIDER: "gemini", TRIAL_MODEL: "gemini-trial" });
     expect(await resolveKey("o1", "u1")).toMatchObject({ provider: "gemini", model: "gemini-trial", via_trial: true });
   });
   it("AI_MOCK vẫn chạy được khi không có key", async () => {
-    Object.assign(E, { DB: fakeDb(null, 5), AI_MOCK: "1" });
+    Object.assign(E, { DB: fakeDb([], null, 5), AI_MOCK: "1" });
     const k = await resolveKey("o1", "u1");
     expect(k).toMatchObject({ provider: "mock", model: "mock" });
     const r = await callAI(k, "sys", "user", mock);
@@ -84,22 +95,31 @@ describe("callAI", () => {
   it("đổi đúng MỘT lần sang mô hình dự phòng khi được phép, và báo mô hình thực chạy", async () => {
     const f = vi.fn().mockResolvedValueOnce(overloaded()).mockResolvedValueOnce(ok());
     vi.stubGlobal("fetch", f);
-    const r = await callAI(key({ fallback: "beta/structured" }), "s", "u", mock);
+    const r = await callAI(key({ fallback: { provider: "openrouter", key: "k", model: "beta/structured" } }), "s", "u", mock);
     expect(sentModels(f)).toEqual(["zeta/big-model", "beta/structured"]);
-    expect(r.model).toBe("beta/structured");
+    expect(r).toMatchObject({ provider: "openrouter", model: "beta/structured" });
   });
   it("dự phòng cũng quá tải thì dừng, không thử thêm", async () => {
     const f = vi.fn(async () => overloaded());
     vi.stubGlobal("fetch", f);
-    const e = (await callAI(key({ fallback: "beta/structured" }), "s", "u", mock).catch((x) => x)) as HttpError;
+    const e = (await callAI(key({ fallback: { provider: "openrouter", key: "k", model: "beta/structured" } }), "s", "u", mock).catch((x) => x)) as HttpError;
     expect(f).toHaveBeenCalledTimes(2);
     expect(e.message).toContain("beta/structured");
   });
   it("lỗi khác quá tải (401) không đổi mô hình", async () => {
     const f = vi.fn(async () => new Response("{}", { status: 401 }));
     vi.stubGlobal("fetch", f);
-    await expect(callAI(key({ fallback: "beta/structured" }), "s", "u", mock)).rejects.toBeInstanceOf(HttpError);
+    await expect(callAI(key({ fallback: { provider: "openrouter", key: "k", model: "beta/structured" } }), "s", "u", mock)).rejects.toBeInstanceOf(HttpError);
     expect(f).toHaveBeenCalledTimes(1);
+  });
+  it("dự phòng ở AI khác: gọi đúng nhà cung cấp và key của AI đó", async () => {
+    const sse = 'data: {"candidates":[{"content":{"parts":[{"text":"{}"}]}}]}\n\n';
+    const f = vi.fn().mockResolvedValueOnce(overloaded()).mockResolvedValueOnce(new Response(sse, { status: 200 }));
+    vi.stubGlobal("fetch", f);
+    const r = await callAI(key({ fallback: { provider: "gemini", key: "AIza-1", model: "gemini-2.5-flash" } }), "s", "u", mock);
+    expect(String(f.mock.calls[1][0])).toContain("generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:");
+    expect((f.mock.calls[1][1] as RequestInit).headers).toMatchObject({ "x-goog-api-key": "AIza-1" });
+    expect(r).toMatchObject({ provider: "gemini", model: "gemini-2.5-flash" });
   });
   it("mô hình không nhận response_format: gửi lại không có tham số đó", async () => {
     const f = vi.fn()

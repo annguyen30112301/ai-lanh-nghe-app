@@ -5,8 +5,10 @@ import { db } from "./db";
 import { fail } from "./http";
 
 export type Provider = "openrouter" | "gemini" | "openai" | "mock";
-/** model: mô hình khách đã chọn (hoặc TRIAL_MODEL cho lượt thử); fallback: chỉ có khi khách cho phép đổi. */
-export interface AIKey { provider: Provider; key: string; via_trial: boolean; model: string; fallback: string | null }
+/** Một mô hình cụ thể trên một AI của khách (provider + key). */
+export interface AITarget { provider: Provider; key: string; model: string }
+/** model: mô hình khách đã chọn (hoặc TRIAL_MODEL cho lượt thử); fallback: chỉ có khi khách cho phép đổi, có thể thuộc AI khác của khách. */
+export interface AIKey extends AITarget { via_trial: boolean; fallback: AITarget | null }
 export interface AIReply { text: string; tokens_in: number; tokens_out: number }
 
 export const TRIAL_LIMIT = 5;
@@ -20,19 +22,29 @@ export async function useTrial(userId: string) {
   await db().prepare("INSERT INTO trial_usage (user_id, used) VALUES (?, 1) ON CONFLICT(user_id) DO UPDATE SET used = used + 1").bind(userId).run();
 }
 
-/** Chọn nguồn AI: kết nối của tổ chức (bắt buộc đã chọn mô hình) → lượt dùng thử → (local) mô phỏng. */
+/** Chọn nguồn AI: AI khách đã kết nối (bắt buộc đã chọn mô hình) → lượt dùng thử → (local) mô phỏng. */
 export async function resolveKey(orgId: string, userId: string): Promise<AIKey> {
-  const c = await db().prepare("SELECT provider, key_ciphertext, key_iv, model, allow_fallback, fallback_model FROM ai_connections WHERE org_id = ?").bind(orgId)
-    .first<{ provider: Provider; key_ciphertext: string; key_iv: string; model: string | null; allow_fallback: number; fallback_model: string | null }>();
-  if (c) {
-    if (!c.model) return fail(409, "Chưa chọn mô hình AI. Vào mục Kết nối AI để chọn mô hình rồi chạy lại.", "no_model");
-    const fallback = c.allow_fallback && c.fallback_model && c.fallback_model !== c.model ? c.fallback_model : null;
-    return { provider: c.provider, key: await decryptSecret(env.KEY_ENC_SECRET, c.key_ciphertext, c.key_iv), via_trial: false, model: c.model, fallback };
+  const keys = (await db().prepare("SELECT provider, key_ciphertext, key_iv FROM ai_keys WHERE org_id = ?").bind(orgId)
+    .all<{ provider: Provider; key_ciphertext: string; key_iv: string }>()).results;
+  if (keys.length) {
+    const c = await db().prepare("SELECT provider, model, allow_fallback, fallback_provider, fallback_model FROM ai_model_choice WHERE org_id = ?").bind(orgId)
+      .first<{ provider: Provider; model: string; allow_fallback: number; fallback_provider: Provider | null; fallback_model: string | null }>();
+    const main = c && keys.find((k) => k.provider === c.provider);
+    if (!c || !main) return fail(409, "Chưa chọn mô hình AI. Vào mục Kết nối AI để chọn mô hình rồi chạy lại.", "no_model");
+    const target = async (provider: Provider, model: string): Promise<AITarget | null> => {
+      const k = keys.find((x) => x.provider === provider);
+      return k ? { provider, model, key: await decryptSecret(env.KEY_ENC_SECRET, k.key_ciphertext, k.key_iv) } : null;
+    };
+    const fb = c.allow_fallback && c.fallback_provider && c.fallback_model && !(c.fallback_provider === c.provider && c.fallback_model === c.model)
+      ? await target(c.fallback_provider, c.fallback_model) : null;
+    return { ...(await target(c.provider, c.model))!, via_trial: false, fallback: fb };
   }
   if ((await trialLeft(userId)) > 0) {
     if (env.TRIAL_API_KEY) {
       const model = env.TRIAL_MODEL || fail(500, "Thiếu cấu hình TRIAL_MODEL cho lượt dùng thử.");
-      return { provider: (env.TRIAL_PROVIDER as Provider) || "openrouter", key: env.TRIAL_API_KEY, via_trial: true, model, fallback: env.TRIAL_FALLBACK_MODEL || null };
+      const provider = (env.TRIAL_PROVIDER as Provider) || "openrouter";
+      const fallback = env.TRIAL_FALLBACK_MODEL ? { provider, key: env.TRIAL_API_KEY, model: env.TRIAL_FALLBACK_MODEL } : null;
+      return { provider, key: env.TRIAL_API_KEY, via_trial: true, model, fallback };
     }
     if (mockEnabled()) return { provider: "mock", key: "", via_trial: true, model: "mock", fallback: null };
   }
@@ -125,13 +137,13 @@ async function gemini(key: string, model: string, system: string, user: string):
 }
 
 /** Gọi đúng mô hình đã chọn. Quá tải (429/503) thì chỉ thử lại MỘT lần bằng mô hình dự phòng khách đã chọn. */
-export async function callAI(k: AIKey, system: string, user: string, mock: () => unknown): Promise<AIReply & { model: string }> {
+export async function callAI(k: AIKey, system: string, user: string, mock: () => unknown): Promise<AIReply & { provider: Provider; model: string }> {
   try {
-    try { return { ...(await callModel(k, k.model, system, user, mock)), model: k.model }; }
+    try { return { ...(await callModel(k, system, user, mock)), provider: k.provider, model: k.model }; }
     catch (e) {
       if (!(e instanceof UpstreamError) || !OVERLOAD.includes(e.status) || !k.fallback) throw e;
-      console.error("ai_fallback", k.model, "->", k.fallback, e.status);
-      return { ...(await callModel(k, k.fallback, system, user, mock)), model: k.fallback };
+      console.error("ai_fallback", k.provider, k.model, "->", k.fallback.provider, k.fallback.model, e.status);
+      return { ...(await callModel(k.fallback, system, user, mock)), provider: k.fallback.provider, model: k.fallback.model };
     }
   } catch (e) {
     if (e instanceof UpstreamError) return upstreamFail(k, e);
@@ -143,11 +155,11 @@ export async function callAI(k: AIKey, system: string, user: string, mock: () =>
   }
 }
 
-async function callModel(k: AIKey, model: string, system: string, user: string, mock: () => unknown): Promise<AIReply> {
-  switch (k.provider) {
-    case "openrouter": return chatCompletions("openrouter", "https://openrouter.ai/api/v1/chat/completions", k.key, model, system, user);
-    case "openai": return chatCompletions("openai", "https://api.openai.com/v1/chat/completions", k.key, model, system, user);
-    case "gemini": return gemini(k.key, model, system, user);
+async function callModel(t: AITarget, system: string, user: string, mock: () => unknown): Promise<AIReply> {
+  switch (t.provider) {
+    case "openrouter": return chatCompletions("openrouter", "https://openrouter.ai/api/v1/chat/completions", t.key, t.model, system, user);
+    case "openai": return chatCompletions("openai", "https://api.openai.com/v1/chat/completions", t.key, t.model, system, user);
+    case "gemini": return gemini(t.key, t.model, system, user);
     case "mock": {
       await new Promise((r) => setTimeout(r, 1400));
       return { text: JSON.stringify(mock()), tokens_in: Math.round((system.length + user.length) / 3.2), tokens_out: 900 };

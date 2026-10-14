@@ -3,17 +3,20 @@ import { CheckCircleIcon, CircleNotchIcon, LockSimpleIcon, MagnifyingGlassIcon, 
 import type { ModelInfo, ModelsResponse } from "../content/types";
 import type { app } from "../content/vi";
 import { api, errText, post } from "../lib/client";
-import { formatVnd, pricePerRun } from "../lib/models";
+import { formatVnd, modelKey, pricePerRun, PROVIDER_LABEL } from "../lib/models";
 
 type T = typeof app.connect.models;
-const PROVIDER: Record<string, string> = { openrouter: "OpenRouter", gemini: "Google Gemini", openai: "OpenAI" };
 
 const ctxLabel = (n: number | null) => (n === null ? null : n >= 1e6 ? `${+(n / 1e6).toFixed(1)}M` : `${Math.round(n / 1000)}k`);
+const pname = (p: string) => PROVIDER_LABEL[p] ?? p;
+const keyOf = (m: ModelInfo) => modelKey(m.provider, m.id);
+const split = (k: string) => { const i = k.indexOf(":"); return { provider: k.slice(0, i), model: k.slice(i + 1) }; };
 
-/** Danh sách mô hình trong tài khoản AI của khách. Sắp theo tên, không chọn sẵn, không gắn nhãn khuyên dùng. */
+/** Mô hình của mọi AI khách đã kết nối. Sắp theo tên, không chọn sẵn, không gắn nhãn khuyên dùng. */
 export default function ModelPicker({ t, onSaved }: { t: T; onSaved?: () => void }) {
   const [d, setD] = useState<ModelsResponse | null>(null);
   const [q, setQ] = useState("");
+  const [prov, setProv] = useState<string | null>(null);
   const [onlyTested, setOnlyTested] = useState(false);
   const [maxPrice, setMaxPrice] = useState("");
   const [minCtx, setMinCtx] = useState("");
@@ -24,17 +27,22 @@ export default function ModelPicker({ t, onSaved }: { t: T; onSaved?: () => void
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
-  const load = () => api<ModelsResponse>("/api/ai/models").then((r) => {
-    setD(r); setSel(r.current.model); setAllow(r.current.allow_fallback); setFb(r.current.fallback_model ?? "");
-  }).catch((e) => setMsg({ ok: false, text: errText(e) }));
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    api<ModelsResponse>("/api/ai/models").then((r) => {
+      const c = r.current;
+      setD(r);
+      setSel(c ? modelKey(c.provider, c.model) : null);
+      setAllow(!!c?.allow_fallback);
+      setFb(c?.fallback_provider && c.fallback_model ? modelKey(c.fallback_provider, c.fallback_model) : "");
+    }).catch((e) => setMsg({ ok: false, text: errText(e) }));
+  }, []);
 
-  const price = (m: ModelInfo) => (d ? pricePerRun(m, d.usd_vnd) : null);
   const shown = useMemo(() => {
     if (!d) return [];
     const words = q.toLocaleLowerCase("vi").split(/\s+/).filter(Boolean);
     const mp = maxPrice ? Number(maxPrice) : null, mc = minCtx ? Number(minCtx) * 1000 : null;
     return d.models.filter((m) => {
+      if (prov && m.provider !== prov) return false;
       const hay = `${m.name} ${m.id}`.toLocaleLowerCase("vi");
       if (!words.every((w) => hay.includes(w))) return false;
       if (onlyTested && !m.tested) return false;
@@ -42,21 +50,27 @@ export default function ModelPicker({ t, onSaved }: { t: T; onSaved?: () => void
       if (mc !== null && (m.contextLength ?? 0) < mc) return false;
       return true;
     });
-  }, [d, q, onlyTested, maxPrice, minCtx]);
+  }, [d, q, prov, onlyTested, maxPrice, minCtx]);
 
   if (!d) return msg ? <p className="err" role="alert">{msg.text}</p> : <p className="flex items-center gap-2 text-ink-2"><CircleNotchIcon className="spin" size={20} />{t.loading}</p>;
 
-  const selectable = d.models.filter((m) => !m.locked && m.id !== sel);
-  const changed = sel !== d.current.model || allow !== d.current.allow_fallback || (allow && fb !== (d.current.fallback_model ?? ""));
+  const multi = d.providers.length > 1;
+  const price = (m: ModelInfo) => pricePerRun(m, d.usd_vnd);
+  const cur = d.current;
+  const curKey = cur ? modelKey(cur.provider, cur.model) : null;
+  const curFb = cur?.fallback_provider && cur.fallback_model ? modelKey(cur.fallback_provider, cur.fallback_model) : "";
+  const selectable = d.models.filter((m) => !m.locked && keyOf(m) !== sel);
+  const changed = sel !== curKey || allow !== !!cur?.allow_fallback || (allow && fb !== curFb);
   const canSave = !!sel && (!allow || (!!fb && fb !== sel)) && changed && !busy;
 
   async function save() {
     if (!sel) { setMsg({ ok: false, text: t.pickFirst }); return; }
     if (allow && (!fb || fb === sel)) { setMsg({ ok: false, text: t.pickFallback }); return; }
     setBusy(true); setMsg(null);
+    const m = split(sel), f = allow ? split(fb) : null;
     try {
-      await post("/api/ai/model", { model: sel, allow_fallback: allow, fallback_model: allow ? fb : null });
-      setD({ ...d!, current: { model: sel, allow_fallback: allow, fallback_model: allow ? fb : null } });
+      await post("/api/ai/model", { provider: m.provider, model: m.model, allow_fallback: allow, fallback_provider: f?.provider ?? null, fallback_model: f?.model ?? null });
+      setD({ ...d!, current: { ...m, allow_fallback: allow, fallback_provider: f?.provider ?? null, fallback_model: f?.model ?? null } });
       setMsg({ ok: true, text: t.saved });
       onSaved?.();
     } catch (e) { setMsg({ ok: false, text: errText(e) }); }
@@ -65,8 +79,21 @@ export default function ModelPicker({ t, onSaved }: { t: T; onSaved?: () => void
 
   return (
     <div>
-      <p className="mb-3 text-[0.88rem] font-semibold">{t.source.replace("{p}", PROVIDER[d.provider] ?? d.provider)}</p>
-      {d.provider === "openrouter" && <p className="t-note -mt-2 mb-3">{t.sourceOpenRouter}</p>}
+      <p className="mb-3 text-[0.88rem] font-semibold">{t.source.replace("{p}", d.providers.map(pname).join(", "))}</p>
+      {d.providers.includes("openrouter") && <p className="t-note -mt-2 mb-3">{t.sourceOpenRouter}</p>}
+      {d.errors.map((e) => <p key={e.provider} className="err !mt-0 mb-3" role="alert">{t.providerError.replace("{p}", pname(e.provider)).replace("{m}", e.message)}</p>)}
+
+      {multi && (
+        <div className="mb-3 flex flex-wrap gap-2" role="radiogroup" aria-label={t.filters}>
+          {[null, ...d.providers].map((p) => (
+            <button key={p ?? "all"} type="button" role="radio" aria-checked={prov === p} onClick={() => { setProv(p); setLimit(40); }}
+              className={`min-h-11 rounded-full border-2 px-4 text-[0.85rem] font-semibold ${prov === p ? "border-accent bg-accent text-on-accent" : "border-hair bg-raised"}`}>
+              {p ? `${pname(p)} · ${d.models.filter((m) => m.provider === p).length}` : `${t.allProviders} · ${d.models.length}`}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="flex items-center gap-2 rounded-2xl border-2 border-hair bg-raised px-3 focus-within:border-accent">
         <MagnifyingGlassIcon size={20} className="shrink-0 text-ink-3" />
         <label className="sr-only" htmlFor="model-q">{t.search}</label>
@@ -89,17 +116,17 @@ export default function ModelPicker({ t, onSaved }: { t: T; onSaved?: () => void
       <div role="radiogroup" aria-label={t.step} className="mt-2 grid max-h-[28rem] gap-2 overflow-y-auto pr-1">
         {shown.length === 0 && <p className="rounded-2xl bg-canvas p-4 text-[0.9rem] text-ink-2">{t.none}</p>}
         {shown.slice(0, limit).map((m) => {
-          const on = sel === m.id, p = price(m), ctx = ctxLabel(m.contextLength);
+          const k = keyOf(m), on = sel === k, p = price(m), ctx = ctxLabel(m.contextLength);
           return (
-            <button key={m.id} type="button" role="radio" aria-checked={on} disabled={!!m.locked} onClick={() => { setSel(m.id); setMsg(null); if (fb === m.id) setFb(""); }}
+            <button key={k} type="button" role="radio" aria-checked={on} disabled={!!m.locked} onClick={() => { setSel(k); setMsg(null); if (fb === k) setFb(""); }}
               className={`flex w-full flex-wrap items-center gap-x-4 gap-y-1 rounded-2xl border-2 px-4 py-3 text-left transition-colors ${on ? "border-accent bg-tint" : "border-hair bg-raised hover:border-brand-300"} disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-hair`}>
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2 font-semibold">
                   {on && <CheckCircleIcon size={18} weight="fill" className="shrink-0 text-accent" />}
                   <span className="truncate">{m.name}</span>
-                  {d.current.model === m.id && <span className="chip chip-muted !py-0.5 text-[0.72rem]">{t.current}</span>}
+                  {curKey === k && <span className="chip chip-muted !py-0.5 text-[0.72rem]">{t.current}</span>}
                 </span>
-                <span className="block truncate font-mono text-[0.75rem] text-ink-3">{m.id}</span>
+                <span className="block truncate font-mono text-[0.75rem] text-ink-3">{m.id}{multi && <span className="font-sans"> · {t.via.replace("{p}", pname(m.provider))}</span>}</span>
                 {m.locked && <span className="mt-1 flex items-center gap-1.5 text-[0.8rem] font-medium text-urgent"><LockSimpleIcon size={14} weight="bold" />{t.locked}: {m.locked}</span>}
               </span>
               <span className="flex flex-wrap items-center gap-2 text-[0.8rem]">
@@ -126,7 +153,10 @@ export default function ModelPicker({ t, onSaved }: { t: T; onSaved?: () => void
             <label className="label" htmlFor="fb-model">{t.fallbackPick}</label>
             <select id="fb-model" className="field" value={fb} onChange={(e) => setFb(e.target.value)}>
               <option value="">{t.fallbackPh}</option>
-              {selectable.map((m) => { const p = price(m); return <option key={m.id} value={m.id}>{m.name}{p === null ? "" : ` · ${t.perRun.replace("{p}", formatVnd(p))}`}</option>; })}
+              {selectable.map((m) => {
+                const p = price(m);
+                return <option key={keyOf(m)} value={keyOf(m)}>{m.name}{multi ? ` (${pname(m.provider)})` : ""}{p === null ? "" : ` · ${t.perRun.replace("{p}", formatVnd(p))}`}</option>;
+              })}
             </select>
             <p className="t-note mt-2">{t.fallbackNote}</p>
           </div>

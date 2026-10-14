@@ -3,7 +3,7 @@ import { CpuIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type { MeResponse, ModelsResponse } from "../content/types";
 import type { app } from "../content/vi";
 import { api, getMe } from "../lib/client";
-import { formatVnd, pricePerRun } from "../lib/models";
+import { formatVnd, pricePerRun, PROVIDER_LABEL } from "../lib/models";
 import ModelPicker from "./ModelPicker";
 
 interface Props { t: typeof app.work.model; tm: typeof app.connect.models; onBlocked: (blocked: boolean) => void }
@@ -17,10 +17,10 @@ export default function ModelBar({ t, tm, onBlocked }: Props) {
   const load = async (force = false) => {
     const m = await getMe(force);
     setMe(m);
-    if (m.ai?.model) api<ModelsResponse>("/api/ai/models").then(setInfo).catch(() => setInfo(null));
+    if (m.ai?.choice) api<ModelsResponse>("/api/ai/models").then(setInfo).catch(() => setInfo(null));
   };
   useEffect(() => { load().catch(() => {}); }, []);
-  useEffect(() => { onBlocked(!!me?.ai && !me.ai.model); }, [me, onBlocked]);
+  useEffect(() => { onBlocked(!!me?.ai && !me.ai.choice); }, [me, onBlocked]);
 
   if (!me) return null;
   if (!me.ai) {
@@ -34,7 +34,8 @@ export default function ModelBar({ t, tm, onBlocked }: Props) {
     </div>
   );
 
-  if (!me.ai.model) {
+  const choice = me.ai.choice;
+  if (!choice) {
     return (
       <div>
         <div className="err flex flex-wrap items-center justify-between gap-3" role="alert">
@@ -46,13 +47,13 @@ export default function ModelBar({ t, tm, onBlocked }: Props) {
     );
   }
 
-  const cur = info?.models.find((m) => m.id === me.ai!.model);
+  const cur = info?.models.find((m) => m.provider === choice.provider && m.id === choice.model);
   const price = cur && info ? pricePerRun(cur, info.usd_vnd) : null;
   return (
     <div>
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.88rem] text-ink-2">
         <CpuIcon size={18} className="shrink-0" />
-        <span>{t.label.replace("{m}", cur?.name ?? me.ai.model)}</span>
+        <span>{t.label.replace("{m}", cur?.name ?? choice.model)}{me.ai.keys.length > 1 && ` (${PROVIDER_LABEL[choice.provider] ?? choice.provider})`}</span>
         {price !== null && <span>· {tm.perRun.replace("{p}", formatVnd(price))}</span>}
         {admin && <>· <button type="button" className="min-h-9 font-semibold text-accent-ink underline-offset-2 hover:underline" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? t.close : t.change}</button></>}
       </p>

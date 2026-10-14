@@ -1,7 +1,6 @@
 import type { APIRoute } from "astro";
 import { verifyKey, type Provider } from "../../../lib/ai-gateway";
-import { saveConnection } from "../../../lib/ai-store";
-import { db } from "../../../lib/db";
+import { removeConnection, saveConnection } from "../../../lib/ai-store";
 import { fail, json, readJson, route } from "../../../lib/http";
 import { canManageAI, requireAuth } from "../../../lib/session";
 
@@ -24,9 +23,12 @@ export const POST: APIRoute = route(async ({ request, cookies }) => {
   return json({ ok: true, provider, key_last4: key.slice(-3) });
 });
 
-export const DELETE: APIRoute = route(async ({ cookies }) => {
+/** Gỡ một AI đã kết nối (theo nhà cung cấp). Các AI khác giữ nguyên. */
+export const DELETE: APIRoute = route(async ({ request, cookies }) => {
   const a = await requireAuth(cookies);
   if (!canManageAI(a)) fail(403, "Kết nối AI của công ty do quản trị viên quản lý.");
-  await db().prepare("DELETE FROM ai_connections WHERE org_id = ?").bind(a.org.org_id).run();
+  const { provider } = await readJson<{ provider?: string }>(request);
+  if (!["openrouter", "gemini", "openai"].includes(provider ?? "")) fail(400, "Bạn chọn AI cần gỡ.");
+  await removeConnection(a.org.org_id, provider!);
   return json({ ok: true });
 });

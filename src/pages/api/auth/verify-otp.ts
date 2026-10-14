@@ -43,7 +43,7 @@ export const POST: APIRoute = route(async ({ request, cookies, url }) => {
   await createSession(cookies, user.id, request.headers.get("user-agent") ?? "", url.protocol === "https:");
 
   const ai = await db().prepare(
-    "SELECT 1 AS ok FROM members m JOIN ai_connections c ON c.org_id = m.org_id WHERE m.user_id = ? AND m.status = 'active' LIMIT 1"
+    "SELECT 1 AS ok FROM members m JOIN ai_keys c ON c.org_id = m.org_id WHERE m.user_id = ? AND m.status = 'active' LIMIT 1"
   ).bind(user.id).first();
   return json({ ok: true, is_new: isNew, next: ai ? "/app/tinh-huong/" : "/app/ket-noi-ai/" });
 });

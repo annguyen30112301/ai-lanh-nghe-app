@@ -1,6 +1,6 @@
 import type { app } from "../content/vi";
 import type { ModelUsageRow } from "../lib/models";
-import { formatVnd } from "../lib/models";
+import { formatVnd, PROVIDER_LABEL } from "../lib/models";
 
 /** Bảng lượt theo mô hình thực chạy: số lượt, token, chi phí ước tính. */
 export default function ModelUsage({ title, t, rows }: { title: string; t: typeof app.dash.usage; rows: ModelUsageRow[] }) {
@@ -13,8 +13,8 @@ export default function ModelUsage({ title, t, rows }: { title: string; t: typeo
           <thead><tr className="text-left text-ink-2">{t.cols.map((c, i) => <th key={c} scope="col" className={`pb-2 font-semibold ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
           <tbody className="divide-y divide-hair">
             {rows.map((r) => (
-              <tr key={r.model}>
-                <th scope="row" className="max-w-[16rem] truncate py-2 pr-3 text-left font-mono text-[0.8rem] font-medium">{r.model}</th>
+              <tr key={`${r.provider}:${r.model}`}>
+                <th scope="row" className="max-w-[16rem] truncate py-2 pr-3 text-left font-mono text-[0.8rem] font-medium">{r.model}{r.provider && <span className="font-sans text-ink-3"> · {PROVIDER_LABEL[r.provider] ?? r.provider}</span>}</th>
                 <td className="py-2 text-right font-semibold tabular-nums">{n(r.runs)}</td>
                 <td className="py-2 text-right tabular-nums">{n(r.tokens_in)}</td>
                 <td className="py-2 text-right tabular-nums">{n(r.tokens_out)}</td>

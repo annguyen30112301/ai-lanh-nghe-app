@@ -49,7 +49,12 @@ export interface ExecuteResponse {
 export interface MeResponse {
   user: { id: string; email: string; name: string | null };
   org: { id: string; name: string; plan: string; role: "admin" | "member"; seats: number };
-  ai: { source: string; provider: string; key_last4: string; verified_at: number | null; model: string | null; allow_fallback: number; fallback_model: string | null } | null;
+  /** null khi chưa kết nối AI nào */
+  ai: {
+    keys: { source: string; provider: string; key_last4: string; verified_at: number | null }[];
+    /** null khi chưa chọn mô hình */
+    choice: ModelChoiceOut | null;
+  } | null;
   trial_left: number;
   /** mô hình nhóm chọn cho lượt dùng thử (null khi chạy mô phỏng) */
   trial_model: string | null;
@@ -58,8 +63,15 @@ export interface MeResponse {
 
 import type { ModelInfo } from "../lib/models";
 export type { ModelInfo };
+export interface ModelChoiceOut { provider: string; model: string; allow_fallback: boolean; fallback_provider: string | null; fallback_model: string | null }
 export interface ModelsResponse {
-  provider: string; models: ModelInfo[]; usd_vnd: number;
-  current: { model: string | null; allow_fallback: boolean; fallback_model: string | null };
+  /** các AI khách đã kết nối */
+  providers: string[];
+  /** mô hình của mọi AI đó, gộp và sắp theo tên */
+  models: ModelInfo[];
+  /** AI nào chưa lấy được danh sách (key hết hạn, nhà cung cấp lỗi…) */
+  errors: { provider: string; message: string }[];
+  usd_vnd: number;
+  current: ModelChoiceOut | null;
   can_edit: boolean;
 }
