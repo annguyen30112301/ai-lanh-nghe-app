@@ -9,9 +9,15 @@ interface Props { page: PageKey; title: string; description: string }
 const { page, title, description } = Astro.props;
 
 const href: Record<PageKey, string> = { home: "/", how: "/cach-hoat-dong/", packs: "/goi-nghe/", pricing: "/bang-gia/", safety: "/an-toan/", order: "/dat-mua/", trial: "/dung-thu/", qa: "/hoi-dap/", terms: "/dieu-khoan/", privacy: "/chinh-sach-du-lieu/", business: "/doanh-nghiep/" };
-const desktop = ["home", "how", "packs", "pricing", "safety"] as const;
-const tabs: { k: PageKey; icon: string }[] = [{ k: "home", icon: "home" }, { k: "how", icon: "path" }, { k: "packs", icon: "briefcase" }, { k: "pricing", icon: "coins" }];
-const moreActive = page === "safety";
+const desktop = ["home", "how", "packs", "business", "pricing", "safety"] as const;
+const tabs = [{ k: "home", icon: "home" }, { k: "how", icon: "path" }, { k: "pricing", icon: "coins" }, { k: "trial", icon: "sparkle" }] as const;
+/** Mục trong sheet "Thêm" (điện thoại). */
+const sheet: { k: PageKey; icon: string; label: string }[] = [
+  { k: "packs", icon: "briefcase", label: ui.nav.packs }, { k: "business", icon: "buildings", label: ui.nav.business },
+  { k: "safety", icon: "shield", label: ui.nav.safety }, { k: "qa", icon: "quote", label: ui.sheet.qa },
+  { k: "terms", icon: "scales", label: ui.sheet.terms }, { k: "privacy", icon: "lock", label: ui.sheet.privacy }
+];
+const moreActive = sheet.some((x) => x.k === page);
 ---
 <!doctype html>
 <html lang="vi">
@@ -38,20 +44,20 @@ const moreActive = page === "safety";
       <div class="pointer-events-auto flex h-16 items-center justify-between gap-3 rounded-full border border-hair/70 bg-raised/95 pl-3 pr-2 shadow-[var(--shadow)] backdrop-blur">
         <a href="/" class="flex shrink-0 items-center gap-2.5 rounded-full pr-2 font-bold text-ink no-underline" aria-label={site.name}>
           <img src="/logo.png" alt="" width="288" height="228" class="h-8 w-auto sm:h-9" />
-          <span class="text-[1.02rem] tracking-tight">{site.name}</span>
+          <span class="text-[1.02rem] tracking-tight lg:hidden xl:inline">{site.name}</span>
         </a>
         <nav class="hidden items-center lg:flex" aria-label="Chính">
           {desktop.map((k) => (
             <a href={href[k]} aria-current={k === page ? "page" : undefined}
-              class:list={["relative whitespace-nowrap rounded-full px-3 py-2 text-[0.88rem] font-medium no-underline transition-colors xl:px-4", k === page ? "text-accent-ink" : "text-ink-2 hover:text-ink"]}>
+              class:list={["relative whitespace-nowrap rounded-full px-2.5 py-2 text-[0.88rem] font-medium no-underline transition-colors xl:px-4", k === page ? "text-accent-ink" : "text-ink-2 hover:text-ink"]}>
               {k === page && <span class="absolute inset-0 -z-10 rounded-full bg-tint" style="view-transition-name: nav-pill"></span>}
               {ui.nav[k]}
             </a>
           ))}
         </nav>
         <div class="flex items-center gap-1.5">
-          <a href="/app/dang-nhap/" class="hidden h-11 items-center rounded-full px-4 text-[0.88rem] font-semibold text-ink-2 no-underline hover:bg-tint hover:text-accent-ink sm:inline-flex">{ui.login}</a>
-          <a href="/app/dang-nhap/" class="btn btn-accent !min-h-11 !px-5"><span class="sm:hidden">{ui.ctaShort}</span><span class="hidden sm:inline">{ui.cta}</span></a>
+          <a href="/app/dang-nhap/" aria-label={ui.login} title={ui.login} class="hidden h-11 min-w-11 items-center justify-center gap-2 whitespace-nowrap rounded-full px-3 text-[0.88rem] font-semibold text-ink-2 no-underline hover:bg-tint hover:text-accent-ink sm:inline-flex"><Icon name="lock" size={20} class="lg:inline 2xl:hidden" /><span class="lg:hidden 2xl:inline">{ui.login}</span></a>
+          <a href="/dung-thu/" aria-current={page === "trial" ? "page" : undefined} class="btn btn-accent !min-h-11 !px-5"><span class="sm:hidden lg:inline 2xl:hidden">{ui.ctaShort}</span><span class="hidden sm:inline lg:hidden 2xl:inline">{ui.cta}</span></a>
         </div>
       </div>
     </div>
@@ -67,7 +73,7 @@ const moreActive = page === "safety";
           <span class="text-xl font-bold text-white">{site.name}</span>
         </div>
         <p class="mt-6 max-w-md text-[clamp(1.2rem,0.95rem+1vw,1.7rem)] font-bold leading-tight tracking-tight text-white">{ui.footer.tagline}</p>
-        <a href="/app/dang-nhap/" class="btn btn-light mt-8">{ui.cta}</a>
+        <a href="/dung-thu/" class="btn btn-light mt-8">{ui.cta}</a>
       </div>
       <nav aria-label={ui.footer.explore}>
         <h2 class="mb-4 text-[0.85rem] font-semibold text-brand-300">{ui.footer.explore}</h2>
@@ -106,7 +112,7 @@ const moreActive = page === "safety";
             class:list={["relative flex flex-col items-center gap-0.5 rounded-[1.4rem] py-2 text-[0.62rem] font-semibold no-underline", k === page ? "text-accent-ink" : "text-ink-3"]}>
             {k === page && <span class="absolute inset-0 -z-10 rounded-[1.4rem] bg-tint" style="view-transition-name: nav-pill"></span>}
             <Icon name={icon} size={24} weight={k === page ? "fill" : "regular"} />
-            <span class="whitespace-nowrap">{ui.tabs[k as keyof typeof ui.tabs]}</span>
+            <span class="whitespace-nowrap">{ui.tabs[k]}</span>
           </a>
         </li>
       ))}
@@ -124,9 +130,11 @@ const moreActive = page === "safety";
   <dialog class="sheet lg:hidden" id="sheet" aria-label={ui.more}>
     <div class="mx-auto mt-3 h-1.5 w-12 rounded-full bg-hair" aria-hidden="true"></div>
     <div class="grid gap-2 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-      <a href="/an-toan/" data-close-sheet class:list={["flex items-center gap-4 rounded-2xl px-4 py-3.5 text-lg font-semibold no-underline", page === "safety" ? "bg-tint text-accent-ink" : "text-ink"]}>
-        <span class="icon-tile size-11"><Icon name="shield" size={22} /></span>{ui.nav.safety}
-      </a>
+      {sheet.map((x) => (
+        <a href={href[x.k]} data-close-sheet aria-current={x.k === page ? "page" : undefined} class:list={["flex items-center gap-4 rounded-2xl px-4 py-3 text-lg font-semibold no-underline", x.k === page ? "bg-tint text-accent-ink" : "text-ink"]}>
+          <span class="icon-tile size-11"><Icon name={x.icon} size={22} /></span>{x.label}
+        </a>
+      ))}
       <a href="/app/dang-nhap/" data-close-sheet class="flex items-center gap-4 rounded-2xl px-4 py-3.5 text-lg font-semibold text-ink no-underline">
         <span class="icon-tile size-11"><Icon name="lock" size={22} /></span>{ui.login}
       </a>

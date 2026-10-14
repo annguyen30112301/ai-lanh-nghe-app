@@ -10,8 +10,9 @@ export const site = {
 
 export const ui = {
   skip: "Bỏ qua, tới nội dung chính",
-  nav: { home: "Trang chủ", how: "Cách hoạt động", packs: "Gói nghề", pricing: "Bảng giá", safety: "An toàn" },
-  tabs: { home: "Trang chủ", how: "Cách làm", packs: "Gói nghề", pricing: "Bảng giá", more: "Thêm" },
+  nav: { home: "Trang chủ", how: "Cách hoạt động", packs: "Gói nghề", business: "Doanh nghiệp", pricing: "Bảng giá", safety: "An toàn" },
+  tabs: { home: "Trang chủ", how: "Cách làm", pricing: "Bảng giá", trial: "Dùng thử", more: "Thêm" },
+  sheet: { qa: "Hỏi đáp", terms: "Điều khoản", privacy: "Chính sách dữ liệu" },
   login: "Đăng nhập",
   order: "Đặt mua",
   cta: "Dùng thử miễn phí",
