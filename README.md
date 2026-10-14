@@ -49,11 +49,9 @@ Variable `TRIAL_PROVIDER` = `gemini` nếu `TRIAL_API_KEY` là key Gemini (mặc
 
 Variable `APP_ORIGIN` = URL thật sau lần deploy đầu (vd. `https://ai-lanh-nghe-app.<subdomain>.workers.dev`) – dùng cho callback OpenRouter.
 
-Push `main` → Actions tự test, build, migrate D1, deploy, đồng bộ secrets. Nạp dữ liệu mẫu lên D1 thật (một lần):
+Push `main` → Actions tự test, build, migrate D1, deploy, đồng bộ secrets.
 
-```bash
-npx wrangler d1 execute DB --remote --file=db/seed.sql
-```
+Nạp dữ liệu mẫu lên D1 thật: Actions → **Nạp dữ liệu mẫu** → Run workflow → gõ `XOA-VA-NAP`. Mốc thời gian được tạo lại tính từ hôm nay (chạy lại trước buổi báo cáo).
 
 ## Cấu trúc
 
