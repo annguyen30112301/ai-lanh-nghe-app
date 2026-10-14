@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, MotionConfig, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ArrowRightIcon, CheckIcon, FileXlsIcon, FilePdfIcon, ShieldCheckIcon, DownloadSimpleIcon, CircleNotchIcon, SealCheckIcon } from "@phosphor-icons/react";
 import type { home } from "../content/vi";
@@ -13,15 +13,20 @@ const hhmm = (v: number) => { const m = Math.round(v); return `${String(Math.flo
  * 3 báo giá → che dữ liệu → bảng so sánh → checklist → xuất file.
  */
 export default function HeroDay({ h }: { h: H }) {
-  const reduce = useReducedMotion();
+  // Máy chủ không biết cài đặt "Giảm chuyển động" → lần render đầu luôn như bản động, sau khi gắn mới đổi (tránh lỗi hydration #418).
+  const prefersReduce = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const reduce = mounted && !!prefersReduce;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const minutes = useTransform(p, [0.02, 0.9], [START, END], { clamp: true });
   const clock = useTransform(minutes, hhmm);
   const rail = useTransform(p, [0.02, 0.9], [0, 1]);
   const last = h.beats.length - 1;
-  const [stage, setStage] = useState(reduce ? last : 0);
-  const [sub, setSub] = useState(reduce ? 1 : 0); // tiến độ trong một chặng (0..1)
+  const [stage, setStage] = useState(0);
+  const [sub, setSub] = useState(0); // tiến độ trong một chặng (0..1)
+  useEffect(() => { if (reduce) { setStage(last); setSub(1); } }, [reduce, last]);
   useMotionValueEvent(minutes, "change", (v) => {
     let s = 0;
     h.beats.forEach((b, i) => { if (toMin(b.t) <= v + 0.01) s = i; });
@@ -34,7 +39,7 @@ export default function HeroDay({ h }: { h: H }) {
   return (
     <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 280, damping: 28 }}>
       <div ref={ref} className={reduce ? "relative" : "relative h-[340vh]"}>
-        <div className={reduce ? "relative pb-16 pt-28" : "sticky top-0 flex h-[100dvh] min-h-[38rem] items-start overflow-hidden pb-24 pt-24 lg:items-center lg:pb-10"}>
+        <div className={reduce ? "relative overflow-hidden pb-16 pt-28" : "sticky top-0 flex h-[100dvh] min-h-[38rem] items-start overflow-hidden pb-24 pt-24 lg:items-center lg:pb-10"}>
           <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 -z-10 size-[44rem] rounded-full bg-brand-200/40 blur-3xl" />
           <div className="shell grid w-full items-center gap-6 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
             {/* chữ */}
