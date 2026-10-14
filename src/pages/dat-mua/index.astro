@@ -1,0 +1,11 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import OrderWizard from "../../islands/OrderWizard";
+import { order } from "../../content/vi";
+const t = order;
+---
+<Base page="order" title={`${t.title} · AI Lành Nghề`} description={t.description}>
+  <PageIntro title={t.heading} lead={t.lead} chip={t.title} />
+  <div class="shell pb-24"><OrderWizard client:load t={t} /></div>
+</Base>

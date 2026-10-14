@@ -13,6 +13,7 @@ export const ui = {
   nav: { home: "Trang chủ", how: "Cách hoạt động", packs: "Gói nghề", pricing: "Bảng giá", safety: "An toàn" },
   tabs: { home: "Trang chủ", how: "Cách làm", packs: "Gói nghề", pricing: "Bảng giá", more: "Thêm" },
   login: "Đăng nhập",
+  order: "Đặt mua",
   cta: "Dùng thử miễn phí",
   ctaShort: "Dùng thử",
   more: "Thêm",
@@ -210,19 +211,21 @@ export const pricing = {
       id: "personal", group: "personal", name: "Cá nhân", price: "690.000 đ", unit: "/năm",
       for: "Bạn dùng hằng tuần với AI của riêng mình.",
       items: ["Gói nghề Mua hàng đầy đủ", "Kết nối OpenRouter hoặc key Gemini", "Bảng điều khiển cá nhân, đo phút tiết kiệm", "Cập nhật quy trình trong năm"],
-      cta: "Chọn gói Cá nhân", href: "/app/dang-nhap/"
+      cta: "Chọn gói Cá nhân", href: "/dat-mua/?goi=personal"
     },
     {
       id: "business", group: "business", name: "Business", price: "690.000 đ", unit: "/người/năm",
       for: "Phòng mua hàng muốn cả nhóm làm cùng một chuẩn.",
       items: ["Mọi thứ trong gói Cá nhân", "Gắn key AI công ty một lần cho cả phòng", "Quản lý seat: mời, thu hồi, chuyển", "Bảng điều khiển doanh nghiệp: mức áp dụng theo người, theo tuần"],
-      cta: "Xem demo doanh nghiệp", href: "/app/dang-nhap/?demo=doanh-nghiep", featured: true
+      cta: "Đặt mua", href: "/dat-mua/?goi=business", featured: true,
+      cta2: "Xem demo doanh nghiệp", href2: "/app/dang-nhap/?demo=doanh-nghiep"
     },
     {
       id: "business_plus", group: "business", name: "Business Plus", price: "990.000 đ", unit: "/người/năm",
       for: "Doanh nghiệp cần mẫu kết quả theo biểu mẫu riêng.",
       items: ["Mọi thứ trong gói Business", "Mẫu kết quả theo biểu mẫu công ty", "Hỗ trợ ưu tiên", "Báo cáo tiết kiệm thời gian hằng quý"],
-      cta: "Xem demo doanh nghiệp", href: "/app/dang-nhap/?demo=doanh-nghiep"
+      cta: "Đặt mua", href: "/dat-mua/?goi=business_plus",
+      cta2: "Xem demo doanh nghiệp", href2: "/app/dang-nhap/?demo=doanh-nghiep"
     }
   ],
   addons: {
@@ -284,6 +287,102 @@ export const safety = {
     body: "Thiết kế theo tinh thần Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 và Nghị định 356/2025: tối thiểu hóa dữ liệu, minh bạch mục đích xử lý, người dùng kiểm soát dữ liệu gửi đi. Gói doanh nghiệp kèm mẫu đánh giá tác động xử lý dữ liệu (DPIA)."
   },
   cta: "Xem lớp che dữ liệu hoạt động"
+};
+
+export const order = {
+  title: "Đặt mua",
+  description: "Đặt mua gói nghề Mua hàng: chọn gói, điền thông tin hóa đơn, thanh toán (mô phỏng) và nhận license.",
+  heading: "Đặt mua gói nghề",
+  lead: "Bốn bước: chọn gói, thông tin hóa đơn, thanh toán, nhận license. Giá tính lại ở máy chủ theo bảng giá công khai.",
+  demoBanner: "Bản demo đồ án – không phát sinh giao dịch thật.",
+  steps: ["Chọn gói", "Thông tin & hóa đơn", "Thanh toán", "Hoàn tất"],
+  stepOf: "Bước {i}/{n}",
+  back: "Quay lại",
+  next: "Tiếp tục",
+  plans: {
+    personal: { name: "Cá nhân", price: "690.000 đ/năm", for: "Một người dùng, AI của riêng bạn." },
+    business: { name: "Business", price: "690.000 đ/người/năm", for: "Cả phòng dùng chung một chuẩn, key AI công ty." },
+    business_plus: { name: "Business Plus", price: "990.000 đ/người/năm", for: "Thêm mẫu kết quả theo biểu mẫu công ty, hỗ trợ ưu tiên." }
+  },
+  pack: "Gói nghề: <b>Mua hàng</b> (nghề đang mở bán). Giảng dạy, Hành chính – Nhân sự sắp ra mắt.",
+  seats: "Số người dùng (seat)",
+  seatsHint: "Tối thiểu 1. Ưu đãi quy mô tính theo tổng seat.",
+  minus: "Bớt 1 seat",
+  plus: "Thêm 1 seat",
+  tinhChinh: "Thêm Tinh chỉnh 1:1 (800.000 đ/lần)",
+  tinhChinhHint: "Một buổi kèm riêng, trả một lần, không thu lại khi gia hạn.",
+  tinhChinhDN: "Nhận báo giá Tinh chỉnh cho doanh nghiệp",
+  tinhChinhDNHint: "Liên hệ báo giá – không cộng vào đơn này. Nhóm gửi báo giá qua email nhận hóa đơn.",
+  custom: "Cần đóng gói quy trình riêng (Custom 25–80 triệu đ)? Ghi chú trong bước 2, nhóm gửi báo giá riêng.",
+  bill: {
+    title: "Hóa đơn tạm tính",
+    pack: "Gói nghề Mua hàng · {plan}",
+    tinhChinh: "Tinh chỉnh 1:1 (một lần)",
+    tinhChinhDN: "Tinh chỉnh doanh nghiệp",
+    quote: "Liên hệ báo giá",
+    listed: "Giá niêm yết",
+    discount: "Ưu đãi",
+    total: "Tổng thanh toán",
+    period: "Hiệu lực {from} – {to}",
+    renew: "Gia hạn năm sau dự kiến: {v}",
+    tax: "Thuế GTGT: bản demo chưa tính (chờ kế toán chốt).",
+    how: "Xem cách tính",
+    tiers: "Bậc ưu đãi quy mô",
+    tierRow: "{range} seat",
+    tierFrom: "từ {n}",
+    current: "đang áp"
+  },
+  info: {
+    title: "Thông tin người mua",
+    name: "Họ tên", namePh: "Nguyễn Thị Lan",
+    email: "Email", emailPh: "lan.nguyen@congty.vn", emailHint: "License và hướng dẫn đăng nhập gửi tới email này.",
+    phone: "Số điện thoại", phonePh: "0903 123 456",
+    company: "Tên công ty", companyPh: "Công ty TNHH Cơ khí Tân Phú",
+    tax: "Mã số thuế", taxPh: "0312345678", taxHint: "10 số, hoặc 10 số kèm 3 số chi nhánh (0312345678-001).",
+    address: "Địa chỉ xuất hóa đơn", addressPh: "12 Nguyễn Văn Bảo, P.4, Gò Vấp, TP.HCM",
+    invoiceEmail: "Email nhận hóa đơn điện tử", invoiceEmailPh: "ketoan@congty.vn",
+    note: "Ghi chú (không bắt buộc)", notePh: "Ví dụ: cần báo giá Custom cho quy trình duyệt nhà cung cấp",
+    errors: {
+      name: "Bạn nhập họ tên.",
+      email: "Email chưa đúng dạng, ví dụ lan.nguyen@congty.vn.",
+      phone: "Số điện thoại cần 10–11 chữ số.",
+      company: "Bạn nhập tên công ty.",
+      tax: "Mã số thuế gồm 10 số hoặc 10 số kèm 3 số chi nhánh (0312345678-001).",
+      address: "Bạn nhập địa chỉ xuất hóa đơn.",
+      invoiceEmail: "Email nhận hóa đơn chưa đúng dạng."
+    }
+  },
+  pay: {
+    title: "Chọn cách thanh toán",
+    methods: { bank: "Chuyển khoản", vnpay: "VNPay", momo: "MoMo" },
+    bankLead: "Quét mã hoặc chuyển khoản theo thông tin dưới đây. Ghi đúng nội dung để đơn được đối soát.",
+    bankName: "Ngân hàng", bankNameV: "Ngân hàng mẫu (demo)",
+    account: "Số tài khoản", accountV: "0000 0000 0000",
+    holder: "Chủ tài khoản", holderV: "AI LANH NGHE (DEMO)",
+    amount: "Số tiền",
+    content: "Nội dung chuyển khoản",
+    qr: "Mã QR minh họa – không quét được",
+    walletLead: "Bản thật sẽ chuyển sang cổng {m} để xác nhận. Bản demo dừng ở đây.",
+    confirm: "Tôi đã thanh toán (mô phỏng)",
+    confirming: "Đang ghi đơn…",
+    orderCode: "Mã đơn"
+  },
+  done: {
+    title: "Đặt mua thành công",
+    lead: "License đã cấp cho <b>{email}</b>. Đây là đơn mô phỏng, không có giao dịch thật.",
+    code: "Mã đơn",
+    plan: "Gói",
+    seats: "{n} seat",
+    period: "Hiệu lực",
+    total: "Đã thanh toán (mô phỏng)",
+    license: "License đã cấp",
+    next: "Bước tiếp theo: đăng nhập bằng email trên, kết nối AI của bạn rồi chọn mô hình.",
+    cta: "Vào app và kết nối AI",
+    print: "In hoặc lưu PDF"
+  },
+  errors: {
+    server: "Chưa ghi được đơn. Bạn thử lại sau ít phút."
+  }
 };
 
 /* ======================= APP ======================= */
