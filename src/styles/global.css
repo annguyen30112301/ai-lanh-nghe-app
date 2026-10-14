@@ -190,6 +190,10 @@
     .scroll-progress { transform-origin: left; animation: grow-x linear both; animation-timeline: scroll(root); }
     .stack-card { animation: stack-dim linear both; animation-timeline: view(); animation-range: exit -40% exit 30%; }
     @keyframes stack-dim { to { scale: 0.93; filter: brightness(0.95); } }
+    [data-grow-y] { transform-origin: top; animation: grow-y linear both; animation-timeline: view(); animation-range: entry 20% cover 55%; }
+    @keyframes grow-y { from { scale: 1 0; } }
+    .zoom-in-view { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% cover 60%; }
+    @keyframes settle { from { scale: 1.12; } }
   }
 }
 @media (prefers-reduced-motion: reduce) {

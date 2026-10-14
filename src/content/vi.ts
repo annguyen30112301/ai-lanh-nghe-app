@@ -183,7 +183,8 @@ export const packs = {
   procurement: {
     name: "Mua hàng – Thu mua",
     lead: "Cho người làm mua hàng ở doanh nghiệp sản xuất, thương mại. Ba tình huống đầu tiên đã chạy được trong app.",
-    cta: "Dùng thử gói Mua hàng"
+    cta: "Dùng thử gói Mua hàng",
+    more: "Xem chi tiết gói Mua hàng"
   },
   includes: {
     title: "Mỗi gói nghề gồm",
@@ -595,6 +596,139 @@ export const privacy = {
     p: "Khi phát hiện sự cố lộ lọt dữ liệu, AI Lành Nghề thông báo cho khách hàng bị ảnh hưởng và cơ quan có thẩm quyền trong vòng 72 giờ kể từ khi phát hiện, nêu rõ dữ liệu liên quan, mức độ và biện pháp khắc phục."
   },
   more: "Xem cách lớp che dữ liệu hoạt động ở trang <a href=\"/an-toan/\">An toàn</a>."
+  }
+};
+
+export const muaHang = {
+  title: "Gói nghề Mua hàng",
+  description: "Gói nghề Mua hàng – Thu mua: so sánh báo giá, thư thương lượng, hồ sơ nhà cung cấp. Che dữ liệu trước khi gửi lên AI, checklist trước khi xuất.",
+  heading: "Để AI làm phần việc lặp lại. Bạn giữ quyết định mua hàng.",
+  lead: "Quy trình nghề Mua hàng đóng gói sẵn trong app: chọn việc, điền vài ô, tải báo giá. Tên nhà cung cấp, mã số thuế, số điện thoại được che trước khi tới AI của bạn.",
+  chip: "Mua hàng – Thu mua · Đang mở",
+  cta: "Dùng thử với 5 lượt miễn phí",
+  cta2: "Đặt mua",
+  shotAlt: "Màn hình app: dữ liệu báo giá sau khi che, tên nhà cung cấp và số điện thoại đã thành nhãn",
+  shotCap: "Ảnh chụp app thật với bộ báo giá mẫu: dữ liệu sẽ gửi lên AI sau khi che.",
+  catalog: {
+    title: "25 tình huống của nghề Mua hàng",
+    lead: "Danh mục dự kiến, chia 5 nhóm việc. Ba tình huống đã chạy trong app; các tình huống còn lại được đóng gói dần và cập nhật 2 lần mỗi năm.",
+    live: "Đang chạy trong app",
+    soon: "Lộ trình",
+    groups: [
+      { name: "So sánh & đánh giá", items: [["So sánh báo giá nhà cung cấp", true], ["Tóm tắt và chấm hồ sơ năng lực nhà cung cấp", true], ["Đánh giá nhà cung cấp định kỳ theo chỉ tiêu", false], ["So sánh tổng chi phí sở hữu (giá, vận chuyển, bảo hành)", false], ["Lập tiêu chí chọn nhà cung cấp cho gói mua mới", false]] },
+      { name: "Soạn thảo & đàm phán", items: [["Soạn thư thương lượng giá", true], ["Chuẩn bị nội dung buổi đàm phán", false], ["Soạn yêu cầu báo giá gửi nhiều nhà cung cấp", false], ["Soạn thư từ chối nhà cung cấp giữ quan hệ", false], ["Soạn email nhắc giao hàng trễ hạn", false]] },
+      { name: "Rà soát rủi ro", items: [["Rà soát điều khoản hợp đồng mua bán", false], ["Kiểm tra hồ sơ pháp lý nhà cung cấp mới", false], ["Đối chiếu đơn hàng – hóa đơn – phiếu nhập kho", false], ["Phát hiện báo giá bất thường so với lịch sử", false], ["Đánh giá rủi ro phụ thuộc một nhà cung cấp", false]] },
+      { name: "Tổng hợp định kỳ", items: [["Báo cáo mua hàng tuần cho quản lý", false], ["Tổng hợp tiến độ giao hàng theo nhà cung cấp", false], ["Báo cáo tiết kiệm chi phí theo quý", false], ["Tổng hợp công nợ phải trả nhà cung cấp", false], ["Theo dõi hợp đồng khung sắp hết hạn", false]] },
+      { name: "Tra cứu nội bộ", items: [["Tra hạn mức phê duyệt mua hàng", false], ["Tra quy trình mua hàng nội bộ", false], ["Tra lịch sử giá của một mặt hàng", false], ["Tra điều khoản hợp đồng khung đang hiệu lực", false], ["Hỏi đáp quy định chứng từ thanh toán", false]] }
+    ]
+  },
+  detail: {
+    title: "Một tình huống từ đầu đến cuối: so sánh 3 báo giá",
+    lead: "Ba nhà cung cấp báo giá cùng một mặt hàng nhưng trình bày khác nhau về giá, thời gian giao, điều khoản thanh toán và hậu mãi.",
+    input: "Đầu vào",
+    files: ["Báo giá nhà cung cấp A (Excel)", "Báo giá nhà cung cấp B (Excel)", "Báo giá nhà cung cấp C (PDF có chữ)"],
+    ask: "Bạn điền: mặt hàng cần mua và ưu tiên (giá thấp nhất, giao nhanh, thanh toán linh hoạt hay cân bằng). Không viết câu lệnh.",
+    steps: ["Đọc 3 file ngay trong trình duyệt", "Che tên, MST, số điện thoại", "Đưa về cùng tiêu chí, cùng đơn vị", "So sánh và chỉ ra điểm khác biệt", "Đề xuất kèm lý do và gợi ý thương lượng", "Đổi nhãn về tên thật, bạn tự kiểm rồi xuất"],
+    stepsTitle: "App xử lý 6 bước",
+    result: "Kết quả mẫu",
+    head: ["Tiêu chí", "NCC A", "NCC B", "NCC C"],
+    rows: [["Giá đã gồm VAT (đ)", "120.000.000", "118.500.000", "125.000.000"], ["Thời gian giao", "14 ngày", "10 ngày", "12 ngày"], ["Thanh toán", "30% – 70%", "50% – 50%", "30% – 70%"], ["Hậu mãi", "12 tháng", "18 tháng", "12 tháng"], ["Nhận xét", "Phù hợp", "Tốt nhất", "Cân nhắc"]],
+    checklist: "Checklist trước khi xuất (nút Xuất chỉ bật khi tick đủ)",
+    try: "Thử tình huống này không cần đăng nhập",
+    timeline: { title: "Một buổi sáng làm việc", note: "Ví dụ minh họa, không phải số đo.", items: [["08:15", "Nhận 3 báo giá"], ["08:20", "App che dữ liệu, chuẩn hóa và so sánh"], ["08:27", "Kiểm tra điểm bất thường theo checklist"], ["08:35", "Chuẩn bị nội dung trao đổi với nhà cung cấp"], ["09:00", "Người mua hàng đưa ra quyết định"]] }
+  },
+  video: {
+    title: "Video giới thiệu (2 phút)",
+    caption: "Video giai đoạn 1 – cảnh dựng trên Gemini, theo mô hình cũ (cài gói vào trợ lý AI). Hiện gói nghề chạy trong Web App AI Lành Nghề với AI bạn kết nối.",
+    download: "Tải video (MP4)"
+  },
+  includes: {
+    title: "Gói nghề gồm gì",
+    items: [
+      { icon: "path", title: "Quy trình nghề trong app", body: "Mỗi tình huống là một quy trình đóng gói sẵn: vai trò, quy tắc, cách trình bày, giới hạn của AI. Bạn chỉ chọn việc và điền ô." },
+      { icon: "table", title: "Mẫu kết quả", body: "Bảng so sánh, thư, tóm tắt đúng khung; xuất Excel hoặc Word để gửi đi." },
+      { icon: "checks", title: "Checklist tự kiểm", body: "Những điểm người làm lâu năm luôn kiểm. Nút Xuất chỉ bật khi bạn tick đủ." },
+      { icon: "shield", title: "Lớp che dữ liệu", body: "Tên nhà cung cấp, công ty, người liên hệ, MST, CCCD, số tài khoản được che trước khi gửi lên AI." },
+      { icon: "clock", title: "Cập nhật và đo thời gian", body: "Nội dung cập nhật 2 lần mỗi năm. Bảng điều khiển đo số phút bạn tiết kiệm. Tinh chỉnh 1:1 khi cần." }
+    ]
+  },
+  fit: {
+    title: "Gói này dành cho ai",
+    yes: { title: "Phù hợp nếu bạn", items: ["Làm Mua hàng / Thu mua ở doanh nghiệp sản xuất, thương mại", "Đã có kinh nghiệm nghiệp vụ", "Thường xuyên xử lý báo giá, bảng biểu, email nhà cung cấp", "Muốn dùng AI nhưng không muốn học viết câu lệnh"] },
+    no: { title: "Chưa phù hợp nếu", items: ["Bạn đang tìm khóa học AI từ cơ bản", "Bạn muốn học lập trình AI", "Tài liệu của bạn chủ yếu là bản scan (chưa hỗ trợ nhận dạng chữ)"] }
+  },
+  price: {
+    title: "Giá gói Mua hàng",
+    items: [
+      { name: "Cá nhân", price: "690.000 đ", unit: "/năm", href: "/dat-mua/?goi=personal" },
+      { name: "Tinh chỉnh 1:1", price: "800.000 đ", unit: "/lần", href: "/dat-mua/?goi=personal" },
+      { name: "Doanh nghiệp", price: "690.000 đ", unit: "/người/năm · giảm tới 30% theo số seat", href: "/dat-mua/?goi=business" }
+    ],
+    buy: "Đặt mua",
+    all: "Xem bảng giá đầy đủ",
+    aiFee: "Chưa gồm phí AI: bạn trả thẳng cho nhà cung cấp AI qua tài khoản của mình."
+  },
+  faq: {
+    title: "Câu hỏi thường gặp",
+    items: [
+      ["Tôi cần tài khoản AI nào?", "Một trong ba cách: kết nối OpenRouter một chạm, dán key Gemini, hoặc dán key OpenAI. Doanh nghiệp: quản trị viên gắn key công ty một lần cho cả phòng. Bạn tự chọn mô hình trong tài khoản AI của mình."],
+      ["Có phải cài gì vào ChatGPT hay Gemini không?", "Không. Gói nghề chạy trong Web App AI Lành Nghề. AI chạy phía sau bằng key bạn kết nối; bạn không phải mở ChatGPT hay Gemini."],
+      ["Tôi có phải biết viết câu lệnh không?", "Không. Vai trò, quy trình, mẫu kết quả và giới hạn xử lý đã được đóng gói sẵn trong từng tình huống."],
+      ["Dữ liệu công ty có an toàn không?", "Thông tin nhận diện được che thành nhãn trước khi gửi; bạn xem trước đúng dữ liệu AI sẽ thấy. Máy chủ không lưu file, nội dung hay kết quả."],
+      ["Nếu AI trả lời sai thì sao?", "Mỗi kết quả có checklist tự kiểm; AI được yêu cầu ghi “Không có trong báo giá” khi thiếu dữ liệu. Quyền quyết định vẫn thuộc về bạn."],
+      ["Gói có được cập nhật không?", "Có, 2 lần mỗi năm theo thay đổi của nghề và của các mô hình AI."]
+    ],
+    more: "Xem tất cả câu hỏi"
+  }
+};
+
+export const business = {
+  title: "Doanh nghiệp",
+  description: "AI Lành Nghề cho phòng ban: mua theo vị trí công việc, đo được mức áp dụng, an toàn dữ liệu, quản lý seat; gói Custom đóng gói quy trình riêng.",
+  heading: "Cả phòng làm cùng một chuẩn, đo được từng tuần",
+  lead: "Mua theo phòng ban, không theo tuổi. Quản trị viên gắn key AI công ty một lần, mời người vào seat và theo dõi mức áp dụng thật.",
+  chip: "Giải pháp doanh nghiệp",
+  cta: "Xem demo doanh nghiệp",
+  cta2: "Yêu cầu báo giá",
+  why: {
+    title: "Vì sao doanh nghiệp mua",
+    items: [
+      { icon: "users", title: "Mua theo vị trí, không theo tuổi", body: "Ai trong phòng Mua hàng cũng dùng được. Người lâu năm giữ kinh nghiệm, AI làm phần lặp lại." },
+      { icon: "chart", title: "Đo được", body: "Số lượt, phút tiết kiệm, mức áp dụng theo người và theo tuần – lấy từ số đếm trong app, không phải khảo sát." },
+      { icon: "shield", title: "An toàn dữ liệu", body: "Che thông tin trước khi gửi, không lưu nội dung, key công ty mã hóa. Nhân viên không nhìn thấy key." },
+      { icon: "coins", title: "Chi phí khoảng 3,2 giờ công/người/năm", body: "690.000 đ/người/năm, giảm tới 30% theo số seat. Ước tính của nhóm theo lương bình quân khoảng 213.000 đ/giờ." }
+    ]
+  },
+  dash: {
+    title: "Bảng điều khiển doanh nghiệp",
+    lead: "Ảnh chụp app thật với dữ liệu mẫu của “Cơ khí Tân Phú” (15 seat). Đăng nhập tài khoản demo để tự xem và thao tác.",
+    alt: "Bảng điều khiển doanh nghiệp: giờ tiết kiệm, lượt hoàn thành, người dùng tích cực, seat; bảng mức áp dụng theo người và theo tuần",
+    sample: "Dữ liệu mẫu",
+    points: ["Mức áp dụng theo người và theo tuần", "Tình huống dùng nhiều nhất", "Lượt và chi phí AI ước tính theo mô hình", "Quản lý seat: mời, thu hồi, chuyển seat"]
+  },
+  seats: {
+    title: "Quản lý seat ngay trong app",
+    items: [["Mời", "Nhập email, người được mời đăng nhập là vào đúng seat của công ty."], ["Thu hồi", "Người nghỉ việc mất quyền dùng ngay, lịch sử số đếm vẫn giữ cho báo cáo."], ["Chuyển", "Đổi người dùng của một seat, không phát sinh phí."]]
+  },
+  custom: {
+    title: "Gói Custom: đóng gói quy trình riêng của bạn",
+    lead: "Khi doanh nghiệp có quy trình, biểu mẫu riêng cần đưa thành tình huống trong app. Báo giá 25–80 triệu đ theo số quy trình.",
+    steps: [["Khảo sát", "Làm việc với phòng ban, chọn quy trình đáng đóng gói và chỉ số đo."], ["Thiết kế", "Viết quy trình, mẫu kết quả, checklist và quy tắc che dữ liệu riêng."], ["Triển khai & đào tạo", "Đưa tình huống vào app, hướng dẫn quản trị viên và nhân viên."], ["Đồng hành 3 tháng", "Theo dõi mức áp dụng, chỉnh quy trình theo phản hồi thật."]]
+  },
+  form: {
+    title: "Yêu cầu báo giá",
+    lead: "Điền vài thông tin, ứng dụng email của bạn sẽ mở thư soạn sẵn gửi nhóm. Không lưu gì trên máy chủ.",
+    company: "Tên công ty", companyPh: "Công ty TNHH Cơ khí Tân Phú",
+    name: "Người liên hệ", namePh: "Nguyễn Thị Lan",
+    email: "Email", emailPh: "lan.nguyen@congty.vn",
+    seats: "Số người dùng dự kiến", seatsPh: "15",
+    need: "Bạn cần gì?", needs: ["Business / Business Plus", "Tinh chỉnh doanh nghiệp", "Gói Custom"],
+    note: "Ghi chú", notePh: "Ví dụ: muốn đóng gói quy trình duyệt nhà cung cấp mới",
+    send: "Mở thư yêu cầu báo giá",
+    sent: "Đã mở ứng dụng email. Nếu không thấy, gửi thư tới {email}.",
+    subject: "Yêu cầu báo giá AI Lành Nghề – {company}",
+    errors: { company: "Bạn nhập tên công ty.", email: "Email chưa đúng dạng." }
+  }
 };
 
 /* ======================= APP ======================= */
