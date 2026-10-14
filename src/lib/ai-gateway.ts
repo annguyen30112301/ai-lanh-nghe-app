@@ -37,7 +37,8 @@ const ERR: Record<number, string> = {
   401: "Key AI không còn hợp lệ. Vào mục Kết nối AI để gắn lại.",
   402: "Tài khoản AI đã hết tín dụng. Nạp thêm ở nhà cung cấp AI rồi chạy lại.",
   403: "Key AI không có quyền dùng mô hình này. Vào mục Kết nối AI để kiểm tra.",
-  429: "AI đang quá tải hoặc đã chạm hạn mức. Bạn chờ khoảng 1 phút rồi chạy lại."
+  429: "AI đang quá tải hoặc đã chạm hạn mức. Bạn chờ khoảng 1 phút rồi chạy lại.",
+  503: "Máy chủ AI đang quá tải (thường chỉ vài phút). Bạn bấm “Chạy lại” sau ít phút."
 };
 /** Ghi mã lỗi + thông báo lỗi của nhà cung cấp (không có key, không có nội dung) rồi báo người dùng. */
 async function upstreamFail(provider: string, res: Response, mapped = res.status): Promise<never> {
@@ -60,19 +61,29 @@ async function chatCompletions(url: string, key: string, model: string, system: 
   return { text: j.choices?.[0]?.message?.content ?? "", tokens_in: j.usage?.prompt_tokens ?? 0, tokens_out: j.usage?.completion_tokens ?? 0 };
 }
 
+// Khi mô hình chính quá tải (503/429) hoặc không còn cấp (404), thử lần lượt mô hình dự phòng.
+const GEMINI_FALLBACKS = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite"];
+
 async function gemini(key: string, system: string, user: string): Promise<AIReply> {
-  const model = env.GEMINI_MODEL || "gemini-3.8-flash";
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-    method: "POST",
-    headers: { "x-goog-api-key": key, "content-type": "application/json" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: system }] },
-      contents: [{ role: "user", parts: [{ text: user }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 16384, responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "low" } }
-    }),
-    signal: AbortSignal.timeout(150_000)
-  });
-  if (!res.ok) await upstreamFail("gemini", res, res.status === 400 ? 401 : res.status); // Gemini trả 400 khi key sai
+  const models = [...new Set([env.GEMINI_MODEL || "gemini-3.8-flash", ...GEMINI_FALLBACKS])];
+  let res: Response | null = null;
+  for (const [i, model] of models.entries()) {
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: "POST",
+      headers: { "x-goog-api-key": key, "content-type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system }] },
+        contents: [{ role: "user", parts: [{ text: user }] }],
+        generationConfig: { temperature: 0.2, maxOutputTokens: 16384, responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "low" } }
+      }),
+      signal: AbortSignal.timeout(150_000)
+    });
+    if (res.ok || ![404, 429, 500, 503].includes(res.status)) break;
+    console.error("ai_fallback", model, res.status);
+    if (i < models.length - 1) await new Promise((r) => setTimeout(r, 800));
+  }
+  res = res!;
+  if (!res.ok) await upstreamFail("gemini", res);
   const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
   return {
     text: j.candidates?.[0]?.content?.parts?.filter((p) => !p.thought).map((p) => p.text ?? "").join("") ?? "",
