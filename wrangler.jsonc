@@ -14,7 +14,7 @@
     }
   ],
   "vars": {
-    "APP_ORIGIN": "https://ai-lanh-nghe-app.workers.dev",
+    "APP_ORIGIN": "https://ai-lanh-nghe-app.nghoangan-bt96.workers.dev",
     "MAIL_FROM": "AI Lành Nghề <onboarding@resend.dev>",
     "TRIAL_PROVIDER": "openrouter",
     "OPENROUTER_MODEL": "google/gemini-2.5-flash",

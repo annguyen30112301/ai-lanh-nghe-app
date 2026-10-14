@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // Trang marketing + vỏ app: prerender (tĩnh). API: src/pages/api/** (prerender = false) chạy trên Workers.
 export default defineConfig({
-  site: "https://ai-lanh-nghe-app.workers.dev",
+  site: "https://ai-lanh-nghe-app.nghoangan-bt96.workers.dev",
   trailingSlash: "ignore",
   build: { format: "directory" },
   prefetch: { prefetchAll: true, defaultStrategy: "hover" },
