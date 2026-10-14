@@ -134,7 +134,7 @@ export default function TrialBench({ t }: { t: T }) {
                 </div>
                 <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
                   <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[0.88rem] text-ink-2">{t.choose.promise.map((p) => <li key={p} className="flex items-center gap-1.5"><CheckIcon size={16} weight="bold" className="text-accent-2" />{p}</li>)}</ul>
-                  <button type="button" className="btn btn-accent" onClick={() => go("ban")}>{t.choose.start.replace("{x}", s.th.ten)}<ArrowRightIcon size={18} weight="bold" /></button>
+                  <button type="button" className="btn btn-accent !whitespace-normal py-3 text-left" onClick={() => go("ban")}>{t.choose.start.replace("{x}", s.th.ten)}<ArrowRightIcon size={18} weight="bold" /></button>
                 </div>
               </div>
             )}
