@@ -1,0 +1,14 @@
+---
+import AppShell from "../../../layouts/AppShell.astro";
+import Dashboard from "../../../islands/Dashboard";
+import { app } from "../../../content/vi";
+import { publicScenarios } from "../../../lib/skills";
+const t = app.dash;
+const scenarios = publicScenarios().map((s) => ({ id: s.id, name: s.name, ref: s.manual_minutes_ref }));
+---
+<AppShell page="dashboard" title={t.title} description={t.description}>
+  <div class="shell py-10 sm:py-14">
+    <h1 class="t-title">{t.heading}</h1>
+    <div class="mt-8"><Dashboard client:load t={t} scenarios={scenarios} /></div>
+  </div>
+</AppShell>

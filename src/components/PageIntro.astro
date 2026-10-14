@@ -1,0 +1,14 @@
+---
+import Words from "./Words.astro";
+interface Props { title: string; lead?: string; chip?: string }
+const { title, lead, chip } = Astro.props;
+---
+<section class="relative overflow-hidden pt-28 sm:pt-36">
+  <div aria-hidden="true" class="pointer-events-none absolute -left-48 -top-48 -z-10 size-[40rem] rounded-full bg-brand-200/40 blur-3xl"></div>
+  <div class="shell pb-12 sm:pb-16">
+    {chip && <span class="chip enter">{chip}</span>}
+    <h1 class="t-display mt-5 max-w-[20ch]"><Words text={title} /></h1>
+    {lead && <p class="t-sub enter mt-6" style="--d:3" set:html={lead} />}
+    <div class="enter" style="--d:4"><slot /></div>
+  </div>
+</section>

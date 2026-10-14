@@ -1,0 +1,53 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Icon from "../components/Icon.astro";
+import { how } from "../content/vi";
+---
+<Base page="how" title={`${how.title} · AI Lành Nghề`} description={how.description}>
+  <PageIntro title={how.intro.title} lead={how.intro.lead} chip={how.title} />
+  <section class="shell pb-20">
+    <ol class="grid gap-5">
+      {how.steps.map((s, i) => (
+        <li class="stack-card panel grid gap-5 p-7 sm:grid-cols-[auto_1fr] sm:p-9 lg:sticky" style={`--top:${6 + i * 0.75}rem`}>
+          <span class="flex items-center gap-4 sm:flex-col sm:items-start">
+            <span class="icon-tile size-14"><Icon name={s.icon} size={30} /></span>
+            <span class="text-[0.85rem] font-semibold text-ink-3">Bước {i + 1}/{how.steps.length}</span>
+          </span>
+          <div>
+            <h2 class="text-[clamp(1.25rem,1.05rem+0.8vw,1.7rem)]">{s.title}</h2>
+            <p class="mt-3 max-w-[62ch] text-ink-2" set:html={s.body} />
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <section class="bg-raised py-20">
+    <div class="shell">
+      <h2 class="t-title" data-reveal>{how.connect.title}</h2>
+      <p class="t-sub mt-4">{how.connect.lead}</p>
+      <ul class="mt-10 grid gap-4 md:grid-cols-3">
+        {how.connect.options.map((o) => (
+          <li class="rounded-3xl bg-canvas p-7">
+            <span class="icon-tile"><Icon name={o.icon} size={26} /></span>
+            <h3 class="mt-5 text-[1.15rem]">{o.title}</h3>
+            <p class="mt-2 text-[0.95rem] text-ink-2">{o.body}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-6 flex items-center gap-2 text-[0.9rem] text-ink-2"><Icon name="lock" size={20} />{how.connect.note}</p>
+    </div>
+  </section>
+  <section class="shell max-w-4xl py-20">
+    <h2 class="t-title">{how.faq.title}</h2>
+    <div class="mt-8">
+      {how.faq.items.map(([q, a]) => (
+        <details class="qa">
+          <summary>{q}<span class="plus" aria-hidden="true"><Icon name="plus" size={18} weight="bold" /></span></summary>
+          <p class="pb-6 text-ink-2">{a}</p>
+        </details>
+      ))}
+    </div>
+    <a href="/app/dang-nhap/" class="btn btn-accent mt-10">{how.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+  </section>
+</Base>

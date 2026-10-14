@@ -1,0 +1,10 @@
+---
+import AppShell from "../../../layouts/AppShell.astro";
+import LoginForm from "../../../islands/LoginForm";
+import { app } from "../../../content/vi";
+---
+<AppShell page="login" title={app.login.title} description={app.login.description} bare>
+  <div class="shell grid max-w-xl py-10 sm:py-16">
+    <LoginForm client:load t={app.login} />
+  </div>
+</AppShell>

@@ -1,0 +1,140 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
+import Icon from "../components/Icon.astro";
+import { site, ui } from "../content/vi";
+
+export type PageKey = "home" | "how" | "packs" | "pricing" | "safety";
+interface Props { page: PageKey; title: string; description: string }
+const { page, title, description } = Astro.props;
+
+const href: Record<PageKey, string> = { home: "/", how: "/cach-hoat-dong/", packs: "/goi-nghe/", pricing: "/bang-gia/", safety: "/an-toan/" };
+const desktop: PageKey[] = ["home", "how", "packs", "pricing", "safety"];
+const tabs: { k: PageKey; icon: string }[] = [{ k: "home", icon: "home" }, { k: "how", icon: "path" }, { k: "packs", icon: "briefcase" }, { k: "pricing", icon: "coins" }];
+const moreActive = page === "safety";
+---
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#5A3B0A" />
+  <link rel="icon" href="/logo.png" type="image/png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <ClientRouter fallback="swap" />
+</head>
+<body class="min-h-dvh pb-24 lg:pb-0">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-on-accent">{ui.skip}</a>
+  <div aria-hidden="true" class="scroll-progress pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px] bg-accent-2"></div>
+
+  <header class="pointer-events-none fixed inset-x-0 top-0 z-50 pt-3 lg:pt-4" style="view-transition-name: site-nav">
+    <div class="shell">
+      <div class="pointer-events-auto flex h-16 items-center justify-between gap-3 rounded-full border border-hair/70 bg-raised/95 pl-3 pr-2 shadow-[var(--shadow)] backdrop-blur">
+        <a href="/" class="flex shrink-0 items-center gap-2.5 rounded-full pr-2 font-bold text-ink no-underline" aria-label={site.name}>
+          <img src="/logo.png" alt="" width="288" height="228" class="h-8 w-auto sm:h-9" />
+          <span class="text-[1.02rem] tracking-tight">{site.name}</span>
+        </a>
+        <nav class="hidden items-center lg:flex" aria-label="Chính">
+          {desktop.map((k) => (
+            <a href={href[k]} aria-current={k === page ? "page" : undefined}
+              class:list={["relative whitespace-nowrap rounded-full px-3 py-2 text-[0.88rem] font-medium no-underline transition-colors xl:px-4", k === page ? "text-accent-ink" : "text-ink-2 hover:text-ink"]}>
+              {k === page && <span class="absolute inset-0 -z-10 rounded-full bg-tint" style="view-transition-name: nav-pill"></span>}
+              {ui.nav[k]}
+            </a>
+          ))}
+        </nav>
+        <div class="flex items-center gap-1.5">
+          <a href="/app/dang-nhap/" class="hidden h-11 items-center rounded-full px-4 text-[0.88rem] font-semibold text-ink-2 no-underline hover:bg-tint hover:text-accent-ink sm:inline-flex">{ui.login}</a>
+          <a href="/app/dang-nhap/" class="btn btn-accent !min-h-11 !px-5"><span class="sm:hidden">{ui.ctaShort}</span><span class="hidden sm:inline">{ui.cta}</span></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main"><slot /></main>
+
+  <footer class="bg-deep text-brand-100/80">
+    <div class="shell grid gap-12 pb-28 pt-20 lg:grid-cols-[1.4fr_1fr_1fr] lg:pb-16">
+      <div>
+        <div class="flex items-center gap-3">
+          <img src="/logo.png" alt="" width="288" height="228" loading="lazy" class="h-12 w-auto brightness-0 invert" />
+          <span class="text-xl font-bold text-white">{site.name}</span>
+        </div>
+        <p class="mt-6 max-w-md text-[clamp(1.2rem,0.95rem+1vw,1.7rem)] font-bold leading-tight tracking-tight text-white">{ui.footer.tagline}</p>
+        <a href="/app/dang-nhap/" class="btn btn-light mt-8">{ui.cta}</a>
+      </div>
+      <nav aria-label={ui.footer.explore}>
+        <h2 class="mb-4 text-[0.85rem] font-semibold text-brand-300">{ui.footer.explore}</h2>
+        <ul class="grid gap-2.5">
+          {desktop.map((k) => <li><a href={href[k]} class="text-brand-100/85 no-underline hover:text-white">{ui.nav[k]}</a></li>)}
+        </ul>
+      </nav>
+      <div>
+        <h2 class="mb-4 text-[0.85rem] font-semibold text-brand-300">{ui.footer.contact}</h2>
+        <ul class="grid gap-3">
+          <li>{ui.footer.city}</li>
+          <li><a href={site.oldSite} target="_blank" rel="noopener" class="text-brand-100/85 no-underline hover:text-white">{ui.footer.oldSite}</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="shell border-t border-white/10 pb-28 pt-6 text-[0.78rem] leading-relaxed text-brand-100/60 lg:pb-8">{ui.footer.demo}</p>
+  </footer>
+
+  <nav class="no-print fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 lg:hidden" aria-label="Thanh điều hướng" style="view-transition-name: tabbar">
+    <ul class="grid grid-cols-5 rounded-[1.75rem] border border-hair/70 bg-raised/95 p-1.5 shadow-[var(--shadow)] backdrop-blur">
+      {tabs.map(({ k, icon }) => (
+        <li>
+          <a href={href[k]} aria-current={k === page ? "page" : undefined}
+            class:list={["relative flex flex-col items-center gap-0.5 rounded-[1.4rem] py-2 text-[0.62rem] font-semibold no-underline", k === page ? "text-accent-ink" : "text-ink-3"]}>
+            {k === page && <span class="absolute inset-0 -z-10 rounded-[1.4rem] bg-tint" style="view-transition-name: nav-pill"></span>}
+            <Icon name={icon} size={24} weight={k === page ? "fill" : "regular"} />
+            <span class="whitespace-nowrap">{ui.tabs[k as keyof typeof ui.tabs]}</span>
+          </a>
+        </li>
+      ))}
+      <li>
+        <button type="button" data-open-sheet aria-haspopup="dialog"
+          class:list={["relative flex w-full flex-col items-center gap-0.5 rounded-[1.4rem] py-2 text-[0.62rem] font-semibold", moreActive ? "text-accent-ink" : "text-ink-3"]}>
+          {moreActive && <span class="absolute inset-0 -z-10 rounded-[1.4rem] bg-tint" style="view-transition-name: nav-pill"></span>}
+          <Icon name="more" size={24} weight={moreActive ? "fill" : "regular"} />
+          <span>{ui.tabs.more}</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <dialog class="sheet lg:hidden" id="sheet" aria-label={ui.more}>
+    <div class="mx-auto mt-3 h-1.5 w-12 rounded-full bg-hair" aria-hidden="true"></div>
+    <div class="grid gap-2 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+      <a href="/an-toan/" data-close-sheet class:list={["flex items-center gap-4 rounded-2xl px-4 py-3.5 text-lg font-semibold no-underline", page === "safety" ? "bg-tint text-accent-ink" : "text-ink"]}>
+        <span class="icon-tile size-11"><Icon name="shield" size={22} /></span>{ui.nav.safety}
+      </a>
+      <a href="/app/dang-nhap/" data-close-sheet class="flex items-center gap-4 rounded-2xl px-4 py-3.5 text-lg font-semibold text-ink no-underline">
+        <span class="icon-tile size-11"><Icon name="lock" size={22} /></span>{ui.login}
+      </a>
+    </div>
+  </dialog>
+
+  <script>
+    document.addEventListener("pointermove", (e) => {
+      const el = (e.target as Element | null)?.closest?.(".glow") as HTMLElement | null;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      el.style.setProperty("--my", `${e.clientY - r.top}px`);
+    }, { passive: true });
+    document.addEventListener("astro:page-load", () => {
+      const sheet = document.getElementById("sheet") as HTMLDialogElement | null;
+      document.querySelector("[data-open-sheet]")?.addEventListener("click", () => sheet?.showModal());
+      sheet?.addEventListener("click", (e) => { if (e.target === sheet) sheet.close(); });
+      sheet?.querySelectorAll("[data-close-sheet]").forEach((a) => a.addEventListener("click", () => sheet.close()));
+    });
+  </script>
+</body>
+</html>

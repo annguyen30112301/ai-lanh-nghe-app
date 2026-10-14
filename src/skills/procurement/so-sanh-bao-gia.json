@@ -1,0 +1,23 @@
+{
+  "id": "so-sanh-bao-gia",
+  "name": "So sánh báo giá",
+  "summary": "Đặt các báo giá cạnh nhau theo cùng tiêu chí và đề xuất nhà cung cấp.",
+  "cta": "Bắt đầu so sánh",
+  "manual_minutes_ref": 45,
+  "export": "xlsx",
+  "inputs": [
+    { "key": "item", "label": "Bạn đang mua gì?", "type": "text", "example": "Thép tấm SS400 dày 10mm, 20 tấn", "required": true },
+    { "key": "priority", "label": "Ưu tiên của bạn", "type": "select", "options": ["Giá thấp nhất", "Giao nhanh", "Thanh toán linh hoạt", "Cân bằng"], "required": true },
+    { "key": "quotes", "label": "Tải báo giá (Excel hoặc PDF có chữ)", "type": "files", "min": 2, "max": 4, "hint": "Mỗi nhà cung cấp một file." }
+  ],
+  "mask_hint": "Gõ tên từng nhà cung cấp theo đúng thứ tự file, tên công ty bạn và tên người liên hệ.",
+  "system": "Bạn là chuyên viên mua hàng có 15 năm kinh nghiệm tại doanh nghiệp sản xuất Việt Nam. Nhiệm vụ: đọc các báo giá đã được ẩn danh và lập bảng so sánh trung thực để người mua ra quyết định.\nQuy tắc bắt buộc:\n1. Chỉ dùng số liệu có trong báo giá. Không bịa, không ước đoán. Thiếu thông tin thì ghi đúng chữ \"Không có trong báo giá\".\n2. Quy đổi về cùng đơn vị tính và cùng điều kiện VAT trước khi so sánh; nếu phải quy đổi, ghi rõ cách quy đổi trong ghi_chu của dòng đó.\n3. Giữ nguyên các nhãn ẩn danh như [NCC_1], [CONG_TY], [SDT_1] đúng như trong văn bản; không đoán tên thật.\n4. Mỗi nhà cung cấp là một cột, theo thứ tự file được cung cấp.\n5. Đề xuất phải dựa trên ưu tiên của người mua và nêu lý do có số liệu cụ thể.\n6. Viết tiếng Việt, câu ngắn, giọng chuyên nghiệp.\nChỉ trả về một đối tượng JSON hợp lệ, không kèm giải thích nào khác.",
+  "template": "Mặt hàng cần mua: {item}\nƯu tiên của người mua: {priority}\n\nCác báo giá (đã ẩn danh):\n{files_text}\n\nTrả về JSON đúng cấu trúc:\n{\n  \"ncc\": [\"tên/nhãn nhà cung cấp theo thứ tự file\"],\n  \"rows\": [ { \"tieu_chi\": \"Đơn giá\", \"gia_tri\": [\"giá trị cho từng NCC, cùng thứ tự\"], \"ghi_chu\": \"\" } ],\n  \"de_xuat\": { \"ncc\": \"nhãn NCC được đề xuất\", \"ly_do\": \"2–4 câu, có số liệu\" },\n  \"thu_thuong_luong_goi_y\": \"1–3 điểm nên thương lượng thêm với NCC được đề xuất\",\n  \"thieu_du_lieu\": [\"thông tin còn thiếu cần hỏi lại NCC\"]\n}\nBắt buộc có đủ các dòng tieu_chi: Đơn giá; Tổng giá trị; Điều khoản thanh toán; Thời gian giao; Bảo hành; Rủi ro. Có thể thêm dòng khác nếu báo giá có thông tin quan trọng (VAT, hiệu lực báo giá, chi phí vận chuyển).",
+  "output": {
+    "kind": "table",
+    "columns": ["Tiêu chí", "NCC_1", "NCC_2", "NCC_3"],
+    "rows_required": ["Đơn giá", "Tổng giá trị", "Điều khoản thanh toán", "Thời gian giao", "Bảo hành", "Rủi ro"],
+    "extras": ["de_xuat", "thu_thuong_luong_goi_y"]
+  },
+  "checklist": ["Đơn vị tính đã giống nhau", "Giá đã cùng điều kiện VAT", "Đã kiểm tra thời hạn hiệu lực báo giá", "Điều khoản thanh toán đã đọc kỹ", "Đề xuất có lý do rõ ràng", "Không còn thông tin mật trong file xuất"]
+}

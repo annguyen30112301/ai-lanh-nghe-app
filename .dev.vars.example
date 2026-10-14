@@ -1,0 +1,11 @@
+# Sao chép thành .dev.vars khi chạy local (KHÔNG commit .dev.vars)
+# 32 byte base64: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+KEY_ENC_SECRET=
+SESSION_SECRET=
+RESEND_API_KEY=
+MAIL_FROM=AI Lành Nghề <onboarding@resend.dev>
+TRIAL_PROVIDER=openrouter
+TRIAL_API_KEY=
+APP_ORIGIN=http://localhost:4321
+# 1 = khi không có key AI, trả kết quả mẫu (chỉ dùng để chạy thử giao diện ở máy)
+AI_MOCK=1

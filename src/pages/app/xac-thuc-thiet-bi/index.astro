@@ -1,0 +1,10 @@
+---
+import AppShell from "../../../layouts/AppShell.astro";
+import DeviceVerify from "../../../islands/DeviceVerify";
+import { app } from "../../../content/vi";
+---
+<AppShell page="device" title={app.device.title} description={app.device.description} bare>
+  <div class="shell grid max-w-xl py-10 sm:py-16">
+    <DeviceVerify client:load t={app.device} />
+  </div>
+</AppShell>

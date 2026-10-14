@@ -1,0 +1,58 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Icon from "../components/Icon.astro";
+import { safety } from "../content/vi";
+const s = safety;
+---
+<Base page="safety" title={`${s.title} · AI Lành Nghề`} description={s.description}>
+  <PageIntro title={s.intro.title} lead={s.intro.lead} chip={s.title} />
+  <section class="shell pb-16">
+    <h2 class="t-title" data-reveal>{s.flow.title}</h2>
+    <ol class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {s.flow.steps.map((x, i) => (
+        <li class:list={["flex items-start gap-4 rounded-3xl p-5", i === 2 ? "bg-masked-soft" : "bg-raised ring-1 ring-hair"]}>
+          <span class:list={["grid size-10 shrink-0 place-items-center rounded-full font-bold", i === 2 ? "bg-masked text-white" : "bg-tint text-accent-ink"]}>{i + 1}</span>
+          <span class="pt-1.5 text-[0.95rem]">{x}</span>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-5 flex items-center gap-2 text-[0.9rem] text-ink-2"><Icon name="shield" size={20} />{s.flow.note}</p>
+  </section>
+  <section class="shell pb-16">
+    <h2 class="t-title">{s.data.title}</h2>
+    <div class="panel mt-8 overflow-x-auto">
+      <table class="tbl min-w-[40rem]">
+        <thead><tr>{s.data.head.map((hd) => <th scope="col">{hd}</th>)}</tr></thead>
+        <tbody>{s.data.rows.map((r) => <tr><th scope="row" class="!text-ink">{r[0]}</th><td>{r[1]}</td><td><span class="font-mono text-[0.82rem] text-masked">{r[2]}</span></td></tr>)}</tbody>
+      </table>
+    </div>
+  </section>
+  <section class="shell pb-16">
+    <h2 class="t-title">{s.store.title}</h2>
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+      {[{ b: s.store.yes, icon: "check", cls: "bg-raised ring-1 ring-hair" }, { b: s.store.no, icon: "x", cls: "bg-tint" }].map(({ b, icon, cls }) => (
+        <div class:list={["rounded-3xl p-7", cls]}>
+          <h3 class="text-[1.15rem]">{b.title}</h3>
+          <ul class="mt-4 grid gap-2.5">{b.items.map((i) => <li class="flex gap-2.5"><Icon name={icon} size={20} weight="bold" class="mt-0.5 shrink-0 text-accent-ink" />{i}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="bg-raised py-20">
+    <div class="shell grid gap-10 lg:grid-cols-2">
+      <div>
+        <h2 class="t-title">{s.human.title}</h2>
+        <p class="t-sub mt-4">{s.human.body}</p>
+      </div>
+      <ul class="grid content-start gap-3">
+        {s.human.checklist.map((c) => <li class="flex items-center gap-3 rounded-2xl bg-canvas px-4 py-3"><span class="grid size-7 place-items-center rounded-lg bg-accent-2 text-white"><Icon name="check" size={16} weight="bold" /></span>{c}</li>)}
+      </ul>
+    </div>
+  </section>
+  <section class="shell max-w-4xl py-20">
+    <h2 class="text-[1.3rem]">{s.law.title}</h2>
+    <p class="mt-3 text-ink-2">{s.law.body}</p>
+    <a href="/app/dang-nhap/" class="btn btn-accent mt-8">{s.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+  </section>
+</Base>

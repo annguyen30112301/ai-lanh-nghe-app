@@ -1,0 +1,101 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import Counter from "../components/Counter.astro";
+import HeroDay from "../islands/HeroDay";
+import ComparePanel from "../islands/ComparePanel";
+import { home, site, packs } from "../content/vi";
+import { publicScenarios } from "../lib/skills";
+const h = home;
+const scenarios = publicScenarios();
+---
+<Base page="home" title={h.title} description={h.description}>
+  <HeroDay client:load h={h.hero} />
+
+  <section class="shell py-20 sm:py-28">
+    <div class="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
+      <h2 class="t-title" data-reveal>{h.definitionTitle}</h2>
+      <p class="text-[clamp(1.05rem,0.95rem+0.5vw,1.35rem)] leading-relaxed text-ink-2" set:html={site.definition} />
+    </div>
+    <ol class="mt-14 grid gap-4 md:grid-cols-3">
+      {h.steps.items.map((s, i) => (
+        <li class="panel p-7">
+          <span class="flex items-center gap-3"><span class="icon-tile"><Icon name={s.icon} size={26} /></span><span class="text-[0.85rem] font-semibold text-ink-3">Bước {i + 1}</span></span>
+          <h3 class="mt-5 text-[1.2rem]">{s.title}</h3>
+          <p class="mt-2 text-[0.95rem] text-ink-2">{s.body}</p>
+        </li>
+      ))}
+    </ol>
+    <a href="/cach-hoat-dong/" class="mt-8 inline-flex min-h-11 items-center gap-2 font-semibold">{h.steps.more}<Icon name="arrow" size={18} weight="bold" /></a>
+  </section>
+
+  <section class="bg-raised py-20 sm:py-28">
+    <div class="shell">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="t-title" data-reveal>{h.compare.title}</h2>
+        <p class="t-sub mx-auto mt-4">{h.compare.lead}</p>
+      </div>
+      <div class="mt-10"><ComparePanel client:visible left={h.compare.left} right={h.compare.right} rows={h.compare.rows} /></div>
+    </div>
+  </section>
+
+  <section class="shell py-20 sm:py-28">
+    <h2 class="t-title max-w-[22ch]" data-reveal>{h.numbers.title}</h2>
+    <dl class="mt-10 grid gap-4 sm:grid-cols-3">
+      {h.numbers.items.map((n) => (
+        <div class="panel p-7">
+          <dt class="sr-only">{n.label}</dt>
+          <dd class="text-[clamp(2.4rem,1.8rem+2vw,3.6rem)] font-bold leading-none tracking-tight text-accent"><Counter value={n.value} suffix={n.suffix} /></dd>
+          <dd class="mt-3 text-ink-2">{n.label}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="shell pb-20 sm:pb-28">
+    <div class="grid gap-10 lg:grid-cols-[1fr_1.5fr]">
+      <div>
+        <h2 class="t-title">{h.packs.title}</h2>
+        <p class="t-sub mt-4">{h.packs.lead}</p>
+        <a href="/goi-nghe/" class="btn btn-quiet mt-6">{h.packs.more}</a>
+      </div>
+      <ul class="grid gap-3">
+        {scenarios.map((s) => (
+          <li class="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-raised p-5 ring-1 ring-hair">
+            <span><b class="block text-[1.05rem]">{s.name}</b><span class="text-[0.9rem] text-ink-2">{s.summary}</span></span>
+            <span class="chip chip-muted"><Icon name="clock" size={16} />{packs.minutes.replace("{n}", String(s.manual_minutes_ref))}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-tint py-20 sm:py-24">
+    <div class="shell">
+      <h2 class="t-title max-w-[26ch]">{h.why.title}</h2>
+      <p class="t-sub mt-4">{h.why.lead}</p>
+      <dl class="mt-10 grid gap-6 sm:grid-cols-3">
+        {h.why.stats.map((s) => (
+          <div>
+            <dd class="text-[clamp(2.2rem,1.6rem+2vw,3.2rem)] font-bold leading-none text-accent"><Counter value={s.value} suffix={s.suffix} /></dd>
+            <dt class="mt-3 text-ink-2">{s.label}</dt>
+          </div>
+        ))}
+      </dl>
+      <p class="t-note mt-8">{h.why.source}</p>
+    </div>
+  </section>
+
+  <section class="shell py-20 sm:py-28">
+    <div class="panel flex flex-col items-start gap-6 p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <h2 class="t-title max-w-[22ch]">{h.final.title}</h2>
+        <p class="t-sub mt-3">{h.final.lead}</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/app/dang-nhap/" class="btn btn-accent">{h.final.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+        <a href="/bang-gia/" class="btn btn-quiet">{h.final.cta2}</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,19 @@
+{
+  "id": "tom-tat-ho-so-ncc",
+  "name": "Tóm tắt hồ sơ nhà cung cấp",
+  "summary": "Đọc hồ sơ năng lực dài, chấm theo khung và chỉ ra điểm cần kiểm tra thêm.",
+  "cta": "Bắt đầu tóm tắt",
+  "manual_minutes_ref": 40,
+  "export": "docx",
+  "inputs": [
+    { "key": "supplier", "label": "Tên nhà cung cấp", "type": "text", "example": "Công ty CP Cơ khí Đại Phong", "mask_as": "ncc", "required": true },
+    { "key": "need", "label": "Bạn cần nhà cung cấp này cho việc gì?", "type": "textarea", "example": "Gia công chi tiết khung máy, 500 bộ/tháng, dung sai ±0,1 mm", "required": true },
+    { "key": "focus", "label": "Trọng tâm đánh giá", "type": "select", "options": ["Toàn diện", "Năng lực sản xuất", "Chất lượng & chứng chỉ", "Tài chính & pháp lý"], "required": true },
+    { "key": "profile", "label": "Tải hồ sơ năng lực (PDF có chữ hoặc Excel)", "type": "files", "min": 1, "max": 2 }
+  ],
+  "mask_hint": "Tên nhà cung cấp đã được che sẵn. Thêm tên người đại diện, khách hàng tham chiếu nếu muốn che.",
+  "system": "Bạn là chuyên viên đánh giá nhà cung cấp (supplier qualification) tại doanh nghiệp sản xuất Việt Nam.\nQuy tắc bắt buộc:\n1. Chỉ dựa vào hồ sơ được cung cấp. Thông tin không có thì ghi \"Hồ sơ không nêu\" và đưa vào diem_can_kiem_tra.\n2. Chấm điểm 1–5 theo bằng chứng trong hồ sơ, không chấm theo lời quảng cáo. Mỗi điểm có nhận xét dẫn chứng ngắn.\n3. Phân biệt rõ điều hồ sơ khẳng định với điều đã có chứng từ (chứng chỉ, số liệu, khách hàng tham chiếu).\n4. Giữ nguyên nhãn ẩn danh như [NCC_1], [NGUOI_1].\n5. Tiếng Việt, gạch đầu dòng ngắn.\nChỉ trả về một đối tượng JSON hợp lệ.",
+  "template": "Nhà cung cấp: {supplier}\nNhu cầu của người mua: {need}\nTrọng tâm đánh giá: {focus}\n\nHồ sơ năng lực (đã ẩn danh):\n{files_text}\n\nTrả về JSON đúng cấu trúc:\n{\n  \"tong_quan\": \"3–4 câu tóm tắt nhà cung cấp và mức phù hợp với nhu cầu\",\n  \"muc\": [ { \"tieu_de\": \"Năng lực sản xuất\", \"y\": [\"gạch đầu dòng\"] } ],\n  \"cham_diem\": [ { \"tieu_chi\": \"Năng lực sản xuất\", \"diem\": 4, \"nhan_xet\": \"dẫn chứng\" } ],\n  \"diem_can_kiem_tra\": [\"việc cần xác minh trước khi chọn\"],\n  \"ket_luan\": \"Nên mời báo giá / Cần đánh giá thêm / Chưa phù hợp – kèm 1 câu lý do\"\n}\nCác mục nên có: Thông tin chung; Năng lực sản xuất; Chất lượng & chứng chỉ; Khách hàng tiêu biểu; Tài chính & pháp lý. Chấm điểm tối thiểu 4 tiêu chí.",
+  "output": { "kind": "summary" },
+  "checklist": ["Đã đối chiếu với hồ sơ gốc", "Điểm số có dẫn chứng", "Đã ghi các điểm cần xác minh", "Kết luận phù hợp nhu cầu", "Không còn thông tin mật trong file xuất"]
+}

@@ -1,0 +1,49 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Icon from "../components/Icon.astro";
+import { pricing } from "../content/vi";
+const p = pricing;
+const groups = [{ k: "personal", title: p.personalTitle }, { k: "business", title: p.businessTitle }];
+---
+<Base page="pricing" title={`${p.title} · AI Lành Nghề`} description={p.description}>
+  <PageIntro title={p.intro.title} lead={p.intro.lead} chip={p.title} />
+  {groups.map((g) => (
+    <section class="shell pb-14">
+      <h2 class="text-[1.3rem]">{g.title}</h2>
+      <ul class="mt-5 grid gap-4 md:grid-cols-2">
+        {p.plans.filter((x) => x.group === g.k).map((x) => (
+          <li class:list={["flex flex-col rounded-3xl p-7 sm:p-8", x.featured ? "bg-accent text-on-accent shadow-[var(--shadow)]" : "panel"]}>
+            <h3 class:list={["text-[1.2rem]", x.featured && "!text-white"]}>{x.name}</h3>
+            <p class:list={["mt-1 text-[0.92rem]", x.featured ? "text-white/80" : "text-ink-2"]}>{x.for}</p>
+            <p class="mt-5"><span class:list={["text-[2.2rem] font-bold tracking-tight tabular-nums", x.featured && "text-white"]}>{x.price}</span><span class:list={["text-[0.95rem]", x.featured ? "text-white/80" : "text-ink-2"]}>{x.unit}</span></p>
+            <ul class="mt-6 grid flex-1 gap-2.5">
+              {x.items.map((i) => (
+                <li class="flex gap-2.5 text-[0.95rem]"><Icon name="check" size={20} weight="bold" class:list={["mt-0.5 shrink-0", x.featured ? "text-brand-200" : "text-accent-2"]} />{i}</li>
+              ))}
+            </ul>
+            <a href={x.href} class:list={["btn mt-8", x.featured ? "btn-light" : "btn-accent"]}>{x.cta}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+  <section class="shell pb-14">
+    <h2 class="text-[1.3rem]">{p.addons.title}</h2>
+    <ul class="mt-5 grid gap-4 md:grid-cols-2">
+      {p.addons.items.map((a) => (
+        <li class="rounded-3xl bg-raised p-7 ring-1 ring-hair">
+          <div class="flex flex-wrap items-baseline justify-between gap-3"><h3 class="text-[1.15rem]">{a.name}</h3><p><b class="text-[1.4rem] tabular-nums">{a.price}</b><span class="text-ink-2">{a.unit}</span></p></div>
+          <p class="mt-2 text-[0.95rem] text-ink-2">{a.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+  <section class="shell pb-24">
+    <div class="rounded-3xl bg-tint p-7 sm:p-9">
+      <h2 class="flex items-center gap-3 text-[1.2rem]"><Icon name="coins" size={26} />{p.aiFee.title}</h2>
+      <p class="mt-3 max-w-[70ch] text-ink-2">{p.aiFee.body}</p>
+    </div>
+    <p class="t-note mt-5">{p.note}</p>
+  </section>
+</Base>

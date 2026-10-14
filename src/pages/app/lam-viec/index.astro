@@ -1,0 +1,19 @@
+---
+import AppShell from "../../../layouts/AppShell.astro";
+import Icon from "../../../components/Icon.astro";
+import WorkPage from "../../../islands/WorkPage";
+import { app } from "../../../content/vi";
+import { publicScenarios } from "../../../lib/skills";
+const t = app.work;
+const demo: Record<string, string[]> = {
+  "so-sanh-bao-gia": ["/demo-data/Bao_gia_Minh_Long_Phat.xlsx", "/demo-data/Bao_gia_Sao_Phuong_Nam.xlsx", "/demo-data/Bao_gia_Dai_Thanh.pdf"],
+  "thu-thuong-luong": ["/demo-data/Bao_gia_Minh_Long_Phat.xlsx"],
+  "tom-tat-ho-so-ncc": ["/demo-data/Ho_so_nang_luc_Dai_Phong.pdf"]
+};
+---
+<AppShell page="work" title={t.title} description={t.description}>
+  <div class="shell py-8 sm:py-12">
+    <a href="/app/tinh-huong/" class="inline-flex min-h-11 items-center gap-1.5 text-[0.88rem] font-semibold no-underline"><Icon name="back" size={18} weight="bold" />{t.back}</a>
+    <div class="mt-4"><WorkPage client:load list={publicScenarios()} t={t} demo={demo} /></div>
+  </div>
+</AppShell>

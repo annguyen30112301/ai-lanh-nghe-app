@@ -1,0 +1,23 @@
+---
+/* Số đếm lên một lần khi thấy. Giá trị cuối nằm sẵn trong HTML. */
+interface Props { value: number; decimals?: number; prefix?: string; suffix?: string; class?: string }
+const { value, decimals = 0, prefix = "", suffix = "", class: cls } = Astro.props;
+const text = prefix + value.toLocaleString("vi-VN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + suffix;
+---
+<span class:list={["tabular-nums", cls]} data-count={value} data-dec={decimals} data-prefix={prefix} data-suffix={suffix}>{text}</span>
+
+<script>
+  import { animate, inView } from "motion";
+  document.addEventListener("astro:page-load", () => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.querySelectorAll<HTMLElement>("[data-count]:not([data-counted])").forEach((el) => {
+      el.dataset.counted = "1";
+      const end = Number(el.dataset.count), dec = Number(el.dataset.dec || 0);
+      if (!end) return;
+      const nf = new Intl.NumberFormat("vi-VN", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+      const paint = (n: number) => (el.textContent = (el.dataset.prefix || "") + nf.format(n) + (el.dataset.suffix || ""));
+      paint(0);
+      inView(el, () => { animate(0, end, { duration: 1.6, ease: [0.16, 1, 0.3, 1], onUpdate: paint }); }, { amount: 0.6 });
+    });
+  });
+</script>

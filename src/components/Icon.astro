@@ -1,0 +1,20 @@
+---
+/* Phosphor duotone, render SVG tĩnh lúc build (không gửi JS). */
+import { ListChecksIcon, UploadSimpleIcon, CheckCircleIcon, ListIcon, PencilSimpleIcon, EyeIcon, RobotIcon, PlugIcon, KeyIcon, BuildingsIcon, PathIcon, TableIcon, ShieldCheckIcon, ArrowRightIcon, ArrowLeftIcon, CheckIcon, XIcon, ClockIcon, SparkleIcon, HouseIcon, DotsThreeCircleIcon, BriefcaseIcon, ChartLineUpIcon, SignOutIcon, LockKeyIcon, EnvelopeSimpleIcon, DeviceMobileIcon, UsersThreeIcon, ChalkboardTeacherIcon, IdentificationCardIcon, CoinsIcon, HandshakeIcon, FileTextIcon, MagnifyingGlassIcon, QuotesIcon, CaretDownIcon, PlusIcon, ArrowUpRightIcon, TagIcon, TimerIcon, ScalesIcon, GearIcon } from "@phosphor-icons/react/ssr";
+
+const map = {
+  checks: ListChecksIcon, upload: UploadSimpleIcon, ok: CheckCircleIcon, list: ListIcon, pen: PencilSimpleIcon, eye: EyeIcon,
+  robot: RobotIcon, plug: PlugIcon, key: KeyIcon, buildings: BuildingsIcon, path: PathIcon, table: TableIcon, shield: ShieldCheckIcon,
+  arrow: ArrowRightIcon, back: ArrowLeftIcon, check: CheckIcon, x: XIcon, clock: ClockIcon, sparkle: SparkleIcon, home: HouseIcon,
+  more: DotsThreeCircleIcon, briefcase: BriefcaseIcon, chart: ChartLineUpIcon, logout: SignOutIcon, lock: LockKeyIcon,
+  mail: EnvelopeSimpleIcon, phone: DeviceMobileIcon, users: UsersThreeIcon, teach: ChalkboardTeacherIcon, id: IdentificationCardIcon,
+  coins: CoinsIcon, handshake: HandshakeIcon, file: FileTextIcon, search: MagnifyingGlassIcon, quote: QuotesIcon, caret: CaretDownIcon,
+  plus: PlusIcon, external: ArrowUpRightIcon, tag: TagIcon, timer: TimerIcon, scales: ScalesIcon, gear: GearIcon
+} as const;
+export type IconName = keyof typeof map;
+
+interface Props { name: IconName | string; size?: number; weight?: "duotone" | "bold" | "regular" | "fill"; class?: string; label?: string }
+const { name, size = 24, weight = "duotone", class: cls, label } = Astro.props;
+const C = map[name as IconName] ?? SparkleIcon;
+---
+<C size={size} weight={weight} className={cls} aria-hidden={label ? undefined : "true"} aria-label={label} role={label ? "img" : undefined} />

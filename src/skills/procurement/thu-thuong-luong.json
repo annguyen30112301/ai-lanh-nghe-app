@@ -1,0 +1,22 @@
+{
+  "id": "thu-thuong-luong",
+  "name": "Soạn thư thương lượng",
+  "summary": "Soạn thư đề nghị nhà cung cấp điều chỉnh giá hoặc điều khoản, không hứa vượt thẩm quyền.",
+  "cta": "Bắt đầu soạn thư",
+  "manual_minutes_ref": 30,
+  "export": "docx",
+  "inputs": [
+    { "key": "supplier", "label": "Gửi cho nhà cung cấp nào?", "type": "text", "example": "Công ty TNHH Thép Minh Long Phát", "mask_as": "ncc", "required": true },
+    { "key": "item", "label": "Mặt hàng đang thương lượng", "type": "text", "example": "Thép tấm SS400 dày 10mm, 20 tấn", "required": true },
+    { "key": "current", "label": "Nhà cung cấp đang đưa ra điều kiện gì?", "type": "textarea", "example": "18.500.000 đ/tấn, thanh toán 50% trước, giao 14 ngày", "required": true },
+    { "key": "goal", "label": "Bạn muốn đạt được gì?", "type": "textarea", "example": "Giảm còn 17.900.000 đ/tấn hoặc giữ giá nhưng thanh toán 30 ngày", "required": true },
+    { "key": "limit", "label": "Giới hạn thẩm quyền của bạn", "type": "text", "example": "Không cam kết số lượng năm; không được hứa đơn hàng tiếp theo" },
+    { "key": "tone", "label": "Giọng thư", "type": "select", "options": ["Mềm mỏng, giữ quan hệ", "Rõ ràng, chắc chắn", "Cứng rắn, có phương án thay thế"], "required": true },
+    { "key": "refs", "label": "Tài liệu kèm theo (không bắt buộc)", "type": "files", "min": 0, "max": 2, "hint": "Báo giá hiện tại hoặc báo giá đối thủ để làm căn cứ." }
+  ],
+  "mask_hint": "Tên nhà cung cấp đã được che sẵn. Thêm tên công ty bạn và người nhận thư nếu có.",
+  "system": "Bạn là trưởng nhóm mua hàng giàu kinh nghiệm tại doanh nghiệp Việt Nam, giỏi viết thư thương lượng giữ được quan hệ lâu dài.\nQuy tắc bắt buộc:\n1. Tuyệt đối không hứa hay ngụ ý điều vượt giới hạn thẩm quyền người dùng nêu (số lượng, đơn hàng tương lai, độc quyền, thời hạn hợp đồng).\n2. Chỉ dùng số liệu người dùng cung cấp hoặc có trong tài liệu kèm theo. Không bịa giá thị trường.\n3. Giữ nguyên nhãn ẩn danh như [NCC_1], [CONG_TY], [NGUOI_1].\n4. Thư theo văn phong thương mại Việt Nam: kính gửi, lời cảm ơn, đề nghị cụ thể có con số, căn cứ, đề xuất bước tiếp theo, lời chào.\n5. Ngắn gọn, mỗi đoạn tối đa 4 câu.\nChỉ trả về một đối tượng JSON hợp lệ.",
+  "template": "Nhà cung cấp: {supplier}\nMặt hàng: {item}\nĐiều kiện hiện tại của nhà cung cấp: {current}\nMục tiêu của người mua: {goal}\nGiới hạn thẩm quyền: {limit}\nGiọng thư: {tone}\n\nTài liệu kèm theo (đã ẩn danh):\n{files_text}\n\nTrả về JSON đúng cấu trúc:\n{\n  \"tieu_de\": \"tiêu đề email\",\n  \"kinh_gui\": \"dòng kính gửi\",\n  \"doan\": [\"đoạn 1\", \"đoạn 2\", \"...\"],\n  \"ky_ten\": \"khối ký tên (dùng nhãn nếu có)\",\n  \"diem_thuong_luong\": [\"các điểm đề nghị chính, mỗi điểm một dòng có con số\"],\n  \"luu_y_tham_quyen\": [\"những câu người dùng cần tự kiểm tra trước khi gửi để không vượt thẩm quyền\"]\n}",
+  "output": { "kind": "letter" },
+  "checklist": ["Con số trong thư khớp với báo giá", "Không hứa vượt thẩm quyền", "Giọng thư đúng ý bạn", "Đã điền đúng người nhận", "Không còn thông tin mật trong file xuất"]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-lanh-nghe-app",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "observability": { "enabled": true, "logs": { "invocation_logs": false } },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ai-lanh-nghe",
+      // Thay bằng id thật sau khi chạy: npx wrangler d1 create ai-lanh-nghe
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "APP_ORIGIN": "https://ai-lanh-nghe-app.workers.dev",
+    "MAIL_FROM": "AI Lành Nghề <onboarding@resend.dev>",
+    "TRIAL_PROVIDER": "openrouter",
+    "OPENROUTER_MODEL": "google/gemini-2.5-flash",
+    "GEMINI_MODEL": "gemini-2.5-flash",
+    "OPENAI_MODEL": "gpt-4.1-mini",
+    "DEMO_EMAIL_DOMAIN": "ailanhnghe.demo"
+  }
+}

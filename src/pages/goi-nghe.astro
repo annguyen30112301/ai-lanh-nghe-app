@@ -1,0 +1,51 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Icon from "../components/Icon.astro";
+import { packs } from "../content/vi";
+import { publicScenarios } from "../lib/skills";
+const p = packs;
+const list = publicScenarios();
+---
+<Base page="packs" title={`${p.title} · AI Lành Nghề`} description={p.description}>
+  <PageIntro title={p.intro.title} lead={p.intro.lead} chip={p.title} />
+  <section class="shell pb-16">
+    <article class="panel p-7 sm:p-10">
+      <div class="flex flex-wrap items-center gap-3"><span class="chip chip-ok"><Icon name="ok" size={16} weight="fill" />{p.open}</span></div>
+      <h2 class="t-title mt-4">{p.procurement.name}</h2>
+      <p class="t-sub mt-3">{p.procurement.lead}</p>
+      <ul class="mt-8 grid gap-4 md:grid-cols-3">
+        {list.map((s) => (
+          <li class="flex flex-col rounded-3xl bg-canvas p-6">
+            <h3 class="text-[1.1rem]">{s.name}</h3>
+            <p class="mt-2 flex-1 text-[0.92rem] text-ink-2">{s.summary}</p>
+            <p class="mt-4 text-[0.82rem] font-semibold text-ink-3">{p.minutes.replace("{n}", String(s.manual_minutes_ref))} · {s.checklist.length} mục tự kiểm</p>
+          </li>
+        ))}
+      </ul>
+      <a href="/app/dang-nhap/" class="btn btn-accent mt-8">{p.procurement.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+    </article>
+  </section>
+  <section class="shell pb-16">
+    <h2 class="t-title" data-reveal>{p.includes.title}</h2>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {p.includes.items.map((x) => (
+        <li class="rounded-3xl bg-raised p-6 ring-1 ring-hair">
+          <span class="icon-tile"><Icon name={x.icon} size={26} /></span>
+          <h3 class="mt-4 text-[1.05rem]">{x.title}</h3>
+          <p class="mt-2 text-[0.92rem] text-ink-2">{x.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+  <section class="shell pb-24">
+    <ul class="grid gap-4 md:grid-cols-2">
+      {p.others.map((o) => (
+        <li class="rounded-3xl border border-dashed border-hair p-7">
+          <div class="flex items-center justify-between gap-3"><h2 class="text-[1.25rem] text-ink-2">{o.name}</h2><span class="chip chip-muted">{p.soon}</span></div>
+          <ul class="mt-4 grid gap-1.5 text-[0.95rem] text-ink-3">{o.items.map((i) => <li>· {i}</li>)}</ul>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>

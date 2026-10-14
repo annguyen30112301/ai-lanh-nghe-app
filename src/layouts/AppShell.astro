@@ -1,0 +1,98 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
+import Icon from "../components/Icon.astro";
+import { app, site } from "../content/vi";
+
+export type AppKey = "scenarios" | "work" | "dashboard" | "admin" | "connect" | "login" | "device";
+interface Props { page: AppKey; title: string; description: string; bare?: boolean }
+const { page, title, description, bare = false } = Astro.props;
+const n = app.nav;
+const items: { k: AppKey; href: string; icon: string; label: string; admin?: boolean }[] = [
+  { k: "scenarios", href: "/app/tinh-huong/", icon: "briefcase", label: n.scenarios },
+  { k: "dashboard", href: "/app/bang-dieu-khien/", icon: "chart", label: n.dashboard },
+  { k: "admin", href: "/app/quan-tri/", icon: "users", label: n.admin, admin: true },
+  { k: "connect", href: "/app/ket-noi-ai/", icon: "plug", label: n.connect }
+];
+const active = page === "work" ? "scenarios" : page;
+---
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>{`${title} · ${site.name}`}</title>
+  <meta name="description" content={description} />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#5A3B0A" />
+  <link rel="icon" href="/logo.png" type="image/png" />
+  <ClientRouter fallback="swap" />
+</head>
+<body class="min-h-dvh bg-canvas pb-24 lg:pb-0" data-app-page={page} data-bare={bare ? "1" : undefined}>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-on-accent">Bỏ qua, tới nội dung chính</a>
+
+  <header class="sticky top-0 z-50 border-b border-hair bg-raised/95 backdrop-blur" style="view-transition-name: site-nav">
+    <div class="shell flex h-16 items-center justify-between gap-4">
+      <a href={bare ? "/" : "/app/tinh-huong/"} class="flex shrink-0 items-center gap-2.5 font-bold text-ink no-underline" aria-label={site.name}>
+        <img src="/logo.png" alt="" width="288" height="228" class="h-8 w-auto" />
+        <span class="hidden text-[1rem] tracking-tight sm:inline">{site.name}</span>
+      </a>
+      {!bare && (
+        <nav class="hidden items-center gap-1 lg:flex" aria-label="Ứng dụng">
+          {items.map((it) => (
+            <a href={it.href} data-admin={it.admin ? "" : undefined} hidden={it.admin} aria-current={it.k === active ? "page" : undefined}
+              class:list={["relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-[0.88rem] font-medium no-underline", it.k === active ? "text-accent-ink" : "text-ink-2 hover:text-ink"]}>
+              {it.k === active && <span class="absolute inset-0 -z-10 rounded-full bg-tint" style="view-transition-name: nav-pill"></span>}
+              <Icon name={it.icon} size={20} />{it.label}
+            </a>
+          ))}
+        </nav>
+      )}
+      {!bare ? (
+        <div class="flex min-w-0 items-center gap-2">
+          <span data-me-email class="hidden max-w-[16rem] truncate text-[0.82rem] text-ink-3 md:inline"></span>
+          <button type="button" data-logout class="inline-flex h-11 items-center gap-2 rounded-full px-3 text-[0.85rem] font-semibold text-ink-2 hover:bg-tint hover:text-accent-ink">
+            <Icon name="logout" size={20} /><span class="hidden sm:inline">{n.logout}</span>
+          </button>
+        </div>
+      ) : (
+        <a href="/" class="text-[0.85rem] font-semibold no-underline">{n.site}</a>
+      )}
+    </div>
+  </header>
+
+  <main id="main"><slot /></main>
+
+  {!bare && (
+    <nav class="no-print fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 lg:hidden" aria-label="Thanh điều hướng" style="view-transition-name: tabbar">
+      <ul class="flex rounded-[1.75rem] border border-hair/70 bg-raised/95 p-1.5 shadow-[var(--shadow)] backdrop-blur">
+        {items.map((it) => (
+          <li class="flex-1" data-admin={it.admin ? "" : undefined} hidden={it.admin}>
+            <a href={it.href} aria-current={it.k === active ? "page" : undefined}
+              class:list={["relative flex flex-col items-center gap-0.5 rounded-[1.4rem] py-2 text-[0.62rem] font-semibold no-underline", it.k === active ? "text-accent-ink" : "text-ink-3"]}>
+              {it.k === active && <span class="absolute inset-0 -z-10 rounded-[1.4rem] bg-tint" style="view-transition-name: nav-pill"></span>}
+              <Icon name={it.icon} size={24} weight={it.k === active ? "fill" : "regular"} />
+              <span class="whitespace-nowrap">{it.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+
+  <script>
+    import { getMe, isBusinessAdmin, post } from "../lib/client";
+    document.addEventListener("astro:page-load", () => {
+      if (document.body.dataset.bare) return;
+      getMe().then((me) => {
+        document.querySelectorAll<HTMLElement>("[data-me-email]").forEach((el) => (el.textContent = me.user.email));
+        if (isBusinessAdmin(me)) document.querySelectorAll<HTMLElement>("[data-admin]").forEach((el) => (el.hidden = false));
+      }).catch(() => {});
+      document.querySelector("[data-logout]")?.addEventListener("click", async () => {
+        await post("/api/auth/logout", {}).catch(() => {});
+        location.href = "/app/dang-nhap/";
+      });
+    });
+  </script>
+</body>
+</html>

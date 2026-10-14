@@ -1,0 +1,13 @@
+---
+import AppShell from "../../../layouts/AppShell.astro";
+import ConnectAI from "../../../islands/ConnectAI";
+import { app } from "../../../content/vi";
+const t = app.connect;
+---
+<AppShell page="connect" title={t.title} description={t.description}>
+  <div class="shell max-w-3xl py-10 sm:py-14">
+    <h1 class="t-title">{t.heading}</h1>
+    <p class="t-sub mt-3">{t.lead}</p>
+    <div class="mt-8"><ConnectAI client:load t={t} /></div>
+  </div>
+</AppShell>
