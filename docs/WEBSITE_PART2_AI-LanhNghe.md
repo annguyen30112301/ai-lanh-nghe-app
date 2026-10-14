@@ -11,6 +11,8 @@
 |---|---|
 | `/`, `/cach-hoat-dong/`, `/goi-nghe/`, `/bang-gia/`, `/an-toan/`, toàn bộ `/app/*`, `/api/*` | `/dat-mua/`, `/dung-thu/`, `/hoi-dap/`, `/dieu-khoan/`, `/chinh-sach-du-lieu/`, `/nghe/mua-hang/`, `/doanh-nghiep/`; video; ưu đãi theo seat; thông tin người bán ở chân trang |
 
+Kết nối nhiều AI và khách tự chọn mô hình **đã xong** (PR #1) – xem `HANDOFF_chon-mo-hinh.md` (hiện trạng + việc còn tồn). Các trang mới không được ghi tên mô hình nào là mặc định/khuyên dùng.
+
 Nút “Chọn gói…” trên Bảng giá hiện dẫn thẳng tới đăng nhập → chưa có luồng mua (phần chấm “khía cạnh TMĐT”).
 
 ## 1. Sửa ngay (làm trước mọi thứ)
@@ -65,15 +67,15 @@ Accordion `.qa`, 3 nhóm. Câu hỏi = câu hỏi các nhóm ở buổi 09/10, v
 
 **Chi phí**
 6. *690.000 đ/năm có đáng không?* – Bằng khoảng 3,2 giờ công của người có thâm niên (lương bình quân khoảng 213.000 đ/giờ). Tiết kiệm khoảng 4 phút mỗi tuần là đủ bù.
-7. *Phí AI ai trả, bao nhiêu?* – Bạn hoặc công ty trả thẳng cho nhà cung cấp AI theo lượng dùng. Ước tính của nhóm: một lượt so sánh 3 báo giá khoảng 300–900 đ tùy mô hình (xem bảng chi phí kỹ thuật). 5 lượt đầu do AI Lành Nghề trả.
+7. *Phí AI ai trả, bao nhiêu?* – Bạn hoặc công ty trả thẳng cho nhà cung cấp AI theo lượng dùng. Ước tính của nhóm: một lượt so sánh 3 báo giá khoảng 300–900 đ với các mô hình phổ biến; giá mỗi lượt của từng mô hình hiện ngay khi bạn chọn. 5 lượt đầu do AI Lành Nghề trả.
 8. *Công ty có nên mua cho nhân sự lớn tuổi? Sao không mua khóa học ngắn?* – Doanh nghiệp mua theo phòng ban, ai trong phòng cũng dùng được. Khóa học giúp biết, không để lại công cụ làm việc, không đo được. Accenture (2024): 94% người lao động muốn học AI tạo sinh, chỉ 5% tổ chức đào tạo được cho số đông.
 
 **Dữ liệu**
-9. *Lấy key AI ở đâu?* – Doanh nghiệp: quản trị viên gắn key công ty một lần. Cá nhân: bấm “Kết nối AI một chạm” (OpenRouter) hoặc dán key Gemini (có hướng dẫn 3 bước). Lưu ý: key Gemini bậc miễn phí cho phép Google dùng dữ liệu để cải thiện sản phẩm → không đưa tài liệu mật khi dùng bậc miễn phí.
+9. *Lấy key AI ở đâu? Dùng mô hình nào?* – Doanh nghiệp: quản trị viên gắn key công ty (OpenRouter, Gemini hoặc OpenAI). Cá nhân: bấm “Kết nối AI một chạm” (OpenRouter) hoặc dán key Gemini / OpenAI. Kết nối được nhiều AI cùng lúc. **Bạn tự chọn mô hình**: danh sách hiện giá ước tính mỗi lượt, độ dài ngữ cảnh và mô hình nào đã qua bộ kiểm thử gói nghề; AI Lành Nghề không chọn thay, chỉ khóa mô hình không đủ điều kiện kỹ thuật. Lưu ý: bậc miễn phí của một số nhà cung cấp (ví dụ Gemini) cho phép dùng dữ liệu để cải thiện sản phẩm → không đưa tài liệu mật khi dùng bậc miễn phí.
 10. *Dữ liệu có ra nước ngoài? An toàn 100%?* – Không ai cam kết 100% một cách trung thực. App che thông tin nhận diện trước khi gửi, mã hóa key, không lưu file/nội dung/kết quả, chỉ lưu số đếm và mốc thời gian. Doanh nghiệp là bên kiểm soát dữ liệu, AI Lành Nghề là bên xử lý (xem Chính sách dữ liệu).
 11. *Chia sẻ tài khoản được không?* – Mỗi tài khoản gắn một người; đăng nhập thiết bị mới phải xác thực mã; doanh nghiệp quản lý theo seat (mời, thu hồi, chuyển).
 
-Thêm mục **Hướng dẫn**: lấy key Gemini 3 bước; checklist trước khi nhập dữ liệu (lấy từ trang Tài nguyên cũ, viết lại theo Web App).
+Thêm mục **Hướng dẫn**: lấy key Gemini / OpenAI (mỗi loại 3 bước), cách chọn mô hình trong app; checklist trước khi nhập dữ liệu (lấy từ trang Tài nguyên cũ, viết lại theo Web App).
 
 ## 5. `/dieu-khoan/`, `/chinh-sach-du-lieu/`, chân trang
 
