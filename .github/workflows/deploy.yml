@@ -20,6 +20,10 @@ jobs:
       - name: Gắn APP_ORIGIN
         if: ${{ vars.APP_ORIGIN != '' }}
         run: sed -i "s#https://ai-lanh-nghe-app.workers.dev#${{ vars.APP_ORIGIN }}#" wrangler.jsonc
+      - name: Chọn nhà cung cấp AI cho lượt thử / mô hình OpenRouter
+        run: |
+          if [ -n "${{ vars.TRIAL_PROVIDER }}" ]; then sed -i 's#"TRIAL_PROVIDER": "[^"]*"#"TRIAL_PROVIDER": "${{ vars.TRIAL_PROVIDER }}"#' wrangler.jsonc; fi
+          if [ -n "${{ vars.OPENROUTER_MODEL }}" ]; then sed -i 's#"OPENROUTER_MODEL": "[^"]*"#"OPENROUTER_MODEL": "${{ vars.OPENROUTER_MODEL }}"#' wrangler.jsonc; fi
       - run: npm run build
       - name: Migrate D1
         run: npx wrangler d1 migrations apply DB --remote
