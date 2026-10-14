@@ -53,7 +53,7 @@ async function chatCompletions(url: string, key: string, model: string, system: 
     headers: { authorization: `Bearer ${key}`, "content-type": "application/json", "HTTP-Referer": env.APP_ORIGIN, "X-Title": "AI Lanh Nghe" },
     body: JSON.stringify({ model, temperature: 0.2, max_tokens: 4000, response_format: { type: "json_object" },
       messages: [{ role: "system", content: system }, { role: "user", content: user }] }),
-    signal: AbortSignal.timeout(90_000)
+    signal: AbortSignal.timeout(150_000)
   });
   if (!res.ok) await upstreamFail(url.includes("openrouter") ? "openrouter" : "openai", res);
   const j = (await res.json()) as { choices?: { message?: { content?: string } }[]; usage?: { prompt_tokens?: number; completion_tokens?: number } };
@@ -68,9 +68,9 @@ async function gemini(key: string, system: string, user: string): Promise<AIRepl
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: system }] },
       contents: [{ role: "user", parts: [{ text: user }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 16384, responseMimeType: "application/json" }
+      generationConfig: { temperature: 0.2, maxOutputTokens: 16384, responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "low" } }
     }),
-    signal: AbortSignal.timeout(90_000)
+    signal: AbortSignal.timeout(150_000)
   });
   if (!res.ok) await upstreamFail("gemini", res, res.status === 400 ? 401 : res.status); // Gemini trả 400 khi key sai
   const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
@@ -81,6 +81,17 @@ async function gemini(key: string, system: string, user: string): Promise<AIRepl
 }
 
 export async function callAI(k: AIKey, system: string, user: string, mock: () => unknown): Promise<AIReply> {
+  try { return await callProvider(k, system, user, mock); }
+  catch (e) {
+    if (e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError")) {
+      console.error("ai_timeout", k.provider);
+      return fail(504, "AI trả lời quá lâu (hơn 2 phút). Bạn bấm “Chạy lại” hoặc bỏ bớt file.", "ai_timeout");
+    }
+    throw e;
+  }
+}
+
+async function callProvider(k: AIKey, system: string, user: string, mock: () => unknown): Promise<AIReply> {
   switch (k.provider) {
     case "openrouter": return chatCompletions("https://openrouter.ai/api/v1/chat/completions", k.key, env.OPENROUTER_MODEL || "anthropic/claude-sonnet-5.5", system, user);
     case "openai": return chatCompletions("https://api.openai.com/v1/chat/completions", k.key, env.OPENAI_MODEL || "gpt-4.1-mini", system, user);
