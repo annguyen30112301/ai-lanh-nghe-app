@@ -3,6 +3,9 @@
 KEY_ENC_SECRET=
 SESSION_SECRET=
 RESEND_API_KEY=
+# Gửi mã qua Gmail của nhóm (ưu tiên hơn Resend): địa chỉ Gmail + mật khẩu ứng dụng 16 ký tự
+SMTP_USER=
+SMTP_PASS=
 MAIL_FROM=AI Lành Nghề <onboarding@resend.dev>
 TRIAL_PROVIDER=openrouter
 # mô hình cho 5 lượt dùng thử (khách tự chọn mô hình của mình sau khi kết nối)

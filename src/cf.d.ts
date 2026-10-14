@@ -15,6 +15,21 @@ interface Fetcher { fetch(input: RequestInfo | URL, init?: RequestInit): Promise
 declare module "cloudflare:workers" {
   export const env: Env & {
     RESEND_API_KEY?: string;
+    SMTP_USER?: string;
+    SMTP_PASS?: string;
+    SMTP_HOST?: string;
+    SMTP_PORT?: string;
     TRIAL_API_KEY?: string;
   };
+}
+
+declare module "cloudflare:sockets" {
+  export interface Socket {
+    readable: ReadableStream<Uint8Array>;
+    writable: WritableStream<Uint8Array>;
+    opened: Promise<unknown>;
+    closed: Promise<void>;
+    close(): Promise<void>;
+  }
+  export function connect(address: { hostname: string; port: number }, options?: { secureTransport?: "off" | "on" | "starttls"; allowHalfOpen?: boolean }): Socket;
 }
