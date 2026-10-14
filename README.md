@@ -45,7 +45,9 @@ GitHub → Settings → Secrets and variables → Actions:
 | `RESEND_API_KEY` | không bắt buộc (không có thì chỉ đăng nhập được bằng tài khoản demo) |
 | `TRIAL_API_KEY` | key cho 5 lượt dùng thử: key Gemini miễn phí (AIza…) hoặc key OpenRouter |
 
-Variable `TRIAL_PROVIDER` = `gemini` nếu `TRIAL_API_KEY` là key Gemini (mặc định `openrouter`). Tùy chọn `OPENROUTER_MODEL` (vd. một mô hình `:free`).
+Variable `TRIAL_PROVIDER` = `gemini` nếu `TRIAL_API_KEY` là key Gemini (mặc định `openrouter`). Variable `TRIAL_MODEL` = mô hình cho **5 lượt dùng thử** (mặc định: `gemini-3.8-flash` khi `TRIAL_PROVIDER=gemini`, nếu không thì `OPENROUTER_MODEL` cũ hoặc giá trị trong `wrangler.jsonc`). Tùy chọn `TRIAL_FALLBACK_MODEL` (mô hình thử lại một lần khi quá tải, chỉ cho lượt thử).
+
+Ngoài lượt thử, hệ thống **không đặt sẵn mô hình**: khách tự chọn ở `/app/ket-noi-ai/` (danh sách lấy trực tiếp từ tài khoản AI của khách, sắp theo tên, có giá ước tính mỗi lượt). Tỷ giá dùng để ước tính: `USD_VND` trong `wrangler.jsonc`. Giá Gemini/OpenAI (API không trả giá) nằm ở `src/lib/model-prices.ts`; nhãn "Đã kiểm thử" lấy từ `src/skills/tested-models.json` (`{ "id", "date", "passed", "total" }`), nhóm cập nhật sau mỗi lần chạy bộ kiểm thử gói nghề.
 
 Variable `APP_ORIGIN` = URL thật sau lần deploy đầu (vd. `https://ai-lanh-nghe-app.<subdomain>.workers.dev`) – dùng cho callback OpenRouter.
 

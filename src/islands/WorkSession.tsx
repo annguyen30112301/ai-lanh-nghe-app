@@ -7,9 +7,10 @@ import { ApiError, errText, post } from "../lib/client";
 import MaskPreview from "./MaskPreview";
 import ResultView from "./ResultView";
 import Checklist from "./Checklist";
+import ModelBar from "./ModelBar";
 
 type T = typeof app.work;
-interface Props { scenario: ScenarioPublic; t: T; demoFiles: string[] }
+interface Props { scenario: ScenarioPublic; t: T; tm: typeof app.connect.models; demoFiles: string[] }
 type LoadedFile = { name: string; text: string; rows: number };
 type Phase = "form" | "masking" | "result" | "exported";
 const KINDS = ["ncc", "cong_ty", "nguoi"] as const;
@@ -20,7 +21,7 @@ const slide = {
   exit: (d: number) => ({ opacity: 0, x: d * -40 })
 };
 
-export default function WorkSession({ scenario, t, demoFiles }: Props) {
+export default function WorkSession({ scenario, t, tm, demoFiles }: Props) {
   const textInputs = scenario.inputs.filter((i) => i.type !== "files");
   const fileInput = scenario.inputs.find((i) => i.type === "files");
   const steps = [t.steps[0], ...(fileInput ? [t.steps[1]] : []), t.steps[2]];
@@ -42,6 +43,7 @@ export default function WorkSession({ scenario, t, demoFiles }: Props) {
   const [checked, setChecked] = useState<boolean[]>([]);
   const [error, setError] = useState<{ msg: string; code?: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [noModel, setNoModel] = useState(false);
   const top = useRef<HTMLDivElement>(null);
   const edited = useRef(false);
   const checkTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -281,13 +283,15 @@ export default function WorkSession({ scenario, t, demoFiles }: Props) {
 
               {error && <ErrorBox error={error} t={t} />}
 
+              {step === steps.length - 1 && <div className="mt-8"><ModelBar t={t.model} tm={tm} onBlocked={setNoModel} /></div>}
+
               <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
                 {step > 0
                   ? <button type="button" onClick={() => go(step - 1)} className="inline-flex min-h-12 items-center gap-1.5 px-2 text-[0.9rem] font-semibold text-accent-ink hover:underline"><ArrowLeftIcon size={18} weight="bold" />{t.prev}</button>
                   : <span />}
                 {step < steps.length - 1
                   ? <button type="button" onClick={next} className="btn btn-accent">{t.next}<ArrowRightIcon size={18} weight="bold" /></button>
-                  : <button type="button" onClick={start} disabled={busy || !runId} className="btn btn-accent">
+                  : <button type="button" onClick={start} disabled={busy || !runId || noModel} className="btn btn-accent">
                       {busy ? <CircleNotchIcon size={20} className="spin" /> : <ShieldCheckIcon size={20} weight="fill" />}{scenario.cta}
                     </button>}
               </div>
@@ -353,6 +357,7 @@ function ErrorBox({ error, t }: { error: { msg: string; code?: string }; t: T })
     <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="err flex flex-wrap items-center justify-between gap-3" role="alert">
       <span>{error.msg}</span>
       {error.code === "no_ai" && <a href="/app/ket-noi-ai/" className="btn btn-accent !min-h-10"><PlugIcon size={18} weight="bold" />{t.noAICta}</a>}
+      {error.code === "no_model" && <a href="/app/ket-noi-ai/?buoc=mo-hinh" className="btn btn-accent !min-h-10"><PlugIcon size={18} weight="bold" />{t.noModelCta}</a>}
     </motion.div>
   );
 }

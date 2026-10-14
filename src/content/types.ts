@@ -44,12 +44,22 @@ export interface ExecuteResponse {
   result: RunResult; kind: ScenarioPublic["output"]["kind"];
   /** cùng kết quả nhưng còn nhãn – để hiệu ứng đổi nhãn → tên thật */
   result_masked: RunResult;
-  masked_items: number; via_trial: boolean; trial_left: number | null; provider: string; seconds: number;
+  masked_items: number; via_trial: boolean; trial_left: number | null; provider: string; model: string; seconds: number;
 }
 export interface MeResponse {
   user: { id: string; email: string; name: string | null };
   org: { id: string; name: string; plan: string; role: "admin" | "member"; seats: number };
-  ai: { source: string; provider: string; key_last4: string; verified_at: number | null } | null;
+  ai: { source: string; provider: string; key_last4: string; verified_at: number | null; model: string | null; allow_fallback: number; fallback_model: string | null } | null;
   trial_left: number;
+  /** mô hình nhóm chọn cho lượt dùng thử (null khi chạy mô phỏng) */
+  trial_model: string | null;
   mock: boolean;
+}
+
+import type { ModelInfo } from "../lib/models";
+export type { ModelInfo };
+export interface ModelsResponse {
+  provider: string; models: ModelInfo[]; usd_vnd: number;
+  current: { model: string | null; allow_fallback: boolean; fallback_model: string | null };
+  can_edit: boolean;
 }

@@ -4,6 +4,7 @@ import { PlugIcon, KeyIcon, BuildingsIcon, CaretDownIcon, CheckCircleIcon, Circl
 import type { MeResponse } from "../content/types";
 import type { app } from "../content/vi";
 import { errText, getMe, isBusinessAdmin, post } from "../lib/client";
+import ModelPicker from "./ModelPicker";
 
 type T = typeof app.connect;
 
@@ -16,7 +17,10 @@ export default function ConnectAI({ t }: { t: T }) {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   useEffect(() => {
-    getMe(true).then(setMe).catch(() => {});
+    getMe(true).then((m) => {
+      setMe(m);
+      if (new URLSearchParams(location.search).get("buoc") === "mo-hinh") requestAnimationFrame(() => document.getElementById("chon-mo-hinh")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    }).catch(() => {});
     const loi = new URLSearchParams(location.search).get("loi") as keyof T["errors"] | null;
     if (loi && t.errors[loi]) setMsg({ ok: false, text: t.errors[loi] });
   }, [t]);
@@ -30,6 +34,7 @@ export default function ConnectAI({ t }: { t: T }) {
     try {
       await post("/api/ai/key", { source, key, provider });
       setKey(""); setOpen(null); setMe(await getMe(true)); setMsg({ ok: true, text: t.saved });
+      requestAnimationFrame(() => document.getElementById("chon-mo-hinh")?.scrollIntoView({ behavior: "smooth", block: "start" }));
     } catch (e) { setMsg({ ok: false, text: errText(e) }); }
     setBusy(false);
   }
@@ -49,7 +54,7 @@ export default function ConnectAI({ t }: { t: T }) {
           <div>
             <p className="font-semibold">{ai ? t.status.connected : t.status.none}</p>
             <p className="text-[0.88rem] text-ink-2">
-              {ai ? <>{t.status.by[ai.source as keyof T["status"]["by"]] ?? ai.provider} · <span className="font-mono tracking-wider">••••{ai.key_last4}</span></> : t.status.trial.replace("{n}", String(me.trial_left))}
+              {ai ? <>{t.status.by[ai.source as keyof T["status"]["by"]] ?? ai.provider} · <span className="font-mono tracking-wider">••••{ai.key_last4}</span> · <span className={ai.model ? "font-mono" : "font-semibold text-urgent"}>{ai.model ?? t.modelNone}</span></> : t.status.trial.replace("{n}", String(me.trial_left))}
             </p>
           </div>
         </div>
@@ -62,8 +67,19 @@ export default function ConnectAI({ t }: { t: T }) {
       {msg && <p className={msg.ok ? "mt-3 rounded-2xl bg-tint px-4 py-3 text-[0.9rem] font-medium text-accent-ink" : "err"} role={msg.ok ? "status" : "alert"}>{msg.text}</p>}
       {me.mock && !ai && <p className="t-note mt-3">{t.mockNote}</p>}
 
+      {ai && canManage && (
+        <section id="chon-mo-hinh" aria-labelledby="chon-mo-hinh-h" className="mt-6 scroll-mt-24 rounded-3xl bg-raised p-6 ring-1 ring-hair sm:p-7">
+          <h2 id="chon-mo-hinh-h" className="text-[1.15rem]">{t.models.step}</h2>
+          <p className="mt-1 text-[0.9rem] text-ink-2">{t.models.lead}</p>
+          <div className="mt-5"><ModelPicker key={ai.provider + ai.key_last4 + (ai.verified_at ?? 0)} t={t.models} onSaved={() => getMe(true).then(setMe)} /></div>
+        </section>
+      )}
+
       {!canManage ? (
-        <p className="mt-6 rounded-3xl bg-raised p-5 ring-1 ring-hair">{t.memberNote}</p>
+        <>
+          <p className="mt-6 rounded-3xl bg-raised p-5 ring-1 ring-hair">{t.memberNote}</p>
+          {ai && !ai.model && <p className="err" role="alert">{t.modelMemberNone}</p>}
+        </>
       ) : (
         <div className="mt-6 grid gap-4">
           {/* một chạm */}

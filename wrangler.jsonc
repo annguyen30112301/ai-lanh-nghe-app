@@ -17,9 +17,9 @@
     "APP_ORIGIN": "https://ai-lanh-nghe-app.nghoangan-bt96.workers.dev",
     "MAIL_FROM": "AI Lành Nghề <onboarding@resend.dev>",
     "TRIAL_PROVIDER": "openrouter",
-    "OPENROUTER_MODEL": "anthropic/claude-sonnet-5.5",
-    "GEMINI_MODEL": "gemini-3.8-flash",
-    "OPENAI_MODEL": "gpt-4.1-mini",
+    "TRIAL_MODEL": "anthropic/claude-sonnet-5.5",
+    "TRIAL_FALLBACK_MODEL": "",
+    "USD_VND": "26000",
     "DEMO_EMAIL_DOMAIN": "ailanhnghe.demo"
   }
 }

@@ -3,9 +3,9 @@
 interface __BaseEnv_Env {
 	DB: D1Database;
 	MAIL_FROM: "AI Lành Nghề <onboarding@resend.dev>";
-	OPENROUTER_MODEL: "anthropic/claude-sonnet-5.5";
-	GEMINI_MODEL: "gemini-3.8-flash";
-	OPENAI_MODEL: "gpt-4.1-mini";
+	TRIAL_MODEL: string;
+	TRIAL_FALLBACK_MODEL: string;
+	USD_VND: string;
 	DEMO_EMAIL_DOMAIN: "ailanhnghe.demo";
 	KEY_ENC_SECRET: string;
 	SESSION_SECRET: string;
@@ -21,7 +21,7 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "MAIL_FROM" | "OPENROUTER_MODEL" | "GEMINI_MODEL" | "OPENAI_MODEL" | "DEMO_EMAIL_DOMAIN" | "KEY_ENC_SECRET" | "SESSION_SECRET" | "APP_ORIGIN" | "AI_MOCK" | "TRIAL_PROVIDER">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "MAIL_FROM" | "TRIAL_MODEL" | "TRIAL_FALLBACK_MODEL" | "USD_VND" | "DEMO_EMAIL_DOMAIN" | "KEY_ENC_SECRET" | "SESSION_SECRET" | "APP_ORIGIN" | "AI_MOCK" | "TRIAL_PROVIDER">> {}
 }
 declare module "*.txt" {
 	const value: string;

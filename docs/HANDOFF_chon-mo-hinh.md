@@ -71,8 +71,18 @@ Không lưu gì thêm về nội dung.
 - `AI_MOCK` vẫn chạy được không cần key.
 
 ## 8. Xong khi
-- [ ] Không còn tên mô hình gắn cứng trong `ai-gateway.ts` (trừ `TRIAL_MODEL` cấu hình).
-- [ ] Kết nối xong phải chọn mô hình mới chạy được; không có lựa chọn sẵn.
-- [ ] Danh sách sắp theo tên, có giá/lượt, nhãn đã kiểm thử, lý do khóa với mô hình không đạt yêu cầu.
-- [ ] `runs.model` có giá trị cho mọi lượt mới.
-- [ ] Test qua, build 0 lỗi, deploy, chạy migration 0003 trên D1 thật.
+- [x] Không còn tên mô hình gắn cứng trong `ai-gateway.ts` (trừ `TRIAL_MODEL` cấu hình).
+- [x] Kết nối xong phải chọn mô hình mới chạy được; không có lựa chọn sẵn.
+- [x] Danh sách sắp theo tên, có giá/lượt, nhãn đã kiểm thử, lý do khóa với mô hình không đạt yêu cầu.
+- [x] `runs.model` có giá trị cho mọi lượt mới.
+- [x] Test qua, build 0 lỗi. Còn lại: deploy (push `main`) — workflow tự chạy migration 0003 trên D1 thật.
+
+## 9. Ghi chú triển khai (14/10/2026)
+- Code: `src/lib/models.ts` (chuẩn hóa, giá/lượt, khóa), `src/lib/models-fetch.ts` (gọi API + cache 1 giờ), `src/pages/api/ai/models.ts` (GET), `src/pages/api/ai/model.ts` (POST lưu), `src/islands/ModelPicker.tsx`, `ModelBar.tsx`, `ModelUsage.tsx`.
+- `src/skills/tested-models.json` đang **rỗng**: chưa mô hình nào có nhãn "Đã kiểm thử" cho tới khi nhóm chạy bộ kiểm thử và ghi `{ "id", "date", "passed", "total" }`.
+- `src/lib/model-prices.ts` mới có giá niêm yết một số mô hình Gemini/OpenAI; mô hình khác hiện "—". Nhóm rà lại theo trang giá.
+- Tỷ giá ước tính: `USD_VND` trong `wrangler.jsonc` (26.000).
+- Lượt dùng thử: giữ nguyên hành vi đang chạy. `TRIAL_MODEL` mặc định `anthropic/claude-sonnet-5.5` (OpenRouter); nếu repo đặt `TRIAL_PROVIDER=gemini` thì deploy tự đặt `gemini-3.8-flash` + dự phòng `gemini-3.7-flash`. Muốn theo đề xuất `gemini-3.8-flash` cho mọi trường hợp: đặt Variable `TRIAL_MODEL` (và `TRIAL_PROVIDER`/`TRIAL_API_KEY` tương ứng).
+- Đổi nhà cung cấp (gắn key khác hãng) thì xóa mô hình đã chọn để khách chọn lại; gắn lại key cùng hãng giữ nguyên lựa chọn.
+- Gateway: mô hình không nhận `response_format` → tự gửi lại không có tham số đó; Gemini không nhận `thinkingConfig` → gửi lại không có.
+- Sau migration, các tổ chức **đã kết nối từ trước** có `model = NULL` nên bị chặn chạy cho tới khi quản trị viên chọn mô hình (đúng nguyên tắc, nhưng cần báo khách cũ).

@@ -5,6 +5,8 @@ import type { app } from "../content/vi";
 import { api, errText, post } from "../lib/client";
 import CountUp from "./CountUp";
 import WeekBars from "./WeekBars";
+import ModelUsage from "./ModelUsage";
+import type { ModelUsageRow } from "../lib/models";
 
 type T = typeof app.admin;
 interface Biz {
@@ -12,6 +14,7 @@ interface Biz {
   runs: number; saved_minutes: number; scenarios: { id: string; name: string; count: number; avg_minutes: number }[];
   weekly: { label: string; count: number }[]; active_people: number; seats_used: number;
   people: { id: string; name: string; role: string; status: string; weeks: number[]; total: number }[];
+  models: ModelUsageRow[];
 }
 interface Member { id: string; email: string; name: string | null; role: "admin" | "member"; status: "active" | "invited"; runs: number; last_at: number | null }
 
@@ -97,6 +100,8 @@ export default function Business({ t }: { t: T }) {
           </section>
         </div>
       </div>
+
+      <div className="mt-6"><ModelUsage title={t.models} t={t.usage} rows={d.models} /></div>
 
       <section className="panel mt-6 p-6 sm:p-8" aria-labelledby="seats">
         <h2 id="seats" className="text-[1.25rem]">{t.seats.title} <span className="text-ink-3 tabular-nums">· {m.members.length}/{m.seats}</span></h2>

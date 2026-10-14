@@ -136,12 +136,12 @@ export const how = {
     { icon: "pen", title: "Điền vài thông tin", body: "Tối đa ba bước, mỗi ô có ví dụ. Không có thuật ngữ AI." },
     { icon: "upload", title: "Tải file lên", body: "Excel hoặc PDF có chữ. File được đọc ngay trong trình duyệt, chỉ phần chữ được gửi đi – file gốc không rời máy bạn." },
     { icon: "eye", title: "Xem trước dữ liệu gửi lên AI", body: "Bạn đánh dấu tên nhà cung cấp, tên công ty, người liên hệ. Số điện thoại, email, mã số thuế, CCCD, số tài khoản được che tự động thành nhãn như <b>[NCC_1]</b>." },
-    { icon: "robot", title: "AI của bạn làm theo quy trình", body: "Yêu cầu được gửi tới AI bạn đã kết nối. Kết quả trả về theo đúng mẫu, sau đó nhãn được đổi lại tên thật ngay trên màn hình của bạn." },
+    { icon: "robot", title: "AI của bạn làm theo quy trình", body: "Yêu cầu được gửi tới AI bạn đã kết nối, chạy trên mô hình bạn tự chọn. Kết quả trả về theo đúng mẫu, sau đó nhãn được đổi lại tên thật ngay trên màn hình của bạn." },
     { icon: "checks", title: "Tự kiểm, xuất file, đo thời gian", body: "Nút Xuất chỉ bật khi bạn tick đủ checklist. Thời gian mỗi lượt được ghi lại để bạn thấy mình tiết kiệm bao nhiêu." }
   ],
   connect: {
     title: "Kết nối AI một lần",
-    lead: "Bạn dùng AI của chính mình nên tự chủ chi phí và dữ liệu. AI Lành Nghề chỉ thu phí gói nghề.",
+    lead: "Bạn dùng AI của chính mình nên tự chủ chi phí và dữ liệu. Bạn tự chọn mô hình trong tài khoản AI của mình. AI Lành Nghề không chọn thay và chỉ thu phí gói nghề.",
     options: [
       { icon: "plug", title: "Một chạm qua OpenRouter", body: "Đăng nhập OpenRouter, bấm đồng ý. Không cần sao chép key. Phù hợp với cá nhân." },
       { icon: "key", title: "Dán key Gemini miễn phí", body: "Tạo key ở Google AI Studio trong 3 bước rồi dán vào. Có hạn mức miễn phí hằng ngày." },
@@ -156,6 +156,7 @@ export const how = {
       ["Chi phí AI ai trả?", "Bạn hoặc công ty trả trực tiếp cho nhà cung cấp AI qua tài khoản của mình. Ước tính một lượt so sánh 3 báo giá tốn vài trăm đồng tiền AI. 5 lượt thử đầu tiên do AI Lành Nghề trả."],
       ["AI Lành Nghề có lưu báo giá của tôi không?", "Không. Máy chủ chỉ lưu số đếm (bạn mở lúc nào, xong lúc nào, che bao nhiêu thông tin) để tính thời gian tiết kiệm. Không lưu file, nội dung hay kết quả."],
       ["Nếu AI tính sai thì sao?", "Mỗi kết quả có checklist tự kiểm và AI được yêu cầu ghi “Không có trong báo giá” khi thiếu dữ liệu. Quyết định cuối cùng luôn là của bạn."],
+      ["Nên chọn mô hình nào?", "Tùy ngân sách và yêu cầu chất lượng. Danh sách hiện giá mỗi lượt và mô hình nào đã qua bộ kiểm thử gói nghề để bạn so sánh. Tránh bậc miễn phí của nhà cung cấp nếu bậc đó cho phép dùng dữ liệu để huấn luyện."],
       ["File PDF scan có dùng được không?", "Chưa. Hãy dùng file Excel hoặc PDF có thể chọn chữ. Bản scan cần nhận dạng chữ, sẽ có ở phiên bản sau."]
     ]
   },
@@ -251,11 +252,11 @@ export const safety = {
       "File được đọc ngay trong trình duyệt của bạn",
       "Chỉ phần chữ được gửi tới máy chủ AI Lành Nghề",
       "Tên, số điện thoại, mã số thuế… đổi thành nhãn",
-      "Bản đã che được gửi tới AI bạn kết nối",
+      "Bản đã che được gửi tới AI bạn kết nối, đúng mô hình bạn chọn",
       "Kết quả về, nhãn đổi lại tên thật",
       "Bạn tự kiểm theo checklist rồi xuất file"
     ],
-    note: "Bản đồ nhãn ↔ tên thật chỉ tồn tại trong bộ nhớ trong lúc xử lý một yêu cầu, rồi bị xóa."
+    note: "Bản đồ nhãn ↔ tên thật chỉ tồn tại trong bộ nhớ trong lúc xử lý một yêu cầu, rồi bị xóa. Bạn tự chọn mô hình trong tài khoản AI của mình. AI Lành Nghề không chọn thay và không tự đổi mô hình khi bạn chưa cho phép."
   },
   data: {
     title: "Thông tin nào được che?",
@@ -270,7 +271,7 @@ export const safety = {
   },
   store: {
     title: "Máy chủ lưu gì và không lưu gì",
-    yes: { title: "Có lưu", items: ["Email đăng nhập", "Gói, seat, vai trò", "Số đếm mỗi lượt: mở, xong, xuất lúc nào; che bao nhiêu thông tin; lượng dùng AI", "Key AI đã mã hóa AES-256-GCM"] },
+    yes: { title: "Có lưu", items: ["Email đăng nhập", "Gói, seat, vai trò", "Số đếm mỗi lượt: mở, xong, xuất lúc nào; che bao nhiêu thông tin; lượng dùng AI; tên mô hình đã chạy", "Key AI đã mã hóa AES-256-GCM"] },
     no: { title: "Không lưu", items: ["File bạn tải lên", "Nội dung báo giá, thư, hồ sơ", "Kết quả AI trả về", "Câu lệnh gửi AI, key dạng chữ thường"] }
   },
   human: {
@@ -286,6 +287,11 @@ export const safety = {
 };
 
 /* ======================= APP ======================= */
+const usage = {
+  cols: ["Mô hình", "Số lượt", "Token gửi đi", "Token nhận về", "Chi phí ước tính"],
+  note: "Chi phí ước tính theo giá niêm yết của nhà cung cấp; “—” khi không rõ giá. Lượt dùng thử do AI Lành Nghề trả.",
+  empty: "Chưa có lượt nào ghi tên mô hình."
+};
 export const app = {
   nav: { scenarios: "Tình huống", dashboard: "Bảng điều khiển", admin: "Quản trị", connect: "Kết nối AI", logout: "Đăng xuất", site: "Về trang giới thiệu" },
   loading: "Đang tải…",
@@ -363,7 +369,41 @@ export const app = {
     mockNote: "Đang chạy ở máy: chưa có key AI thì kết quả là bản mô phỏng.",
     secure: "Key được mã hóa AES-256-GCM. Màn hình chỉ hiện 3 ký tự cuối.",
     errors: { quyen: "Chỉ quản trị viên mới đổi được kết nối AI của công ty.", "ket-noi": "Chưa kết nối được OpenRouter. Bạn bấm thử lại nhé.", "het-han": "Phiên kết nối đã quá 15 phút. Bạn bấm Kết nối lại." },
-    saved: "Đã lưu. AI của bạn sẵn sàng."
+    saved: "Đã lưu key. Bước tiếp theo: chọn mô hình.",
+    modelNone: "Chưa chọn mô hình",
+    modelMemberNone: "Quản trị viên chưa chọn mô hình AI nên chưa chạy được. Bạn báo quản trị viên chọn mô hình ở mục Kết nối AI.",
+    models: {
+      step: "Bước 2 · Chọn mô hình",
+      lead: "Bạn tự chọn mô hình trong tài khoản AI của mình. AI Lành Nghề không chọn thay và không xếp hạng hãng nào.",
+      loading: "Đang lấy danh sách mô hình từ tài khoản AI của bạn…",
+      search: "Tìm theo tên mô hình",
+      filters: "Lọc",
+      tested: "Đã kiểm thử với gói nghề",
+      maxPrice: "Giá / lượt ≤ (đ)",
+      minCtx: "Ngữ cảnh ≥ (nghìn token)",
+      count: "{n} mô hình, sắp theo tên A→Z",
+      none: "Không có mô hình nào khớp bộ lọc.",
+      more: "Xem thêm {n} mô hình",
+      perRun: "≈ {p}/lượt",
+      noPrice: "— (nhà cung cấp không công bố giá qua API)",
+      ctx: "Ngữ cảnh {n}",
+      testedChip: "Đã kiểm thử {s}",
+      locked: "Không chọn được",
+      current: "Đang dùng",
+      fallbackTitle: "Khi mô hình quá tải",
+      fallbackOff: "Báo lỗi để tôi thử lại",
+      fallbackOn: "Chuyển sang mô hình dự phòng tôi chọn",
+      fallbackPick: "Mô hình dự phòng",
+      fallbackPh: "Chọn mô hình dự phòng",
+      fallbackNote: "Chỉ chuyển một lần, khi mô hình chính báo quá tải. Lượt đó ghi đúng tên mô hình đã chạy.",
+      save: "Lưu mô hình",
+      saving: "Đang lưu…",
+      saved: "Đã lưu mô hình. AI của bạn sẵn sàng.",
+      pickFirst: "Bạn chọn một mô hình trong danh sách.",
+      pickFallback: "Bạn chọn mô hình dự phòng (khác mô hình chính).",
+      priceNote: "Giá ước tính cho một lượt khoảng 6.000 token gửi đi và 2.000 token nhận về, theo tỷ giá {r} đ/USD. Giá do nhà cung cấp AI thu trực tiếp từ tài khoản của bạn. AI Lành Nghề không thu phí AI.",
+      freeTier: "Tránh bậc miễn phí của nhà cung cấp nếu bậc đó cho phép dùng dữ liệu để huấn luyện."
+    }
   },
   scenarios: {
     title: "Chọn tình huống",
@@ -376,7 +416,7 @@ export const app = {
     otherJobs: "Nghề khác",
     others: ["Giảng dạy", "Hành chính – Nhân sự", "Kế toán – Tài chính"],
     connected: "Đã kết nối AI. Bạn chọn việc để bắt đầu.",
-    banner: { trial: "Bạn đang dùng thử: còn {n} lượt.", none: "Bạn đã hết lượt thử.", connect: "Kết nối AI" }
+    banner: { trial: "Bạn đang dùng thử: còn {n} lượt.", none: "Bạn đã hết lượt thử.", connect: "Kết nối AI", noModel: "Đã kết nối AI nhưng chưa chọn mô hình nên chưa chạy được.", pickModel: "Chọn mô hình" }
   },
   work: {
     title: "Làm việc",
@@ -433,7 +473,18 @@ export const app = {
     summary: { overview: "Tổng quan", score: "Chấm điểm", check: "Cần xác minh thêm", verdict: "Kết luận" },
     editHint: "Bạn có thể sửa trực tiếp nội dung trước khi xuất.",
     noAI: "Bạn đã dùng hết lượt thử.",
-    noAICta: "Kết nối AI"
+    noAICta: "Kết nối AI",
+    noModelCta: "Chọn mô hình",
+    model: {
+      label: "Mô hình: {m}",
+      change: "Đổi",
+      pick: "Chọn mô hình",
+      close: "Đóng",
+      missing: "Chưa chọn mô hình AI nên chưa chạy được.",
+      missingMember: "Quản trị viên chưa chọn mô hình AI nên chưa chạy được.",
+      trial: "Lượt dùng thử chạy trên {m}. Khi kết nối AI của bạn, bạn tự chọn mô hình.",
+      mock: "Đang chạy mô phỏng ở máy (chưa có key AI)."
+    }
   },
   dash: {
     title: "Bảng điều khiển",
@@ -454,6 +505,8 @@ export const app = {
     min: "{n} phút",
     baseline: { title: "Bạn thường mất bao lâu khi làm tay?", lead: "Sửa số phút cho đúng với bạn để phép tính tiết kiệm chính xác hơn.", save: "Lưu", saved: "Đã lưu" },
     security: "Bảo mật thiết bị",
+    models: "Lượt theo mô hình",
+    usage,
     howCalc: "Phút tiết kiệm = (thời gian làm tay của bạn − thời gian thực tế từ lúc mở tới lúc xuất), cộng dồn mọi lượt."
   },
   admin: {
@@ -475,6 +528,8 @@ export const app = {
       status: { active: "Đang dùng", invited: "Đã mời" }, role: { admin: "Quản trị", member: "Thành viên" },
       runs: "{n} lượt", never: "Chưa dùng", cancel: "Hủy", done: "Đã cập nhật"
     },
-    company: "Kết nối AI của công ty"
+    company: "Kết nối AI của công ty",
+    models: "Lượt theo mô hình (4 tuần)",
+    usage
   }
 };

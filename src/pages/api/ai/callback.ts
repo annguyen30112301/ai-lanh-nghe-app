@@ -19,7 +19,7 @@ export const GET: APIRoute = async ({ cookies, url, redirect }) => {
     if (!st) return redirect("/app/ket-noi-ai/?loi=het-han", 302);
     const key = await exchangeCode(code, st.code_verifier);
     await saveConnection(a.org.org_id, "openrouter_oauth", "openrouter", key);
-    return redirect("/app/tinh-huong/?ket-noi=ok", 302);
+    return redirect("/app/ket-noi-ai/?buoc=mo-hinh", 302);
   } catch {
     return redirect("/app/ket-noi-ai/?loi=ket-noi", 302);
   }
