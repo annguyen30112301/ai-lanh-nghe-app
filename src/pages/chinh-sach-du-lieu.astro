@@ -1,0 +1,60 @@
+---
+import Base from "../layouts/Base.astro";
+import LegalHead from "../components/LegalHead.astro";
+import Icon from "../components/Icon.astro";
+import { privacy, safety } from "../content/vi";
+const t = privacy;
+const st = safety.store;
+---
+<Base page="privacy" title={`${t.title} · AI Lành Nghề`} description={t.description}>
+  <LegalHead title={t.title} demo={t.demo} updated={t.updated} />
+  <article class="shell max-w-3xl pb-24 pt-8">
+    <p class="t-sub">{t.intro}</p>
+
+    <section class="mt-8 border-t border-hair py-7">
+      <h2 class="text-[1.2rem]">{t.kinds.h}</h2>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        {t.kinds.items.map((k) => <div class="panel p-5"><h3 class="text-[1.02rem]">{k.t}</h3><p class="mt-2 text-[0.95rem] text-ink-2">{k.b}</p></div>)}
+      </div>
+    </section>
+
+    <section class="border-t border-hair py-7">
+      <h2 class="text-[1.2rem]">{t.store.h}</h2>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        {[{ x: st.yes, ok: true }, { x: st.no, ok: false }].map(({ x, ok }) => (
+          <div class="rounded-3xl bg-raised p-5 ring-1 ring-hair">
+            <h3 class:list={["flex items-center gap-2 text-[1.02rem]", ok ? "text-accent-ink" : "text-masked"]}><Icon name={ok ? "check" : "x"} size={20} weight="bold" />{x.title}</h3>
+            <ul class="mt-3 grid gap-2 text-[0.95rem] text-ink-2">{x.items.map((i) => <li class="flex gap-2"><span aria-hidden="true">·</span>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="border-t border-hair py-7">
+      <h2 class="text-[1.2rem]">{t.roles.h}</h2>
+      <div class="mt-4 overflow-x-auto rounded-2xl ring-1 ring-hair">
+        <table class="w-full min-w-[34rem] text-[0.92rem]">
+          <thead class="bg-canvas text-left"><tr>{t.roles.head.map((h) => <th scope="col" class="px-4 py-3 font-semibold text-ink-2">{h}</th>)}</tr></thead>
+          <tbody>{t.roles.rows.map(([a, b, c]) => <tr class="border-t border-hair align-top"><th scope="row" class="px-4 py-3 text-left font-semibold">{a}</th><td class="px-4 py-3 font-semibold text-accent-ink">{b}</td><td class="px-4 py-3 text-ink-2">{c}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="border-t border-hair py-7">
+      <h2 class="text-[1.2rem]">{t.retention.h}</h2>
+      <ul class="mt-4 grid gap-3">{t.retention.items.map((i) => <li class="flex gap-2.5 text-ink-2"><Icon name="check" size={20} weight="bold" class="mt-0.5 shrink-0 text-accent-2" />{i}</li>)}</ul>
+    </section>
+
+    <section class="border-t border-hair py-7">
+      <h2 class="text-[1.2rem]">{t.rights.h}</h2>
+      <ul class="mt-4 grid gap-2">{t.rights.items.map((i) => <li class="flex gap-2.5 text-ink-2"><Icon name="check" size={20} weight="bold" class="mt-0.5 shrink-0 text-accent-2" />{i}</li>)}</ul>
+      <p class="mt-4 text-ink-2" set:html={t.rights.how} />
+    </section>
+
+    <section class="border-t border-hair py-7">
+      <h2 class="text-[1.2rem]">{t.incident.h}</h2>
+      <p class="mt-3 max-w-[68ch] text-ink-2">{t.incident.p}</p>
+    </section>
+    <p class="t-note border-t border-hair pt-6" set:html={t.more} />
+  </article>
+</Base>

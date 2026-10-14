@@ -2,7 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import Icon from "../components/Icon.astro";
-import { app, site } from "../content/vi";
+import { app, site, ui } from "../content/vi";
 
 export type AppKey = "scenarios" | "work" | "dashboard" | "admin" | "connect" | "login" | "device";
 interface Props { page: AppKey; title: string; description: string; bare?: boolean }
@@ -62,6 +62,16 @@ const active = page === "work" ? "scenarios" : page;
   </header>
 
   <main id="main"><slot /></main>
+
+  <footer class="no-print shell border-t border-hair py-6 text-[0.8rem] text-ink-3">
+    <nav aria-label={ui.footer.legal} class="flex flex-wrap gap-x-5 gap-y-1">
+      <a href="/hoi-dap/" class="text-ink-2 no-underline hover:text-ink">{ui.footer.qa}</a>
+      <a href="/dieu-khoan/" class="text-ink-2 no-underline hover:text-ink">{ui.footer.terms}</a>
+      <a href="/chinh-sach-du-lieu/" class="text-ink-2 no-underline hover:text-ink">{ui.footer.privacy}</a>
+      <a href={`mailto:${ui.footer.email}`} class="text-ink-2 no-underline hover:text-ink">{ui.footer.email}</a>
+    </nav>
+    <p class="mt-2">{site.name} · {ui.footer.demo}</p>
+  </footer>
 
   {!bare && (
     <nav class="no-print fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 lg:hidden" aria-label="Thanh điều hướng" style="view-transition-name: tabbar">

@@ -1,0 +1,10 @@
+---
+import Icon from "./Icon.astro";
+interface Props { title: string; demo: string; updated: string }
+const { title, demo, updated } = Astro.props;
+---
+<section class="shell max-w-3xl pt-28 sm:pt-36">
+  <p class="flex items-start gap-2 rounded-2xl bg-urgent-soft px-4 py-3 text-[0.92rem] font-semibold text-urgent" role="note"><Icon name="scales" size={20} class="mt-0.5 shrink-0" />{demo}</p>
+  <h1 class="t-display mt-8">{title}</h1>
+  <p class="t-note mt-3">{updated}</p>
+</section>
