@@ -62,28 +62,29 @@ export function normalizeOpenRouter(j: { data?: ORModel[] }): ModelInfo[] {
 
 interface GModel { name: string; displayName?: string; inputTokenLimit?: number; supportedGenerationMethods?: string[] }
 const GEMINI_SKIP = /embedding|aqa|imagen|veo|tts|native-audio|live/i;
-/** Gemini: mô hình có generateContent, bỏ embedding/aqa/imagen… Giá lấy từ bảng tĩnh. */
+/** Gemini: chỉ dòng gemini-* có generateContent (bỏ Gemma, embedding, aqa, imagen…). Giá lấy từ bảng tĩnh. */
 export function normalizeGemini(models: GModel[]): ModelInfo[] {
   return models
-    .filter((m) => m?.name && m.supportedGenerationMethods?.includes("generateContent") && !GEMINI_SKIP.test(m.name))
+    .filter((m) => m?.name?.startsWith("models/gemini") && m.supportedGenerationMethods?.includes("generateContent") && !GEMINI_SKIP.test(m.name))
     .map((m) => {
       const id = m.name.replace(/^models\//, "");
       const p = MODEL_PRICES[id];
       return finish({
         id, name: m.displayName || id, vendor: "google",
         contextLength: m.inputTokenLimit ?? null, priceIn: p?.in ?? null, priceOut: p?.out ?? null,
-        // Gemma và mô hình ngoài dòng gemini không nhận responseMimeType JSON ổn định.
-        jsonOk: id.startsWith("gemini")
+        jsonOk: true
       });
     })
     .sort(byName);
 }
 
+/** Chỉ mô hình chat của OpenAI (gpt-*, o1/o3/o4…, chatgpt-*, kể cả bản fine-tune ft:gpt-*). */
+const OPENAI_CHAT = /^(ft:)?(gpt-|o\d|chatgpt-)/i;
 const OPENAI_SKIP = /embedding|tts|whisper|dall-e|moderation|realtime|audio|transcribe|image|search|babbage|davinci|computer-use/i;
 /** OpenAI: bỏ mô hình không phải chat. API không trả giá và ngữ cảnh: lấy từ bảng tĩnh nếu có. */
 export function normalizeOpenAI(j: { data?: { id: string }[] }): ModelInfo[] {
   return (j.data ?? [])
-    .filter((m) => m?.id && !OPENAI_SKIP.test(m.id))
+    .filter((m) => m?.id && OPENAI_CHAT.test(m.id) && !OPENAI_SKIP.test(m.id))
     .map((m) => {
       const p = MODEL_PRICES[m.id];
       return finish({ id: m.id, name: m.id, vendor: "openai", contextLength: p?.context ?? null, priceIn: p?.in ?? null, priceOut: p?.out ?? null, jsonOk: true });

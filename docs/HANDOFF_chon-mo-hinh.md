@@ -78,6 +78,7 @@ Không lưu gì thêm về nội dung.
 - [x] Test qua, build 0 lỗi. Còn lại: deploy (push `main`) — workflow tự chạy migration 0003 trên D1 thật.
 
 ## 9. Ghi chú triển khai (14/10/2026)
+- Danh sách chỉ gồm mô hình của nhà cung cấp ứng với key: key Gemini → chỉ `gemini-*`; key OpenAI → chỉ mô hình chat của OpenAI; OpenRouter → nhiều hãng (một key OpenRouter dùng được mọi hãng trên OpenRouter). Lưu mô hình cũng kiểm tra lại theo đúng danh sách đó.
 - Code: `src/lib/models.ts` (chuẩn hóa, giá/lượt, khóa), `src/lib/models-fetch.ts` (gọi API + cache 1 giờ), `src/pages/api/ai/models.ts` (GET), `src/pages/api/ai/model.ts` (POST lưu), `src/islands/ModelPicker.tsx`, `ModelBar.tsx`, `ModelUsage.tsx`.
 - `src/skills/tested-models.json` đang **rỗng**: chưa mô hình nào có nhãn "Đã kiểm thử" cho tới khi nhóm chạy bộ kiểm thử và ghi `{ "id", "date", "passed", "total" }`.
 - `src/lib/model-prices.ts` mới có giá niêm yết một số mô hình Gemini/OpenAI; mô hình khác hiện "—". Nhóm rà lại theo trang giá.

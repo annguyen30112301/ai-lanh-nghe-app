@@ -6,6 +6,7 @@ import { api, errText, post } from "../lib/client";
 import { formatVnd, pricePerRun } from "../lib/models";
 
 type T = typeof app.connect.models;
+const PROVIDER: Record<string, string> = { openrouter: "OpenRouter", gemini: "Google Gemini", openai: "OpenAI" };
 
 const ctxLabel = (n: number | null) => (n === null ? null : n >= 1e6 ? `${+(n / 1e6).toFixed(1)}M` : `${Math.round(n / 1000)}k`);
 
@@ -64,6 +65,8 @@ export default function ModelPicker({ t, onSaved }: { t: T; onSaved?: () => void
 
   return (
     <div>
+      <p className="mb-3 text-[0.88rem] font-semibold">{t.source.replace("{p}", PROVIDER[d.provider] ?? d.provider)}</p>
+      {d.provider === "openrouter" && <p className="t-note -mt-2 mb-3">{t.sourceOpenRouter}</p>}
       <div className="flex items-center gap-2 rounded-2xl border-2 border-hair bg-raised px-3 focus-within:border-accent">
         <MagnifyingGlassIcon size={20} className="shrink-0 text-ink-3" />
         <label className="sr-only" htmlFor="model-q">{t.search}</label>

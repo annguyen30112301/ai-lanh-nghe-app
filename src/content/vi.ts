@@ -381,6 +381,8 @@ export const app = {
       tested: "Đã kiểm thử với gói nghề",
       maxPrice: "Giá / lượt ≤ (đ)",
       minCtx: "Ngữ cảnh ≥ (nghìn token)",
+      source: "Mô hình có trong tài khoản {p} của bạn (theo key đã gắn)",
+      sourceOpenRouter: "OpenRouter cho dùng mô hình của nhiều hãng bằng cùng một key, nên danh sách có nhiều hãng.",
       count: "{n} mô hình, sắp theo tên A→Z",
       none: "Không có mô hình nào khớp bộ lọc.",
       more: "Xem thêm {n} mô hình",

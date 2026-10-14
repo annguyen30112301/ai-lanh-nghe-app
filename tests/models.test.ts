@@ -42,24 +42,23 @@ describe("normalizeGemini", () => {
     { name: "models/gemini-small-ctx", displayName: "Gemini Small", inputTokenLimit: 16_000, supportedGenerationMethods: ["generateContent"] },
     { name: "models/gemini-new-unpriced", displayName: "Gemini New", inputTokenLimit: 1_000_000, supportedGenerationMethods: ["generateContent"] }
   ]);
-  it("chỉ giữ generateContent, bỏ embedding/aqa/imagen, bỏ tiền tố models/", () => {
-    expect(list.map((m) => m.id)).toEqual(["gemini-2.5-flash", "gemini-new-unpriced", "gemini-small-ctx", "gemma-3-27b-it"]);
+  it("chỉ giữ mô hình Gemini có generateContent (bỏ Gemma, embedding, aqa, imagen), bỏ tiền tố models/", () => {
+    expect(list.map((m) => m.id)).toEqual(["gemini-2.5-flash", "gemini-new-unpriced", "gemini-small-ctx"]);
   });
   it("giá lấy từ bảng tĩnh, không có thì null", () => {
     expect(list[0].priceIn).toBe(0.3);
     expect(list.find((m) => m.id === "gemini-new-unpriced")!.priceIn).toBeNull();
   });
-  it("khóa mô hình ngữ cảnh < 32k và mô hình không trả JSON ổn định", () => {
+  it("khóa mô hình ngữ cảnh < 32k", () => {
     expect(list.find((m) => m.id === "gemini-small-ctx")!.locked).toBe(LOCK.context);
-    expect(list.find((m) => m.id === "gemma-3-27b-it")!.locked).toBe(LOCK.json);
     expect(list[0].locked).toBeNull();
   });
 });
 
 describe("normalizeOpenAI", () => {
-  const list = normalizeOpenAI({ data: ["gpt-4.1-mini", "text-embedding-3-small", "tts-1", "whisper-1", "dall-e-3", "omni-moderation-latest", "gpt-x-unknown"].map((id) => ({ id })) });
-  it("bỏ embedding, tts, whisper, dall-e, moderation", () => {
-    expect(list.map((m) => m.id)).toEqual(["gpt-4.1-mini", "gpt-x-unknown"]);
+  const list = normalizeOpenAI({ data: ["gpt-4.1-mini", "text-embedding-3-small", "tts-1", "whisper-1", "dall-e-3", "omni-moderation-latest", "gpt-x-unknown", "o4-mini", "gpt-4o-realtime-preview", "babbage-002", "sora-2"].map((id) => ({ id })) });
+  it("chỉ giữ mô hình chat của OpenAI (bỏ embedding, tts, whisper, dall-e, moderation, realtime…)", () => {
+    expect(list.map((m) => m.id)).toEqual(["gpt-4.1-mini", "gpt-x-unknown", "o4-mini"]);
   });
   it("giá + ngữ cảnh từ bảng tĩnh nếu có, không thì null (vẫn chọn được)", () => {
     expect([list[0].priceIn, list[0].priceOut, list[0].contextLength]).toEqual([0.4, 1.6, 1_047_576]);
