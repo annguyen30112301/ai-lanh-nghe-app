@@ -1,0 +1,78 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Icon from "../components/Icon.astro";
+import QuoteForm from "../islands/QuoteForm";
+import { business } from "../content/vi";
+const t = business;
+const to = "hello@ailanhnghe.vn"; // giống email ở chân trang (mục 5)
+---
+<Base page="business" title={`${t.title} · AI Lành Nghề`} description={t.description}>
+  <PageIntro title={t.heading} lead={t.lead} chip={t.chip}>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="/app/dang-nhap/?demo=doanh-nghiep" class="btn btn-accent">{t.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+      <a href="#bao-gia" class="btn btn-line">{t.cta2}</a>
+    </div>
+  </PageIntro>
+
+  <section class="shell max-w-6xl pb-20" aria-labelledby="why-h">
+    <h2 id="why-h" class="t-title" data-reveal>{t.why.title}</h2>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {t.why.items.map((x) => (
+        <li class="rounded-3xl bg-raised p-6 ring-1 ring-hair">
+          <span class="icon-tile"><Icon name={x.icon} size={26} /></span>
+          <h3 class="mt-4 text-[1.05rem]">{x.title}</h3>
+          <p class="mt-2 text-[0.92rem] text-ink-2">{x.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="bg-paper py-20" aria-labelledby="dash-h">
+    <div class="shell max-w-6xl">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 id="dash-h" class="t-title">{t.dash.title}</h2>
+          <p class="t-sub mt-3">{t.dash.lead}</p>
+        </div>
+        <a href="/app/dang-nhap/?demo=doanh-nghiep" class="btn btn-accent">{t.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+      </div>
+      <figure class="relative mt-8 overflow-hidden rounded-3xl shadow-[var(--shadow)] ring-1 ring-hair">
+        <img src="/images/business-dashboard.png" alt={t.dash.alt} width="1920" height="1290" loading="lazy" class="zoom-in-view w-full" />
+        <figcaption class="chip absolute bottom-4 right-4 shadow-[var(--shadow)]">{t.dash.sample}</figcaption>
+      </figure>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {t.dash.points.map((p) => <li class="flex gap-2.5 text-[0.95rem]"><Icon name="check" size={20} weight="bold" class="mt-0.5 shrink-0 text-accent-2" />{p}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="shell max-w-6xl py-20" aria-labelledby="seat-h">
+    <h2 id="seat-h" class="t-title">{t.seats.title}</h2>
+    <ul class="mt-8 grid gap-4 md:grid-cols-3">
+      {t.seats.items.map(([h, b]) => <li class="panel p-6"><h3 class="text-[1.05rem]">{h}</h3><p class="mt-2 text-[0.92rem] text-ink-2">{b}</p></li>)}
+    </ul>
+  </section>
+
+  <section class="shell max-w-6xl pb-20" aria-labelledby="custom-h">
+    <h2 id="custom-h" class="t-title" data-reveal>{t.custom.title}</h2>
+    <p class="t-sub mt-3">{t.custom.lead}</p>
+    <ol class="mt-8 grid gap-4 md:grid-cols-4">
+      {t.custom.steps.map(([h, b], i) => (
+        <li class="rounded-3xl bg-raised p-6 ring-1 ring-hair">
+          <span class="grid size-9 place-items-center rounded-full bg-accent text-[0.9rem] font-bold text-on-accent">{i + 1}</span>
+          <h3 class="mt-4 text-[1.05rem]">{h}</h3>
+          <p class="mt-2 text-[0.92rem] text-ink-2">{b}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section id="bao-gia" class="shell max-w-4xl scroll-mt-28 pb-24" aria-labelledby="form-h">
+    <div class="panel p-7 sm:p-10">
+      <h2 id="form-h" class="t-title !text-[clamp(1.4rem,1.1rem+1vw,1.9rem)]">{t.form.title}</h2>
+      <p class="mt-2 text-ink-2">{t.form.lead}</p>
+      <div class="mt-6"><QuoteForm client:visible t={t.form} to={to} /></div>
+    </div>
+  </section>
+</Base>
