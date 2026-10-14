@@ -286,6 +286,84 @@ export const safety = {
   cta: "Xem lớp che dữ liệu hoạt động"
 };
 
+export const trial = {
+  title: "Dùng thử",
+  description: "Bàn thử việc: giao cho AI một việc mẫu của nghề, xem dữ liệu được che, tự bắt lỗi bằng checklist. Không cần đăng nhập.",
+  heading: "Giao cho AI một việc thật của nghề bạn",
+  lead: "Chọn một việc bạn làm hằng tuần, xem dữ liệu được che trước khi gửi, rồi tự kiểm tra bản nháp bằng checklist của gói nghề.",
+  chip: "Bàn thử việc",
+  mock: "Kết quả soạn sẵn để minh họa, không gọi AI.",
+  noLogin: "Không cần tài khoản · không lưu dữ liệu",
+  steps: ["Chọn việc", "Đầu vào", "Kiểm tra", "Kết quả"],
+  choose: {
+    title: "Hôm nay bạn muốn giao cho AI việc gì?",
+    lead: "Chọn nghề và một việc quen thuộc. Tài liệu mẫu đã điền sẵn, bạn không cần nhập dữ liệu thật.",
+    preview: "Xem trước – sắp ra mắt",
+    guard: "Có bước che dữ liệu",
+    promise: ["Xong trong khoảng 2 phút", "Bạn kiểm tra trước khi dùng", "Không cần tài khoản"],
+    start: "Bắt đầu: {x}"
+  },
+  bench: {
+    back: "Chọn việc khác",
+    input: "Bạn đưa vào",
+    sample: "Dữ liệu mẫu",
+    ask: "Bạn yêu cầu",
+    note: "Ghi chú của bạn",
+    noteClean: "Ghi chú đã ẩn danh",
+    output: "AI Lành Nghề xử lý",
+    draftBadge: "Bản mẫu",
+    run: "Giao cho AI",
+    rerun: "Giao lại cho AI",
+    running: "AI đang xử lý…",
+    idle: "Bấm <b>Giao cho AI</b>: dữ liệu được che trước, rồi AI làm theo quy trình nghề.",
+    guardTitle: "AI dừng lại trước khi xử lý",
+    before: "Trước",
+    after: "Sau khi che",
+    later: "Để sau",
+    drafting: "Đang tạo bản nháp…",
+    draft: "Bản nháp",
+    draftHint: "AI tạo bản nháp. Người làm nghề kiểm tra trước khi dùng.",
+    check: "Kiểm tra trước khi dùng"
+  },
+  mask: {
+    preview: "Dữ liệu sẽ gửi lên AI",
+    previewLead: "Chạy bằng đúng lớp che dữ liệu của app, ngay trong trình duyệt của bạn.",
+    truncated: "…còn nữa",
+    counted: "Đã che {n} thông tin"
+  },
+  review: {
+    title: "Kiểm tra trước khi dùng",
+    lead: "Đây là checklist của gói nghề. Đọc bản nháp và tick từng mục như khi bạn xem lại việc của đồng nghiệp.",
+    back: "Chỉnh lại đầu vào",
+    draft: "Bản nháp của AI",
+    checklist: "Checklist",
+    issue: "Chưa tick được mục này",
+    use: "Dùng kết quả này",
+    ready: "Đủ checklist. Kết quả sẵn sàng để dùng.",
+    need: "Tick đủ {n} mục trước khi dùng. Mục nào chưa ổn thì bấm vào để xem gợi ý."
+  },
+  done: {
+    title: "Xong việc: {x}",
+    usual: "Việc này thường mất",
+    withPack: "→ {x} với gói nghề",
+    usualNote: "Ví dụ minh họa của nhóm, không phải số đo trên người dùng thật.",
+    caught: "Bạn vừa bắt được 1 lỗi trước khi dùng",
+    why: "Đây là lý do mỗi gói nghề đi kèm checklist: AI làm nhanh phần lặp lại, người làm nghề giữ quyền quyết định.",
+    mock: "Bạn vừa xem bản mô phỏng: kết quả soạn sẵn, không có AI thật xử lý. Trong app, bạn làm việc thật với tài liệu của mình trên AI bạn kết nối.",
+    next: "Bước tiếp theo",
+    cta: "Làm với tài liệu thật của bạn – 5 lượt miễn phí",
+    ctaLead: "Đăng nhập bằng email, không cần thẻ, không cần key AI cho lượt thử.",
+    buy: "Đặt mua gói Mua hàng",
+    buyLead: "690.000 đ/năm cho cá nhân, có gói cho doanh nghiệp.",
+    pack: "Xem gói nghề",
+    packLead: "Ba tình huống Mua hàng đang chạy trong app.",
+    soon: "Giảng dạy đang sắp ra mắt",
+    soonLead: "Tình huống Giảng dạy ở đây là bản xem trước. Bạn có thể thử ngay nghề Mua hàng.",
+    again: "Thử thêm",
+    otherJob: "Việc của nghề {x}"
+  }
+};
+
 /* ======================= APP ======================= */
 const usage = {
   cols: ["Mô hình", "Số lượt", "Token gửi đi", "Token nhận về", "Chi phí ước tính"],
