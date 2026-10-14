@@ -42,9 +42,9 @@ const ERR: Record<number, string> = {
 /** Ghi mã lỗi + thông báo lỗi của nhà cung cấp (không có key, không có nội dung) rồi báo người dùng. */
 async function upstreamFail(provider: string, res: Response, mapped = res.status): Promise<never> {
   const body = (await res.text().catch(() => "")).slice(0, 400);
-  const msg = body.match(/"message"\s*:\s*"([^"]{0,200})/)?.[1] ?? "";
+  const msg = body.match(/"message"\s*:\s*"([^"]{0,260})/)?.[1] ?? "";
   console.error("ai_upstream", provider, res.status, msg);
-  return fail(502, (ERR[mapped] ?? "AI không phản hồi. Bạn chạy lại sau ít phút.") + ` (mã ${res.status}${msg ? ": " + msg.slice(0, 120) : ""})`, "ai_upstream");
+  return fail(502, (ERR[mapped] ?? "AI không phản hồi. Bạn chạy lại sau ít phút.") + ` (mã ${res.status}${msg ? ": " + msg.slice(0, 220) : ""})`, "ai_upstream");
 }
 
 async function chatCompletions(url: string, key: string, model: string, system: string, user: string): Promise<AIReply> {
