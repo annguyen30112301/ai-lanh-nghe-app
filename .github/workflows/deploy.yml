@@ -44,8 +44,8 @@ jobs:
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           TRIAL_API_KEY: ${{ secrets.TRIAL_API_KEY }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
-          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_USER: ${{ secrets.SMTP_USER || vars.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS || vars.SMTP_PASS }}
         run: |
           node -e 'const o={};for(const k of ["KEY_ENC_SECRET","SESSION_SECRET","RESEND_API_KEY","TRIAL_API_KEY","SMTP_USER","SMTP_PASS"]) if(process.env[k]) o[k]=process.env[k]; require("fs").writeFileSync("/tmp/s.json", JSON.stringify(o))'
           npx wrangler secret bulk /tmp/s.json --name ai-lanh-nghe-app
