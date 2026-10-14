@@ -39,8 +39,13 @@ const ERR: Record<number, string> = {
   403: "Key AI không có quyền dùng mô hình này. Vào mục Kết nối AI để kiểm tra.",
   429: "AI đang quá tải hoặc đã chạm hạn mức. Bạn chờ khoảng 1 phút rồi chạy lại."
 };
-const upstreamFail = (status: number): never =>
-  fail(502, ERR[status] ?? "AI không phản hồi. Bạn chạy lại sau ít phút.", "ai_upstream");
+/** Ghi mã lỗi + thông báo lỗi của nhà cung cấp (không có key, không có nội dung) rồi báo người dùng. */
+async function upstreamFail(provider: string, res: Response, mapped = res.status): Promise<never> {
+  const body = (await res.text().catch(() => "")).slice(0, 400);
+  const msg = body.match(/"message"\s*:\s*"([^"]{0,200})/)?.[1] ?? "";
+  console.error("ai_upstream", provider, res.status, msg);
+  return fail(502, (ERR[mapped] ?? "AI không phản hồi. Bạn chạy lại sau ít phút.") + ` (mã ${res.status}${msg ? ": " + msg.slice(0, 120) : ""})`, "ai_upstream");
+}
 
 async function chatCompletions(url: string, key: string, model: string, system: string, user: string): Promise<AIReply> {
   const res = await fetch(url, {
@@ -50,7 +55,7 @@ async function chatCompletions(url: string, key: string, model: string, system: 
       messages: [{ role: "system", content: system }, { role: "user", content: user }] }),
     signal: AbortSignal.timeout(90_000)
   });
-  if (!res.ok) upstreamFail(res.status);
+  if (!res.ok) await upstreamFail(url.includes("openrouter") ? "openrouter" : "openai", res);
   const j = (await res.json()) as { choices?: { message?: { content?: string } }[]; usage?: { prompt_tokens?: number; completion_tokens?: number } };
   return { text: j.choices?.[0]?.message?.content ?? "", tokens_in: j.usage?.prompt_tokens ?? 0, tokens_out: j.usage?.completion_tokens ?? 0 };
 }
@@ -67,7 +72,7 @@ async function gemini(key: string, system: string, user: string): Promise<AIRepl
     }),
     signal: AbortSignal.timeout(90_000)
   });
-  if (!res.ok) upstreamFail(res.status === 400 ? 401 : res.status); // Gemini trả 400 khi key sai
+  if (!res.ok) await upstreamFail("gemini", res, res.status === 400 ? 401 : res.status); // Gemini trả 400 khi key sai
   const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
   return {
     text: j.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "",
