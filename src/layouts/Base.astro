@@ -4,12 +4,12 @@ import "../styles/global.css";
 import Icon from "../components/Icon.astro";
 import { site, ui } from "../content/vi";
 
-export type PageKey = "home" | "how" | "packs" | "pricing" | "safety";
+export type PageKey = "home" | "how" | "packs" | "pricing" | "safety" | "terms" | "privacy";
 interface Props { page: PageKey; title: string; description: string }
 const { page, title, description } = Astro.props;
 
-const href: Record<PageKey, string> = { home: "/", how: "/cach-hoat-dong/", packs: "/goi-nghe/", pricing: "/bang-gia/", safety: "/an-toan/" };
-const desktop: PageKey[] = ["home", "how", "packs", "pricing", "safety"];
+const href: Record<PageKey, string> = { home: "/", how: "/cach-hoat-dong/", packs: "/goi-nghe/", pricing: "/bang-gia/", safety: "/an-toan/", terms: "/dieu-khoan/", privacy: "/chinh-sach-du-lieu/" };
+const desktop = ["home", "how", "packs", "pricing", "safety"] as const;
 const tabs: { k: PageKey; icon: string }[] = [{ k: "home", icon: "home" }, { k: "how", icon: "path" }, { k: "packs", icon: "briefcase" }, { k: "pricing", icon: "coins" }];
 const moreActive = page === "safety";
 ---
@@ -60,8 +60,8 @@ const moreActive = page === "safety";
   <main id="main"><slot /></main>
 
   <footer class="bg-deep text-brand-100/80">
-    <div class="shell grid gap-12 pb-28 pt-20 lg:grid-cols-[1.4fr_1fr_1fr] lg:pb-16">
-      <div>
+    <div class="shell grid gap-12 pb-28 pt-20 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:pb-16">
+      <div class="sm:col-span-2 lg:col-span-1">
         <div class="flex items-center gap-3">
           <img src="/logo.png" alt="" width="288" height="228" loading="lazy" class="h-12 w-auto brightness-0 invert" />
           <span class="text-xl font-bold text-white">{site.name}</span>
@@ -75,15 +75,27 @@ const moreActive = page === "safety";
           {desktop.map((k) => <li><a href={href[k]} class="text-brand-100/85 no-underline hover:text-white">{ui.nav[k]}</a></li>)}
         </ul>
       </nav>
+      <nav aria-label={ui.footer.legal}>
+        <h2 class="mb-4 text-[0.85rem] font-semibold text-brand-300">{ui.footer.legal}</h2>
+        <ul class="grid gap-2.5">
+          <li><a href="/hoi-dap/" class="text-brand-100/85 no-underline hover:text-white">{ui.footer.qa}</a></li>
+          <li><a href="/dieu-khoan/" class="text-brand-100/85 no-underline hover:text-white">{ui.footer.terms}</a></li>
+          <li><a href="/chinh-sach-du-lieu/" class="text-brand-100/85 no-underline hover:text-white">{ui.footer.privacy}</a></li>
+        </ul>
+      </nav>
       <div>
         <h2 class="mb-4 text-[0.85rem] font-semibold text-brand-300">{ui.footer.contact}</h2>
         <ul class="grid gap-3">
+          <li><a href={`mailto:${ui.footer.email}`} class="text-brand-100/85 no-underline hover:text-white">{ui.footer.email}</a></li>
           <li>{ui.footer.city}</li>
           <li><a href={site.oldSite} target="_blank" rel="noopener" class="text-brand-100/85 no-underline hover:text-white">{ui.footer.oldSite}</a></li>
         </ul>
       </div>
     </div>
-    <p class="shell border-t border-white/10 pb-28 pt-6 text-[0.78rem] leading-relaxed text-brand-100/60 lg:pb-8">{ui.footer.demo}</p>
+    <div class="shell border-t border-white/10 pb-28 pt-6 text-[0.78rem] leading-relaxed text-brand-100/60 lg:pb-8">
+      <p>{site.name} · {ui.footer.demo}</p>
+      <p class="mt-1">{ui.footer.images}</p>
+    </div>
   </footer>
 
   <nav class="no-print fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 lg:hidden" aria-label="Thanh điều hướng" style="view-transition-name: tabbar">

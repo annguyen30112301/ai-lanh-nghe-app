@@ -21,8 +21,14 @@ export const ui = {
     explore: "Khám phá",
     contact: "Liên hệ",
     city: "TP. Hồ Chí Minh",
-    demo: "Đồ án môn Thương mại điện tử – UEH, Nhóm 02. Bản demo: dữ liệu và doanh nghiệp trong ví dụ đều là giả lập.",
-    oldSite: "Website giới thiệu bản cũ"
+    demo: "Website demo cho đồ án môn Thương mại điện tử – UEH, Nhóm 02. Không phát sinh giao dịch thật; dữ liệu và doanh nghiệp trong ví dụ đều là giả lập.",
+    oldSite: "Website giới thiệu bản cũ",
+    email: "hello@ailanhnghe.vn",
+    legal: "Thông tin",
+    terms: "Điều khoản dịch vụ",
+    privacy: "Chính sách dữ liệu",
+    qa: "Hỏi đáp",
+    images: "Ảnh màn hình là app thật. Ảnh minh họa do AI tạo (nếu có) được ghi chú ngay dưới ảnh."
   }
 };
 
@@ -284,6 +290,69 @@ export const safety = {
     body: "Thiết kế theo tinh thần Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 và Nghị định 356/2025: tối thiểu hóa dữ liệu, minh bạch mục đích xử lý, người dùng kiểm soát dữ liệu gửi đi. Gói doanh nghiệp kèm mẫu đánh giá tác động xử lý dữ liệu (DPIA)."
   },
   cta: "Xem lớp che dữ liệu hoạt động"
+};
+
+const legalDemo = "Bản demo cho đồ án môn Thương mại điện tử – UEH. Không phải văn bản pháp lý có hiệu lực.";
+
+export const terms = {
+  title: "Điều khoản dịch vụ",
+  description: "Điều khoản dịch vụ rút gọn của AI Lành Nghề (bản demo đồ án).",
+  demo: legalDemo,
+  updated: "Cập nhật 14/10/2026",
+  sections: [
+    { h: "1. Phạm vi dịch vụ", p: ["AI Lành Nghề là ứng dụng web làm việc theo nghề: quy trình nghề đóng gói sẵn, lớp che dữ liệu, mẫu kết quả, checklist tự kiểm và bảng điều khiển đo thời gian. AI chạy bằng tài khoản AI của chính khách hàng (key hoặc kết nối OpenRouter); AI Lành Nghề không bán và không thu phí sử dụng AI.", "Gói nghề đang bán: Mua hàng. Các nghề ghi “sắp ra mắt” chưa nằm trong phạm vi dịch vụ."] },
+    { h: "2. Gói và thời hạn", p: ["Gói Cá nhân, Business và Business Plus có thời hạn 1 năm kể từ ngày kích hoạt, gia hạn theo bảng giá công khai tại thời điểm gia hạn. Doanh nghiệp mua theo số người dùng (seat).", "Lượt dùng thử (5 lượt) chỉ để trải nghiệm, có thể thay đổi hoặc dừng mà không báo trước."] },
+    { h: "3. Tinh chỉnh 1:1", p: ["Tinh chỉnh là dịch vụ một lần (cá nhân 800.000 đ/lần; doanh nghiệp theo báo giá). Sau khi buổi tinh chỉnh đã diễn ra, phí này không hoàn lại và không thu lại khi gia hạn gói."] },
+    { h: "4. Thay đổi giữa kỳ", p: ["Thêm seat giữa kỳ: tính theo số ngày còn lại đến ngày hết hạn chung của gói. Ưu đãi quy mô áp theo tổng seat sau khi thêm, chỉ cho phần mua thêm.", "Giảm seat, bỏ hoặc đổi nghề: áp dụng từ kỳ gia hạn sau, không hoàn tiền cho kỳ hiện tại. Đổi người dùng của một seat: miễn phí, có hiệu lực ngay."] },
+    { h: "5. Trách nhiệm với kết quả AI", p: ["Kết quả do mô hình AI bên thứ ba tạo ra và có thể sai. Người dùng phải đọc, kiểm tra theo checklist và tự quyết định trước khi dùng hoặc gửi kết quả ra ngoài. AI Lành Nghề chịu trách nhiệm về quy trình, lớp che dữ liệu và phần mềm; không chịu trách nhiệm về quyết định kinh doanh dựa trên kết quả chưa được kiểm tra."] },
+    { h: "6. Sử dụng hợp lệ", p: ["Mỗi tài khoản gắn với một người; không chia sẻ thông tin đăng nhập. Không dùng dịch vụ để xử lý dữ liệu mà bạn không có quyền xử lý, hoặc dữ liệu mà quy chế nội bộ của bạn cấm đưa ra ngoài."] },
+    { h: "7. Chấm dứt", p: ["Khách hàng có thể ngừng gia hạn bất kỳ lúc nào; tài khoản dùng được đến hết kỳ đã thanh toán. AI Lành Nghề có thể tạm khóa tài khoản vi phạm mục 6 sau khi thông báo qua email. Khi chấm dứt, key AI đã lưu được xóa; số đếm sử dụng được xóa theo Chính sách dữ liệu."] },
+    { h: "8. Liên hệ", p: ["Mọi câu hỏi về điều khoản: gửi email tới <a href=\"mailto:hello@ailanhnghe.vn\">hello@ailanhnghe.vn</a>."] }
+  ]
+};
+
+export const privacy = {
+  title: "Chính sách dữ liệu",
+  description: "AI Lành Nghề lưu gì, không lưu gì, vai trò các bên và quyền của người dùng (bản demo đồ án).",
+  demo: legalDemo,
+  updated: "Cập nhật 14/10/2026",
+  intro: "Chúng tôi thiết kế theo nguyên tắc tối thiểu hóa dữ liệu: che thông tin nhận diện trước khi gửi lên AI, không lưu nội dung công việc trên máy chủ.",
+  kinds: {
+    h: "1. Hai loại dữ liệu cần bảo vệ",
+    items: [
+      { t: "Dữ liệu cá nhân", b: "Họ tên, số điện thoại, email, CCCD, số tài khoản… của người liên hệ, nhân viên, đối tác. Xử lý theo Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 và Nghị định 356/2025/NĐ-CP." },
+      { t: "Bí mật kinh doanh", b: "Báo giá, hợp đồng, điều kiện thương mại của doanh nghiệp. Do quy chế nội bộ của khách hàng quy định; AI Lành Nghề cung cấp công cụ che nhưng không thay quy chế đó." }
+    ]
+  },
+  store: { h: "2. Máy chủ lưu gì và không lưu gì" },
+  roles: {
+    h: "3. Vai trò các bên",
+    rows: [
+      ["Khách hàng (cá nhân hoặc doanh nghiệp)", "Bên kiểm soát dữ liệu", "Quyết định đưa tài liệu nào vào, chọn AI và mô hình, duyệt kết quả."],
+      ["AI Lành Nghề", "Bên xử lý dữ liệu", "Đọc file trong trình duyệt, che thông tin, ghép yêu cầu, chuyển tới AI khách đã kết nối, trả kết quả. Không lưu nội dung."],
+      ["Nhà cung cấp AI / OpenRouter", "Bên nhận dữ liệu đã che", "Xử lý yêu cầu theo điều khoản của chính nhà cung cấp mà khách hàng đã đồng ý khi tạo key."]
+    ],
+    head: ["Bên", "Vai trò", "Việc làm với dữ liệu"]
+  },
+  retention: {
+    h: "4. Thời gian lưu",
+    items: [
+      "Nội dung file, yêu cầu gửi AI, kết quả: không lưu. Bản đồ nhãn ↔ tên thật chỉ tồn tại trong bộ nhớ trong lúc xử lý một yêu cầu.",
+      "Số đếm mỗi lượt (mở, xong, xuất lúc nào; che bao nhiêu thông tin; lượng token; tên mô hình): lưu trong thời hạn gói và 12 tháng sau khi chấm dứt, rồi xóa.",
+      "Key AI (đã mã hóa AES-256-GCM): lưu đến khi bạn gỡ kết nối hoặc chấm dứt tài khoản.",
+      "Đơn đặt mua (bản demo): mã đơn, gói, số tiền, email, tên công ty và MST nếu có; không lưu họ tên, số điện thoại, số thẻ hay tài khoản ngân hàng."
+    ]
+  },
+  rights: {
+    h: "5. Quyền của người dùng",
+    items: ["Biết dữ liệu nào về mình đang được lưu.", "Yêu cầu sửa, xóa dữ liệu tài khoản và số đếm sử dụng.", "Rút lại đồng ý, gỡ kết nối AI bất kỳ lúc nào.", "Khiếu nại tới cơ quan có thẩm quyền theo quy định."],
+    how: "Gửi yêu cầu tới <a href=\"mailto:hello@ailanhnghe.vn\">hello@ailanhnghe.vn</a>; chúng tôi phản hồi trong thời hạn luật định."
+  },
+  incident: {
+    h: "6. Báo cáo sự cố",
+    p: "Khi phát hiện sự cố lộ lọt dữ liệu, AI Lành Nghề thông báo cho khách hàng bị ảnh hưởng và cơ quan có thẩm quyền trong vòng 72 giờ kể từ khi phát hiện, nêu rõ dữ liệu liên quan, mức độ và biện pháp khắc phục."
+  },
+  more: "Xem cách lớp che dữ liệu hoạt động ở trang <a href=\"/an-toan/\">An toàn</a>."
 };
 
 /* ======================= APP ======================= */
