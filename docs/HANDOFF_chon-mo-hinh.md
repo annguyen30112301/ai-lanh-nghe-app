@@ -1,91 +1,66 @@
-# Bàn giao: khách tự chọn mô hình AI
+# Kết nối AI & chọn mô hình – hiện trạng
 
-> Repo `ai-lanh-nghe-app` · Lập 14/10/2026 · Làm **trước** hoặc song song với `WEBSITE_PART2_AI-LanhNghe.md`.
+> Repo `ai-lanh-nghe-app` · Cập nhật 14/10/2026 theo code trên `main` (PR #1: 2c62f10 → ea81195).
+> Phần này **đã làm xong**. File mô tả cách hệ thống đang chạy và các việc còn tồn. Bản thiết kế ban đầu (sửa bảng `ai_connections`) **không còn đúng**: xem lịch sử git nếu cần.
 
-## 1. Vì sao làm
+## 1. Nguyên tắc
+- **AI của khách, khách quyết.** Hệ thống không chọn sẵn mô hình, không gắn nhãn "khuyên dùng" cho hãng nào, không tự đổi mô hình khi khách chưa cho phép.
+- Hệ thống chỉ đưa thông tin trung lập: giá ước tính mỗi lượt, độ dài ngữ cảnh, đáp ứng yêu cầu kỹ thuật hay không, đã qua bộ kiểm thử gói nghề hay chưa.
+- Ngoại lệ: **5 lượt dùng thử** chạy bằng key của nhóm, mô hình do nhóm cấu hình (`TRIAL_*`).
 
-Hiện `src/lib/ai-gateway.ts` gắn cứng mô hình qua biến môi trường: Gemini dùng `gemini-3.8-flash` và tự chuyển sang mô hình dự phòng, OpenRouter dùng `anthropic/claude-sonnet-5.5`, OpenAI dùng `gpt-4.1-mini`. Như vậy là mình đang chọn mô hình thay khách, trái với nguyên tắc **"AI của khách, khách quyết"**.
-
-Nguyên tắc mới:
-- Khách tự chọn mô hình trong tài khoản AI của mình. Hệ thống **không đặt sẵn mô hình**, **không gắn nhãn "khuyên dùng" cho hãng nào**, và **không tự đổi mô hình** khi khách chưa cho phép.
-- Hệ thống chỉ đưa **thông tin trung lập** để khách tự chọn: giá ước tính mỗi lượt, độ dài ngữ cảnh, đáp ứng được yêu cầu kỹ thuật hay không, đã kiểm thử với gói nghề hay chưa.
-- Ngoại lệ: **5 lượt dùng thử** chạy bằng key của nhóm nên nhóm chọn mô hình (cấu hình `TRIAL_PROVIDER`/`TRIAL_MODEL`). Trên màn hình ghi rõ: "Lượt dùng thử chạy trên <tên mô hình>. Khi kết nối AI của bạn, bạn tự chọn mô hình."
-
-## 2. Dữ liệu
-
-`migrations/0003_model_choice.sql`:
-```sql
-ALTER TABLE ai_connections ADD COLUMN model TEXT;            -- mô hình khách chọn, NULL = chưa chọn
-ALTER TABLE ai_connections ADD COLUMN allow_fallback INTEGER NOT NULL DEFAULT 0; -- khách cho phép đổi khi quá tải
-ALTER TABLE ai_connections ADD COLUMN fallback_model TEXT;   -- mô hình dự phòng do khách chọn
-ALTER TABLE runs ADD COLUMN model TEXT;                       -- mô hình thực chạy (để thống kê, đo chi phí)
-```
-Không lưu gì thêm về nội dung.
-
-## 3. Lấy danh sách mô hình
-
-`GET /api/ai/models` (cần đăng nhập, đã có kết nối): máy chủ giải mã key, gọi API danh sách của nhà cung cấp, chuẩn hóa thành
-`{ id, name, contextLength, priceIn, priceOut (USD / 1 triệu token, có thể null), jsonOk, tested }`. Lưu cache 1 giờ theo `org_id` (chỉ trong bộ nhớ hoặc Cache API, không ghi D1).
-
-| Nguồn | API | Lọc |
+## 2. Kết nối AI (nhiều AI cùng lúc)
+| Ai | Cách kết nối | Nguồn (`source`) |
 |---|---|---|
-| OpenRouter | `GET https://openrouter.ai/api/v1/models` | `context_length ≥ 32000`; `jsonOk` khi `supported_parameters` có `response_format` hoặc `structured_outputs`. Có sẵn giá. |
-| Gemini | `GET /v1beta/models` (header `x-goog-api-key`, phân trang hết) | `supportedGenerationMethods` có `generateContent`; bỏ embedding, aqa, imagen. Không có giá: lấy từ bảng tĩnh `src/lib/model-prices.ts` nếu có, không có thì để trống. |
-| OpenAI (key công ty) | `GET /v1/models` | Bỏ embedding, tts, whisper, dall-e, moderation. Giá từ bảng tĩnh nếu có. |
+| Cá nhân | OpenRouter một chạm (OAuth PKCE) | `openrouter_oauth` |
+| Cá nhân | Dán key Gemini | `gemini_key` |
+| Cá nhân | Dán key OpenAI | `openai_key` |
+| Doanh nghiệp | Quản trị viên gắn **key công ty**, chọn nhà cung cấp OpenRouter / Gemini / OpenAI | `company_key` |
 
-- `tested = true` khi mô hình nằm trong `src/skills/tested-models.json`. File này do nhóm cập nhật sau mỗi lần chạy bộ kiểm thử gói nghề, ghi tên mô hình, ngày kiểm thử, số tình huống đạt / tổng.
-- Mô hình `jsonOk = false` hoặc ngữ cảnh < 32k: vẫn hiện, nhưng có cảnh báo và **không cho chọn**, kèm lý do ("không trả được dữ liệu dạng bảng ổn định", "không đủ dài cho 3 báo giá").
+- Mỗi tổ chức kết nối được **nhiều AI**, mỗi nhà cung cấp một key. Bảng `ai_keys`, khóa `(org_id, provider)`, key mã hóa AES-256-GCM, chỉ hiện 4 ký tự cuối.
+- Gắn lại key cùng nhà cung cấp → thay key cũ, giữ mô hình đã chọn.
+- Gỡ một AI: mô hình chính thuộc AI đó → bỏ lựa chọn (khách phải chọn lại); dự phòng thuộc AI đó → tắt dự phòng.
+- Một key lỗi không làm mất danh sách mô hình của các AI khác.
 
-## 4. Giao diện
+## 3. Danh sách mô hình
+- `GET /api/ai/models`: gộp mô hình từ **mọi AI đã kết nối**, cache 1 giờ (không ghi D1). Mỗi AI chỉ trả mô hình của chính nó: key Gemini → `gemini-*`; key OpenAI → mô hình chat của OpenAI; OpenRouter → mọi hãng trên OpenRouter.
+- Mỗi mô hình: nhà cung cấp, id, tên, hãng, ngữ cảnh, giá vào/ra (USD/1 triệu token), `jsonOk`, đã kiểm thử, lý do khóa.
+- **Giá mỗi lượt** = (6.000 × giá vào + 2.000 × giá ra) / 1.000.000 × `USD_VND`. OpenRouter có giá qua API; Gemini/OpenAI lấy từ bảng tĩnh `src/lib/model-prices.ts`; không có giá thì hiện "—".
+- **Khóa (không cho chọn, có ghi lý do):** không trả được JSON ổn định, hoặc ngữ cảnh < 32.000 token.
+- Sắp theo tên A→Z, lọc được theo AI, theo "đã kiểm thử", theo giá và ngữ cảnh. Không có mô hình nào chọn sẵn.
 
-### 4.1 `/app/ket-noi-ai/` (`ConnectAI.tsx`), thêm bước 2 "Chọn mô hình" sau khi xác minh key
-- Ô tìm kiếm + danh sách. **Sắp xếp theo tên (A→Z)**, không sắp theo hãng. Bộ lọc: "Đã kiểm thử với gói nghề", "Giá / lượt ≤ …", "Ngữ cảnh ≥ …".
-- Mỗi dòng: tên, nhà cung cấp, **giá ước tính mỗi lượt** = `(6.000 × priceIn + 2.000 × priceOut) / 1e6 × tỷ giá`, làm tròn đến 10 đ; hiện "—" khi không có giá. Thêm ngữ cảnh và nhãn "Đã kiểm thử 3/3" nếu có.
-- Không có mô hình nào được chọn sẵn. Nút "Lưu" chỉ bật khi đã chọn.
-- Mục phụ (thu gọn): "Khi mô hình quá tải" gồm 2 lựa chọn: *Báo lỗi để tôi thử lại* (mặc định, vì đây là hành vi, không phải mô hình) / *Chuyển sang mô hình dự phòng tôi chọn*, kèm ô chọn mô hình dự phòng.
-- Dòng ghi chú: "Giá do nhà cung cấp AI thu trực tiếp từ tài khoản của bạn. AI Lành Nghề không thu phí AI."
+## 4. Chọn mô hình & dự phòng
+- `POST /api/ai/model` lưu vào `ai_model_choice (org_id, provider, model, allow_fallback, fallback_provider, fallback_model)`. Máy chủ kiểm tra lại mô hình có trong danh sách và không bị khóa.
+- **Doanh nghiệp: chỉ quản trị viên** được đổi mô hình; thành viên chỉ thấy tên mô hình đang dùng.
+- Dự phòng khi quá tải: mặc định **báo lỗi để khách thử lại**. Khách có thể bật dự phòng và tự chọn mô hình dự phòng; mô hình này **có thể thuộc AI khác** của khách, phải khác mô hình chính. Gateway chỉ thử lại **một lần**.
+- Chưa chọn mô hình → chặn chạy, dẫn sang bước chọn.
 
-### 4.2 `/app/lam-viec/`
-- Trên nút chạy hiện "Mô hình: <tên> · ≈ <giá>/lượt · Đổi". Bấm "Đổi" mở lại danh sách (cùng component). Doanh nghiệp: chỉ quản trị viên được đổi, thành viên chỉ thấy tên mô hình.
-- Chưa chọn mô hình thì chặn chạy, dẫn sang bước chọn.
+## 5. Giao diện
+- `/app/ket-noi-ai/` (`ConnectAI.tsx` + `ModelPicker.tsx`): danh sách AI đã kết nối, thêm/gỡ key, chọn mô hình.
+- `/app/lam-viec/` (`ModelBar.tsx`): "Mô hình: … · ≈ …/lượt · Đổi".
+- Bảng điều khiển & quản trị (`ModelUsage.tsx`): thống kê lượt, token theo mô hình (`runs.provider`, `runs.model`).
 
-### 4.3 `/app/quan-tri/` và bảng điều khiển
-- Thống kê lượt theo `runs.model` (số lượt, token vào/ra, chi phí ước tính).
+## 6. Gateway (`src/lib/ai-gateway.ts`)
+- Không còn mô hình gắn cứng (bỏ `GEMINI_MODEL`, `OPENROUTER_MODEL`, `OPENAI_MODEL`, chuỗi dự phòng Gemini).
+- Mô hình không nhận `response_format` → tự gửi lại không có tham số đó; Gemini không nhận `thinkingConfig` → gửi lại không có.
+- Lớp che dữ liệu và việc ghép prompt không đổi.
 
-## 5. Sửa `ai-gateway.ts`
-- Bỏ `GEMINI_MODEL`, `OPENROUTER_MODEL`, `OPENAI_MODEL`, bỏ chuỗi `GEMINI_FALLBACKS` gắn cứng. Mô hình lấy từ `ai_connections.model`.
-- Khi lỗi 429/503: nếu `allow_fallback = 1` và có `fallback_model`, thử lại **một lần** bằng mô hình đó và ghi `runs.model` là mô hình thực chạy; nếu không thì trả lỗi rõ ràng: "Mô hình <tên> đang quá tải. Thử lại sau hoặc đổi mô hình."
-- Mô hình không hỗ trợ `response_format`: không gửi tham số đó; dùng prompt yêu cầu JSON + bóc JSON từ văn bản + kiểm tra schema hiện có. Gemini: giữ `responseMimeType: application/json`.
-- Biến cho lượt dùng thử: thêm `TRIAL_MODEL` (đặt trong `wrangler.jsonc`), đề xuất `gemini-3.8-flash` theo bảng chi phí. Chỉ dùng cho lượt thử.
-- Không thay đổi lớp che dữ liệu và việc ghép prompt.
+## 7. Cấu hình
+| Biến (`wrangler.jsonc` / GitHub Variables) | Giá trị hiện tại | Ghi chú |
+|---|---|---|
+| `TRIAL_PROVIDER` | `openrouter` | Đặt Variable để ghi đè khi deploy |
+| `TRIAL_MODEL` | `anthropic/claude-sonnet-5.5` | Bảng chi phí đề xuất `gemini-3.8-flash` (≈ 4,7 tr thay vì ≈ 13,3 tr cho 3.000 người thử). **Nhóm cần chốt.** Đổi sang Gemini thì đặt cả `TRIAL_PROVIDER=gemini` và secret `TRIAL_API_KEY` là key Gemini trả phí |
+| `TRIAL_FALLBACK_MODEL` | trống | |
+| `USD_VND` | `26000` | Bảng chi phí & báo cáo dùng 26.200; nên để 26.200 cho khớp |
 
-## 6. Nội dung trang
-- `vi.ts`, `/cach-hoat-dong/`, `/an-toan/`, `/hoi-dap/`: thêm câu "Bạn tự chọn mô hình trong tài khoản AI của mình. AI Lành Nghề không chọn thay." Không nêu tên mô hình nào là khuyên dùng.
-- Hỏi đáp (WEBSITE_PART2 mục 4) thêm câu: **"Nên chọn mô hình nào?"** → "Tùy ngân sách và yêu cầu chất lượng. Danh sách hiện giá mỗi lượt và mô hình nào đã qua bộ kiểm thử gói nghề để bạn so sánh. Tránh bậc miễn phí của nhà cung cấp nếu bậc đó cho phép dùng dữ liệu để huấn luyện."
+## 8. Dữ liệu (migration 0003, đã chạy trên D1 thật)
+- Chuyển `ai_connections` → `ai_keys` rồi **xóa** `ai_connections`.
+- Thêm `ai_model_choice`; `runs` thêm `provider`, `model`.
+- Tổ chức kết nối từ trước chưa có dòng trong `ai_model_choice` → bị chặn chạy tới khi quản trị viên chọn mô hình.
+- `db/seed.sql` không tạo key AI cho tài khoản demo, nên tài khoản demo chạy bằng lượt thử. Muốn trình diễn bước kết nối và chọn mô hình ở buổi báo cáo: đăng nhập `lan@ailanhnghe.demo`, gắn một key thật, chọn mô hình **trước giờ báo cáo**.
 
-## 7. Kiểm thử (Vitest)
-- Chuẩn hóa danh sách cho cả 3 nguồn (dùng JSON mẫu, không gọi mạng).
-- Tính giá mỗi lượt; giá null → "—".
-- Gateway: dùng đúng mô hình đã lưu; không tự đổi khi `allow_fallback = 0`; đổi đúng một lần khi = 1.
-- Chặn chạy khi `model` NULL.
-- `AI_MOCK` vẫn chạy được không cần key.
-
-## 8. Xong khi
-- [x] Không còn tên mô hình gắn cứng trong `ai-gateway.ts` (trừ `TRIAL_MODEL` cấu hình).
-- [x] Kết nối xong phải chọn mô hình mới chạy được; không có lựa chọn sẵn.
-- [x] Danh sách sắp theo tên, có giá/lượt, nhãn đã kiểm thử, lý do khóa với mô hình không đạt yêu cầu.
-- [x] `runs.model` có giá trị cho mọi lượt mới.
-- [x] Test qua, build 0 lỗi. Còn lại: deploy (push `main`) — workflow tự chạy migration 0003 trên D1 thật.
-
-## 9. Ghi chú triển khai (14/10/2026)
-- Danh sách chỉ gồm mô hình của nhà cung cấp ứng với key: key Gemini → chỉ `gemini-*`; key OpenAI → chỉ mô hình chat của OpenAI; OpenRouter → nhiều hãng (một key OpenRouter dùng được mọi hãng trên OpenRouter). Lưu mô hình cũng kiểm tra lại theo đúng danh sách đó.
-- Code: `src/lib/models.ts` (chuẩn hóa, giá/lượt, khóa), `src/lib/models-fetch.ts` (gọi API + cache 1 giờ), `src/pages/api/ai/models.ts` (GET), `src/pages/api/ai/model.ts` (POST lưu), `src/islands/ModelPicker.tsx`, `ModelBar.tsx`, `ModelUsage.tsx`.
-- `src/skills/tested-models.json` đang **rỗng**: chưa mô hình nào có nhãn "Đã kiểm thử" cho tới khi nhóm chạy bộ kiểm thử và ghi `{ "id", "date", "passed", "total" }`.
-- `src/lib/model-prices.ts` mới có giá niêm yết một số mô hình Gemini/OpenAI; mô hình khác hiện "—". Nhóm rà lại theo trang giá.
-- Tỷ giá ước tính: `USD_VND` trong `wrangler.jsonc` (26.000).
-- Lượt dùng thử: giữ nguyên hành vi đang chạy. `TRIAL_MODEL` mặc định `anthropic/claude-sonnet-5.5` (OpenRouter); nếu repo đặt `TRIAL_PROVIDER=gemini` thì deploy tự đặt `gemini-3.8-flash` + dự phòng `gemini-3.7-flash`. Muốn theo đề xuất `gemini-3.8-flash` cho mọi trường hợp: đặt Variable `TRIAL_MODEL` (và `TRIAL_PROVIDER`/`TRIAL_API_KEY` tương ứng).
-- Gateway: mô hình không nhận `response_format` → tự gửi lại không có tham số đó; Gemini không nhận `thinkingConfig` → gửi lại không có.
-- **Gói cá nhân** dán được key Gemini và key OpenAI (nguồn `openai_key`); doanh nghiệp dùng "Key công ty" (OpenRouter/Gemini/OpenAI).
-- **Nhiều AI cùng lúc:** mỗi tổ chức kết nối được nhiều AI (mỗi nhà cung cấp một key, bảng `ai_keys`, khóa `(org_id, provider)`). Danh sách mô hình gộp từ mọi AI đã kết nối, sắp theo tên, lọc được theo AI. Mô hình chọn lưu ở `ai_model_choice` gồm cả nhà cung cấp; dự phòng có thể thuộc AI khác. Gắn lại key cùng nhà cung cấp thì thay key cũ, giữ mô hình. Gỡ một AI: nếu mô hình chính thuộc AI đó thì bỏ lựa chọn, nếu dự phòng thuộc AI đó thì tắt dự phòng. Một key lỗi không làm mất danh sách của AI khác.
-- Migration 0003 chuyển dữ liệu `ai_connections` sang `ai_keys` rồi **xóa bảng `ai_connections`**. `runs` thêm `provider` + `model`.
-- Sau migration, các tổ chức **đã kết nối từ trước** chưa có dòng trong `ai_model_choice` nên bị chặn chạy cho tới khi quản trị viên chọn mô hình (đúng nguyên tắc, nhưng cần báo khách cũ).
+## 9. Việc còn tồn
+- [ ] **Bảng giá tĩnh thiếu các mô hình Gemini 3.x**: `gemini-3.8-flash` (0,75 / 3,75 USD đến 31/12/2026; 1,50 / 7,50 từ 01/01/2027), `gemini-3.5-flash-lite` (0,30 / 2,50). Hiện các mô hình này hiện giá "—". Rà thêm `gemini-3.7-flash` và các mô hình OpenAI mới theo trang giá chính thức.
+- [ ] `src/skills/tested-models.json` đang **rỗng**: chưa mô hình nào có nhãn "Đã kiểm thử". Chạy 3 tình huống Mua hàng với dữ liệu mẫu trên vài mô hình rồi ghi `{ "id", "date", "passed", "total" }`.
+- [ ] Chốt `TRIAL_MODEL` (mục 7) và `USD_VND`.
+- [ ] Trước buổi báo cáo: gắn key và chọn mô hình cho tài khoản demo dùng để trình diễn (mục 8).
+- [ ] Nội dung trang công khai (`/cach-hoat-dong/`, `/an-toan/`, `/hoi-dap/`): thêm câu "Bạn tự chọn mô hình trong tài khoản AI của mình, có thể kết nối nhiều AI. AI Lành Nghề không chọn thay." Phần Hỏi đáp đã ghi trong `WEBSITE_PART2_AI-LanhNghe.md` mục 4.
