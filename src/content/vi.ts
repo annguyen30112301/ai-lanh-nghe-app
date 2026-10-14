@@ -30,7 +30,7 @@ export const home = {
   title: "AI Lành Nghề – làm việc nghề nhanh hơn với AI của chính bạn",
   description: "Chọn đúng việc, tải file, nhận kết quả theo mẫu kèm checklist. Dữ liệu nhạy cảm được che trước khi gửi lên AI.",
   hero: {
-    day: "Sáng thứ Hai của chị Lan",
+    day: "Ví dụ minh họa · Sáng thứ Hai của chị Lan",
     headline: "3 báo giá. Sếp cần đề xuất trước 10 giờ.",
     headlineDone: "Xong lúc 08:18. Chị vẫn là người quyết định.",
     lead: "Chị Lan làm mua hàng 22 năm. Sáng nay có ba nhà cung cấp gửi báo giá ba kiểu khác nhau. Kéo xuống để xem chị làm xong trước giờ họp như thế nào.",
@@ -75,10 +75,11 @@ export const home = {
     title: "Vì sao người làm nghề lâu năm cần làm ngay",
     lead: "Thị trường lao động văn phòng đang thay đổi nhanh hơn tốc độ học lại từ đầu.",
     stats: [
-      { value: 19, suffix: "%", label: "lao động văn phòng 40+ thuộc nhóm có nguy cơ cao" },
-      { value: 58, suffix: "%", label: "cần khoảng 12 tháng mới tìm được việc mới" }
+      { value: 19, suffix: "%", label: "số người bị cho nghỉ việc năm 2025 là lao động trên 40 tuổi" },
+      { value: 58, suffix: "%", label: "trong số đó cần khoảng 12 tháng mới tìm được việc mới" }
     ],
-    source: "Nguồn: TopCV, báo cáo thị trường lao động 2025–2026 (khảo sát lao động văn phòng 40+, 12 tháng gần nhất)."
+    source: "Nguồn: TopCV (2026), theo VnExpress, 01/2026.",
+    sourceLink: { label: "Lao động trên 40 tuổi bị cắt giảm việc nhiều nhất năm 2025", href: "https://vnexpress.net/lao-dong-tren-40-tuoi-bi-cat-giam-viec-nhieu-nhat-nam-2025-5002504.html" }
   },
   compare: {
     title: "Tự dùng ChatGPT khác gì AI Lành Nghề?",
@@ -96,8 +97,9 @@ export const home = {
   },
   numbers: {
     title: "Một lượt so sánh báo giá",
+    note: "Số phút là ước tính của nhóm và ví dụ minh họa, không phải số đo trên người dùng thật. Trong app, mỗi người sửa được số phút làm tay của mình để tính tiết kiệm.",
     items: [
-      { value: 45, suffix: " phút", label: "thường mất khi làm tay" },
+      { value: 45, suffix: " phút", label: "thường mất khi làm tay (ước tính của nhóm)" },
       { value: 18, suffix: " phút", label: "trong ví dụ minh họa của chị Lan, gồm cả tự kiểm" },
       { value: 0, suffix: " file", label: "được lưu trên máy chủ của chúng tôi" }
     ]
@@ -118,7 +120,7 @@ export const home = {
   },
   final: {
     title: "Thử với báo giá thật của bạn – 5 lượt miễn phí",
-    lead: "Không cần thẻ, không cần key AI cho lượt thử. Đăng nhập bằng email, mã gửi trong 10 giây.",
+    lead: "Không cần thẻ, không cần key AI cho lượt thử. Đăng nhập bằng email, mã gửi ngay vào hộp thư.",
     cta: "Bắt đầu dùng thử",
     cta2: "Xem bảng giá"
   }
@@ -169,7 +171,7 @@ export const packs = {
   intro: { title: "Bạn làm nghề gì?", lead: "Mỗi gói nghề được dựng quanh những đầu việc thật của nghề đó. Bắt đầu từ Mua hàng." },
   open: "Đang mở",
   soon: "Sắp ra mắt",
-  minutes: "Thường mất ~{n} phút",
+  minutes: "Làm tay ~{n} phút (ước tính)",
   procurement: {
     name: "Mua hàng – Thu mua",
     lead: "Cho người làm mua hàng ở doanh nghiệp sản xuất, thương mại. Ba tình huống đầu tiên đã chạy được trong app.",
@@ -426,8 +428,8 @@ export const app = {
     title: "Chọn tình huống",
     description: "Chọn việc cần làm trong nghề Mua hàng.",
     heading: "Hôm nay bạn cần làm việc gì?",
-    lead: "Nghề Mua hàng · 3 tình huống. Mỗi việc ghi thời gian thường mất khi làm tay.",
-    usual: "Thường mất ~{n} phút",
+    lead: "Nghề Mua hàng · 3 tình huống. Mỗi việc ghi thời gian làm tay ước tính của nhóm.",
+    usual: "Làm tay ~{n} phút (ước tính)",
     start: "Bắt đầu",
     soon: "Sắp ra mắt",
     otherJobs: "Nghề khác",

@@ -50,6 +50,7 @@ const scenarios = publicScenarios();
         </div>
       ))}
     </dl>
+    <p class="t-note mt-6 max-w-[70ch]">{h.numbers.note}</p>
   </section>
 
   <section class="shell pb-20 sm:pb-28">
@@ -82,7 +83,7 @@ const scenarios = publicScenarios();
           </div>
         ))}
       </dl>
-      <p class="t-note mt-8">{h.why.source}</p>
+      <p class="t-note mt-8">{h.why.source} <a href={h.why.sourceLink.href} target="_blank" rel="noopener">{h.why.sourceLink.label}</a></p>
     </div>
   </section>
 

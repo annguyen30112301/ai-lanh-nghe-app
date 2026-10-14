@@ -109,7 +109,7 @@ Không làm chậm Web App: thử nghiệm A/B dùng app từ 21/10, không depl
 
 ## 9. Xong khi
 
-- [ ] Câu 19% đúng nghĩa báo cáo, có link nguồn.
+- [x] Câu 19% đúng nghĩa báo cáo, có link nguồn.
 - [ ] Luồng Bảng giá → Đặt mua 4 bước → mã đơn → vào app chạy hết; giá đúng mục 2; Tinh chỉnh DN hiện “Liên hệ báo giá”; Giảng dạy không vào được đơn.
 - [ ] `npm test` qua cả test che dữ liệu và test bộ tính tiền.
 - [ ] `/dung-thu/` chạy 3 tình huống Mua hàng; checklist chỉ tick khi đã sửa lỗi; Giảng dạy có nhãn “Xem trước”.
