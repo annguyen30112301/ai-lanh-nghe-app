@@ -471,7 +471,6 @@ export const trial = {
     again: "Thử thêm",
     otherJob: "Việc của nghề {x}"
   }
-  }
 };
 
 export const qa = {
@@ -532,7 +531,6 @@ export const qa = {
     }
   },
   more: { title: "Chưa thấy câu bạn cần?", lead: "Thử ngay một tình huống mẫu, không cần đăng nhập.", cta: "Mở Bàn thử việc", cta2: "Dùng thử với tài liệu thật" }
-  }
 };
 
 const legalDemo = "Bản demo cho đồ án môn Thương mại điện tử – UEH. Không phải văn bản pháp lý có hiệu lực.";
@@ -596,7 +594,6 @@ export const privacy = {
     p: "Khi phát hiện sự cố lộ lọt dữ liệu, AI Lành Nghề thông báo cho khách hàng bị ảnh hưởng và cơ quan có thẩm quyền trong vòng 72 giờ kể từ khi phát hiện, nêu rõ dữ liệu liên quan, mức độ và biện pháp khắc phục."
   },
   more: "Xem cách lớp che dữ liệu hoạt động ở trang <a href=\"/an-toan/\">An toàn</a>."
-  }
 };
 
 export const muaHang = {
