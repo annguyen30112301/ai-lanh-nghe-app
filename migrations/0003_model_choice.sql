@@ -2,7 +2,7 @@
 CREATE TABLE ai_keys (
   org_id TEXT NOT NULL,
   provider TEXT NOT NULL,
-  source TEXT NOT NULL CHECK(source IN ('openrouter_oauth','gemini_key','company_key')),
+  source TEXT NOT NULL CHECK(source IN ('openrouter_oauth','gemini_key','openai_key','company_key')),
   key_ciphertext TEXT NOT NULL, key_iv TEXT NOT NULL, key_last4 TEXT NOT NULL, verified_at INTEGER,
   PRIMARY KEY (org_id, provider)
 );

@@ -14,6 +14,7 @@ export const POST: APIRoute = route(async ({ request, cookies }) => {
   if (key.length < 20 || /\s/.test(key)) fail(400, "Key chưa đúng định dạng. Bạn sao chép lại toàn bộ key, không kèm khoảng trắng.");
   let provider: Provider;
   if (b.source === "gemini_key") provider = "gemini";
+  else if (b.source === "openai_key") provider = "openai";
   else if (b.source === "company_key") {
     if (a.org.plan === "personal") fail(403, "Chỉ tài khoản doanh nghiệp mới gắn được key công ty.");
     provider = (["openrouter", "gemini", "openai"].includes(b.provider ?? "") ? b.provider : "openrouter") as Provider;

@@ -3,7 +3,7 @@ import { encryptSecret } from "./crypto";
 import { db, now } from "./db";
 
 /** Lưu key của một nhà cung cấp. Khách có thể kết nối nhiều AI; gắn lại key cùng nhà cung cấp thì thay key cũ, giữ mô hình đã chọn. */
-export async function saveConnection(orgId: string, source: "openrouter_oauth" | "gemini_key" | "company_key", provider: string, key: string) {
+export async function saveConnection(orgId: string, source: "openrouter_oauth" | "gemini_key" | "openai_key" | "company_key", provider: string, key: string) {
   const { ciphertext, iv } = await encryptSecret(env.KEY_ENC_SECRET, key);
   await db().prepare(
     `INSERT INTO ai_keys (org_id, provider, source, key_ciphertext, key_iv, key_last4, verified_at) VALUES (?, ?, ?, ?, ?, ?, ?)

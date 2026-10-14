@@ -11,7 +11,7 @@ type T = typeof app.connect;
 
 export default function ConnectAI({ t }: { t: T }) {
   const [me, setMe] = useState<MeResponse | null>(null);
-  const [open, setOpen] = useState<"gemini" | "company" | null>(null);
+  const [open, setOpen] = useState<"gemini" | "openai" | "company" | null>(null);
   const [key, setKey] = useState("");
   const [provider, setProvider] = useState("openrouter");
   const [busy, setBusy] = useState(false);
@@ -30,7 +30,7 @@ export default function ConnectAI({ t }: { t: T }) {
   const canManage = me.org.role === "admin";
   const biz = isBusinessAdmin(me);
 
-  async function save(source: "gemini_key" | "company_key") {
+  async function save(source: "gemini_key" | "openai_key" | "company_key") {
     setBusy(true); setMsg(null);
     try {
       await post("/api/ai/key", { source, key, provider });
@@ -109,17 +109,18 @@ export default function ConnectAI({ t }: { t: T }) {
           </a>
 
           <Expand open={open === "gemini"} onToggle={() => setOpen(open === "gemini" ? null : "gemini")} icon={<KeyIcon size={24} />} title={has("gemini") ? `${t.gemini} · ${t.connectedChip}` : t.gemini}>
-            <ol className="grid gap-3">
-              {t.geminiSteps.map((s, i) => (
-                <li key={i} className="flex gap-3 text-[0.92rem]">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-tint text-[0.85rem] font-bold text-accent-ink">{i + 1}</span>
-                  <span className="pt-1" dangerouslySetInnerHTML={{ __html: s }} />
-                </li>
-              ))}
-            </ol>
+            <Steps steps={t.geminiSteps} />
             <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" className="btn btn-quiet mt-4 !min-h-11">{t.geminiOpen}<ArrowUpRightIcon size={18} weight="bold" /></a>
             <KeyForm t={t} value={key} onChange={setKey} busy={busy} onSave={() => save("gemini_key")} />
           </Expand>
+
+          {!biz && (
+            <Expand open={open === "openai"} onToggle={() => setOpen(open === "openai" ? null : "openai")} icon={<KeyIcon size={24} />} title={has("openai") ? `${t.openai} · ${t.connectedChip}` : t.openai}>
+              <Steps steps={t.openaiSteps} />
+              <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" className="btn btn-quiet mt-4 !min-h-11">{t.openaiOpen}<ArrowUpRightIcon size={18} weight="bold" /></a>
+              <KeyForm t={t} value={key} onChange={setKey} busy={busy} onSave={() => save("openai_key")} placeholder="sk-proj-…" />
+            </Expand>
+          )}
 
           {biz && (
             <Expand open={open === "company"} onToggle={() => setOpen(open === "company" ? null : "company")} icon={<BuildingsIcon size={24} />} title={t.company}>
@@ -138,6 +139,19 @@ export default function ConnectAI({ t }: { t: T }) {
         </div>
       )}
     </MotionConfig>
+  );
+}
+
+function Steps({ steps }: { steps: string[] }) {
+  return (
+    <ol className="grid gap-3">
+      {steps.map((s, i) => (
+        <li key={i} className="flex gap-3 text-[0.92rem]">
+          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-tint text-[0.85rem] font-bold text-accent-ink">{i + 1}</span>
+          <span className="pt-1" dangerouslySetInnerHTML={{ __html: s }} />
+        </li>
+      ))}
+    </ol>
   );
 }
 

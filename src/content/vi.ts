@@ -144,7 +144,7 @@ export const how = {
     lead: "Bạn dùng AI của chính mình nên tự chủ chi phí và dữ liệu. Bạn tự chọn mô hình trong tài khoản AI của mình. AI Lành Nghề không chọn thay và chỉ thu phí gói nghề.",
     options: [
       { icon: "plug", title: "Một chạm qua OpenRouter", body: "Đăng nhập OpenRouter, bấm đồng ý. Không cần sao chép key. Phù hợp với cá nhân." },
-      { icon: "key", title: "Dán key Gemini miễn phí", body: "Tạo key ở Google AI Studio trong 3 bước rồi dán vào. Có hạn mức miễn phí hằng ngày." },
+      { icon: "key", title: "Dán key Gemini hoặc OpenAI", body: "Tạo key ở Google AI Studio (có hạn mức miễn phí hằng ngày) hoặc dùng key OpenAI của bạn, rồi dán vào. Kết nối được nhiều AI cùng lúc." },
       { icon: "buildings", title: "Key của công ty", body: "Quản trị viên gắn một lần cho cả phòng. Nhân viên không nhìn thấy key." }
     ],
     note: "Key được mã hóa AES-256-GCM trước khi lưu. Trình duyệt chỉ thấy 3 ký tự cuối, ví dụ ••••x9f."
@@ -343,7 +343,7 @@ export const app = {
     description: "Kết nối AI của bạn một lần để dùng gói nghề.",
     heading: "Kết nối AI của bạn",
     lead: "Kết nối một lần. Bạn trả phí AI trực tiếp cho nhà cung cấp, chúng tôi không thu thêm.",
-    status: { none: "Chưa kết nối", trial: "Còn {n} lượt dùng thử", connected: "Đã kết nối", by: { openrouter_oauth: "OpenRouter (một chạm)", gemini_key: "Key Gemini", company_key: "Key công ty" } },
+    status: { none: "Chưa kết nối", trial: "Còn {n} lượt dùng thử", connected: "Đã kết nối", by: { openrouter_oauth: "OpenRouter (một chạm)", gemini_key: "Key Gemini", openai_key: "Key OpenAI", company_key: "Key công ty" } },
     oneTap: "Kết nối AI một chạm (OpenRouter)",
     oneTapLead: "Đăng nhập OpenRouter rồi bấm “Authorize”. Không cần sao chép key.",
     gemini: "Dùng key Gemini miễn phí",
@@ -353,6 +353,13 @@ export const app = {
       "Sao chép key (bắt đầu bằng AIza… hoặc AQ.…) rồi dán vào ô dưới."
     ],
     geminiOpen: "Mở Google AI Studio",
+    openai: "Dán key OpenAI của bạn",
+    openaiSteps: [
+      "Mở <b>platform.openai.com/api-keys</b> và đăng nhập tài khoản OpenAI.",
+      "Bấm <b>Create new secret key</b>, đặt tên bất kỳ rồi tạo.",
+      "Sao chép key (bắt đầu bằng sk-…) rồi dán vào ô dưới. Tài khoản cần có tín dụng (OpenAI không có bậc miễn phí cho API)."
+    ],
+    openaiOpen: "Mở trang key của OpenAI",
     keyLabel: "Dán key vào đây",
     keyPh: "AIza… hoặc AQ.…",
     save: "Kiểm tra và lưu key",
