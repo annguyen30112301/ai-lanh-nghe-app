@@ -5,6 +5,7 @@ import Icon from "../components/Icon.astro";
 import { app, qa } from "../content/vi";
 const t = qa;
 const steps = app.connect.geminiSteps;
+const openaiSteps = app.connect.openaiSteps;
 ---
 <Base page="qa" title={`${t.title} · AI Lành Nghề`} description={t.description}>
   <PageIntro title={t.heading} lead={t.lead} chip={t.chip}>
@@ -45,6 +46,31 @@ const steps = app.connect.geminiSteps;
           <p class="t-note mt-4" set:html={t.guide.gemini.note} />
         </div>
         <div class="panel p-6 sm:p-7">
+          <h3 class="flex items-center gap-3 text-[1.15rem]"><span class="icon-tile"><Icon name="key" size={22} /></span>{t.guide.openai.title}</h3>
+          <ol class="mt-5 grid gap-3">
+            {openaiSteps.map((s, i) => (
+              <li class="flex gap-3 text-[0.95rem]">
+                <span class="grid size-8 shrink-0 place-items-center rounded-full bg-tint text-[0.85rem] font-bold text-accent-ink">{i + 1}</span>
+                <span class="pt-1" set:html={s.replace(" rồi dán vào ô dưới.", ".").replace("dán vào ô dưới", "dán vào mục Kết nối AI")} />
+              </li>
+            ))}
+          </ol>
+          <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" class="btn btn-quiet mt-5">{t.guide.openai.open}<Icon name="arrow" size={18} weight="bold" /></a>
+          <p class="t-note mt-4" set:html={t.guide.openai.note} />
+        </div>
+        <div class="panel p-6 sm:p-7 md:col-span-2">
+          <h3 class="flex items-center gap-3 text-[1.15rem]"><span class="icon-tile"><Icon name="gear" size={22} /></span>{t.guide.model.title}</h3>
+          <ol class="mt-5 grid gap-3">
+            {t.guide.model.steps.map((s, i) => (
+              <li class="flex gap-3 text-[0.95rem]">
+                <span class="grid size-8 shrink-0 place-items-center rounded-full bg-tint text-[0.85rem] font-bold text-accent-ink">{i + 1}</span>
+                <span class="pt-1" set:html={s} />
+              </li>
+            ))}
+          </ol>
+          <p class="t-note mt-4">{t.guide.model.note}</p>
+        </div>
+        <div class="panel p-6 sm:p-7 md:col-span-2">
           <h3 class="flex items-center gap-3 text-[1.15rem]"><span class="icon-tile"><Icon name="checks" size={22} /></span>{t.guide.checklist.title}</h3>
           <p class="mt-2 text-[0.92rem] text-ink-2">{t.guide.checklist.lead}</p>
           <ul class="mt-4 grid gap-2.5">

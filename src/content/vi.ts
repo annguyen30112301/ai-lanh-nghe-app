@@ -496,7 +496,7 @@ export const qa = {
       id: "chi-phi", title: "Chi phí",
       items: [
         ["690.000 đ/năm có đáng không?", "Bằng khoảng 3,2 giờ công của người có thâm niên (ước tính của nhóm theo lương bình quân khoảng 213.000 đ/giờ). Tiết kiệm khoảng 4 phút mỗi tuần là đủ bù. Bảng điều khiển trong app đo số phút bạn thực sự tiết kiệm."],
-        ["Phí AI ai trả, bao nhiêu?", "Bạn hoặc công ty trả thẳng cho nhà cung cấp AI theo lượng dùng. Ước tính của nhóm: một lượt so sánh 3 báo giá khoảng 300–900 đ tùy mô hình. Khi chọn mô hình trong app, mỗi mô hình hiện giá ước tính mỗi lượt. 5 lượt đầu do AI Lành Nghề trả."],
+        ["Phí AI ai trả, bao nhiêu?", "Bạn hoặc công ty trả thẳng cho nhà cung cấp AI theo lượng dùng. Ước tính của nhóm: một lượt so sánh 3 báo giá khoảng 300–900 đ với các mô hình phổ biến; giá mỗi lượt của từng mô hình hiện ngay khi bạn chọn. 5 lượt đầu do AI Lành Nghề trả."],
         ["Nên chọn mô hình nào?", "Tùy ngân sách và yêu cầu chất lượng. Danh sách hiện giá mỗi lượt và mô hình nào đã qua bộ kiểm thử gói nghề để bạn so sánh. Tránh bậc miễn phí của nhà cung cấp nếu bậc đó cho phép dùng dữ liệu để huấn luyện. Bạn tự chọn mô hình trong tài khoản AI của mình, AI Lành Nghề không chọn thay."],
         ["Công ty có nên mua cho nhân sự lớn tuổi? Sao không mua khóa học ngắn?", "Doanh nghiệp mua theo phòng ban, ai trong phòng cũng dùng được. Khóa học giúp biết, nhưng không để lại công cụ làm việc và không đo được kết quả. Theo Accenture (2024), 94% người lao động muốn học cách làm việc với AI tạo sinh, nhưng chỉ 5% tổ chức đào tạo được cho số đông."]
       ]
@@ -504,14 +504,29 @@ export const qa = {
     {
       id: "du-lieu", title: "Dữ liệu",
       items: [
-        ["Lấy key AI ở đâu?", "Doanh nghiệp: quản trị viên gắn key công ty một lần cho cả phòng. Cá nhân: bấm “Kết nối AI một chạm” (OpenRouter), dán key Gemini (hướng dẫn 3 bước <a href=\"#huong-dan\">bên dưới</a>) hoặc dán key OpenAI. Bạn kết nối được nhiều AI cùng lúc. Lưu ý: key Gemini bậc miễn phí cho phép Google dùng dữ liệu để cải thiện sản phẩm, nên không đưa tài liệu mật khi dùng bậc miễn phí."],
-        ["Dữ liệu có ra nước ngoài? An toàn 100%?", "Không ai cam kết 100% một cách trung thực. App che thông tin nhận diện trước khi gửi, mã hóa key, không lưu file, nội dung hay kết quả; máy chủ chỉ lưu số đếm và mốc thời gian. Bản đã che được gửi tới nhà cung cấp AI bạn chọn, có thể đặt máy chủ ở nước ngoài. Doanh nghiệp là bên kiểm soát dữ liệu, AI Lành Nghề là bên xử lý. Xem trang <a href=\"/an-toan/\">An toàn</a>."],
+        ["Lấy key AI ở đâu? Dùng mô hình nào?", "Doanh nghiệp: quản trị viên gắn key công ty (OpenRouter, Gemini hoặc OpenAI). Cá nhân: bấm “Kết nối AI một chạm” (OpenRouter) hoặc dán key Gemini / OpenAI (hướng dẫn <a href=\"#huong-dan\">bên dưới</a>). Kết nối được nhiều AI cùng lúc. <b>Bạn tự chọn mô hình</b>: danh sách hiện giá ước tính mỗi lượt, độ dài ngữ cảnh và mô hình nào đã qua bộ kiểm thử gói nghề; AI Lành Nghề không chọn thay, chỉ khóa mô hình không đủ điều kiện kỹ thuật. Lưu ý: bậc miễn phí của một số nhà cung cấp (ví dụ Gemini) cho phép dùng dữ liệu để cải thiện sản phẩm, nên không đưa tài liệu mật khi dùng bậc miễn phí."],
+        ["Dữ liệu có ra nước ngoài? An toàn 100%?", "Không ai cam kết 100% một cách trung thực. App che thông tin nhận diện trước khi gửi, mã hóa key, không lưu file, nội dung hay kết quả; máy chủ chỉ lưu số đếm và mốc thời gian. Bản đã che được gửi tới nhà cung cấp AI bạn chọn, có thể đặt máy chủ ở nước ngoài. Doanh nghiệp là bên kiểm soát dữ liệu, AI Lành Nghề là bên xử lý. Xem <a href=\"/chinh-sach-du-lieu/\">Chính sách dữ liệu</a>."],
         ["Chia sẻ tài khoản được không?", "Không. Mỗi tài khoản gắn với một người; đăng nhập trên thiết bị mới phải xác thực mã. Doanh nghiệp quản lý theo seat: mời, thu hồi, chuyển seat cho người khác."]
       ]
     }
   ],
   guide: {
     id: "huong-dan", title: "Hướng dẫn",
+    openai: {
+      title: "Lấy key OpenAI trong 3 bước",
+      open: "Mở trang key của OpenAI",
+      note: "Dán key ở mục <b>Kết nối AI</b> trong app. Tài khoản OpenAI cần có tín dụng; OpenAI không có bậc miễn phí cho API."
+    },
+    model: {
+      title: "Chọn mô hình trong app",
+      steps: [
+        "Vào <b>Kết nối AI</b>, kết nối một hoặc nhiều AI (OpenRouter, Gemini, OpenAI).",
+        "Ở <b>Bước 2 · Chọn mô hình</b>, danh sách gồm mô hình của mọi AI bạn đã kết nối, sắp theo tên. Lọc theo AI, giá mỗi lượt, độ dài ngữ cảnh hoặc “Đã kiểm thử với gói nghề”.",
+        "Bấm chọn một mô hình rồi <b>Lưu mô hình</b>. Mô hình bị khóa có ghi lý do (không trả dữ liệu dạng bảng ổn định, hoặc không đủ dài cho 3 báo giá).",
+        "Tùy chọn: ở mục <b>Khi mô hình quá tải</b>, chọn một mô hình dự phòng; app chỉ chuyển một lần khi mô hình chính quá tải."
+      ],
+      note: "AI Lành Nghề không chọn sẵn và không xếp hạng mô hình nào. Doanh nghiệp: chỉ quản trị viên đổi được mô hình."
+    },
     gemini: {
       title: "Lấy key Gemini trong 3 bước",
       open: "Mở Google AI Studio",
