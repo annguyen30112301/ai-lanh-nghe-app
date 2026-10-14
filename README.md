@@ -32,7 +32,7 @@ Một lần, trên máy có đăng nhập Cloudflare:
 
 ```bash
 npx wrangler login
-npx wrangler d1 create ai-lanh-nghe          # chép database_id
+npx wrangler d1 create ai-lanh-nghe          # đã tạo: id nằm trong wrangler.jsonc
 ```
 
 GitHub → Settings → Secrets and variables → Actions:
@@ -41,7 +41,6 @@ GitHub → Settings → Secrets and variables → Actions:
 |---|---|
 | `CLOUDFLARE_API_TOKEN` | token quyền *Workers Scripts: Edit* + *D1: Edit* |
 | `CLOUDFLARE_ACCOUNT_ID` | |
-| `D1_DATABASE_ID` | id từ lệnh trên |
 | `KEY_ENC_SECRET`, `SESSION_SECRET` | `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
 | `RESEND_API_KEY` | không bắt buộc (không có thì chỉ đăng nhập được bằng tài khoản demo) |
 | `TRIAL_API_KEY` | key OpenRouter của nhóm cho 5 lượt dùng thử |

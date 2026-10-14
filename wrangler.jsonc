@@ -9,8 +9,7 @@
     {
       "binding": "DB",
       "database_name": "ai-lanh-nghe",
-      // Thay bằng id thật sau khi chạy: npx wrangler d1 create ai-lanh-nghe
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "fe5fcee3-5786-42a0-8ec4-ba7edb8907f8",
       "migrations_dir": "migrations"
     }
   ],
