@@ -61,28 +61,28 @@ async function chatCompletions(url: string, key: string, model: string, system: 
 }
 
 async function gemini(key: string, system: string, user: string): Promise<AIReply> {
-  const model = env.GEMINI_MODEL || "gemini-2.5-flash";
+  const model = env.GEMINI_MODEL || "gemini-3.8-flash";
   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "x-goog-api-key": key, "content-type": "application/json" },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: system }] },
       contents: [{ role: "user", parts: [{ text: user }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 8192, responseMimeType: "application/json", thinkingConfig: { thinkingBudget: 0 } }
+      generationConfig: { temperature: 0.2, maxOutputTokens: 16384, responseMimeType: "application/json" }
     }),
     signal: AbortSignal.timeout(90_000)
   });
   if (!res.ok) await upstreamFail("gemini", res, res.status === 400 ? 401 : res.status); // Gemini trả 400 khi key sai
-  const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
+  const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
   return {
-    text: j.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "",
+    text: j.candidates?.[0]?.content?.parts?.filter((p) => !p.thought).map((p) => p.text ?? "").join("") ?? "",
     tokens_in: j.usageMetadata?.promptTokenCount ?? 0, tokens_out: j.usageMetadata?.candidatesTokenCount ?? 0
   };
 }
 
 export async function callAI(k: AIKey, system: string, user: string, mock: () => unknown): Promise<AIReply> {
   switch (k.provider) {
-    case "openrouter": return chatCompletions("https://openrouter.ai/api/v1/chat/completions", k.key, env.OPENROUTER_MODEL || "google/gemini-2.5-flash", system, user);
+    case "openrouter": return chatCompletions("https://openrouter.ai/api/v1/chat/completions", k.key, env.OPENROUTER_MODEL || "anthropic/claude-sonnet-5.5", system, user);
     case "openai": return chatCompletions("https://api.openai.com/v1/chat/completions", k.key, env.OPENAI_MODEL || "gpt-4.1-mini", system, user);
     case "gemini": return gemini(k.key, system, user);
     case "mock": {
