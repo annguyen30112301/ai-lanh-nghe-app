@@ -3,7 +3,7 @@
 Đồ án Thương mại điện tử UEH – Nhóm 02. Ứng dụng web làm việc theo nghề, bắt đầu từ nghề **Mua hàng**:
 chọn việc → điền vài ô → tải file → **che dữ liệu nhạy cảm** → AI của chính người dùng làm theo quy trình → checklist → xuất Excel/Word → đo thời gian tiết kiệm.
 
-Tài liệu: [`docs/HANDOFF_AI-LanhNghe-App.md`](docs/HANDOFF_AI-LanhNghe-App.md) (Web App) · [`docs/WEBSITE_PLAN_AI-LanhNghe.md`](docs/WEBSITE_PLAN_AI-LanhNghe.md) (Website). Đọc skill `brand-motion-web` trước khi làm giao diện.
+Tài liệu: [`docs/HANDOFF_AI-LanhNghe-App.md`](docs/HANDOFF_AI-LanhNghe-App.md) (Web App) · [`docs/WEBSITE_PLAN_AI-LanhNghe.md`](docs/WEBSITE_PLAN_AI-LanhNghe.md) (Website) · [`docs/WEBSITE_PART2_AI-LanhNghe.md`](docs/WEBSITE_PART2_AI-LanhNghe.md) (Website đợt 2 – việc còn lại). Đọc skill `brand-motion-web` trước khi làm giao diện.
 
 Stack: Astro 7 + React 19 (islands) + Tailwind 4 + Motion + Phosphor · Cloudflare **Workers** (static assets) + D1 · WebCrypto AES-256-GCM · Resend · OpenRouter PKCE / Gemini.
 
