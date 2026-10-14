@@ -1,0 +1,17 @@
+---
+import Base from "../layouts/Base.astro";
+import LegalHead from "../components/LegalHead.astro";
+import { terms } from "../content/vi";
+const t = terms;
+---
+<Base page="terms" title={`${t.title} · AI Lành Nghề`} description={t.description}>
+  <LegalHead title={t.title} demo={t.demo} updated={t.updated} />
+  <article class="shell max-w-3xl pb-24 pt-8">
+    {t.sections.map((s) => (
+      <section class="border-t border-hair py-7">
+        <h2 class="text-[1.2rem]">{s.h}</h2>
+        {s.p.map((x) => <p class="mt-3 max-w-[68ch] text-ink-2" set:html={x} />)}
+      </section>
+    ))}
+  </article>
+</Base>

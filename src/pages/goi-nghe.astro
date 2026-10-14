@@ -23,7 +23,10 @@ const list = publicScenarios();
           </li>
         ))}
       </ul>
-      <a href="/app/dang-nhap/" class="btn btn-accent mt-8">{p.procurement.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/app/dang-nhap/" class="btn btn-accent">{p.procurement.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+        <a href="/nghe/mua-hang/" class="btn btn-line">{p.procurement.more}</a>
+      </div>
     </article>
   </section>
   <section class="shell pb-16">

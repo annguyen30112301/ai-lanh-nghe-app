@@ -1,0 +1,14 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import TrialBench from "../../islands/TrialBench";
+import { trial } from "../../content/vi";
+const t = trial;
+---
+<Base page="trial" title={`${t.title} · AI Lành Nghề`} description={t.description}>
+  <PageIntro title={t.heading} lead={t.lead} chip={t.chip} />
+  <div class="shell pb-24">
+    <TrialBench client:load t={t} />
+    <noscript><p class="err">Bàn thử việc cần bật JavaScript. Bạn vẫn xem được ba tình huống ở trang <a href="/goi-nghe/">Gói nghề</a>.</p></noscript>
+  </div>
+</Base>

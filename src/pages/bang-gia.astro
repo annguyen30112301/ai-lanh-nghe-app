@@ -23,6 +23,9 @@ const groups = [{ k: "personal", title: p.personalTitle }, { k: "business", titl
               ))}
             </ul>
             <a href={x.href} class:list={["btn mt-8", x.featured ? "btn-light" : "btn-accent"]}>{x.cta}</a>
+            {"cta2" in x && x.cta2 && (
+              <a href={x.href2} class:list={["btn mt-3", x.featured ? "border border-white/40 text-white hover:bg-white/10" : "btn-line"]}>{x.cta2}</a>
+            )}
           </li>
         ))}
       </ul>

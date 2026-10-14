@@ -10,9 +10,11 @@ export const site = {
 
 export const ui = {
   skip: "Bỏ qua, tới nội dung chính",
-  nav: { home: "Trang chủ", how: "Cách hoạt động", packs: "Gói nghề", pricing: "Bảng giá", safety: "An toàn" },
-  tabs: { home: "Trang chủ", how: "Cách làm", packs: "Gói nghề", pricing: "Bảng giá", more: "Thêm" },
+  nav: { home: "Trang chủ", how: "Cách hoạt động", packs: "Gói nghề", business: "Doanh nghiệp", pricing: "Bảng giá", safety: "An toàn" },
+  tabs: { home: "Trang chủ", how: "Cách làm", pricing: "Bảng giá", trial: "Dùng thử", more: "Thêm" },
+  sheet: { qa: "Hỏi đáp", terms: "Điều khoản", privacy: "Chính sách dữ liệu" },
   login: "Đăng nhập",
+  order: "Đặt mua",
   cta: "Dùng thử miễn phí",
   ctaShort: "Dùng thử",
   more: "Thêm",
@@ -21,8 +23,14 @@ export const ui = {
     explore: "Khám phá",
     contact: "Liên hệ",
     city: "TP. Hồ Chí Minh",
-    demo: "Đồ án môn Thương mại điện tử – UEH, Nhóm 02. Bản demo: dữ liệu và doanh nghiệp trong ví dụ đều là giả lập.",
-    oldSite: "Website giới thiệu bản cũ"
+    demo: "Website demo cho đồ án môn Thương mại điện tử – UEH, Nhóm 02. Không phát sinh giao dịch thật; dữ liệu và doanh nghiệp trong ví dụ đều là giả lập.",
+    oldSite: "Website giới thiệu bản cũ",
+    email: "hello@ailanhnghe.vn",
+    legal: "Thông tin",
+    terms: "Điều khoản dịch vụ",
+    privacy: "Chính sách dữ liệu",
+    qa: "Hỏi đáp",
+    images: "Ảnh màn hình là app thật. Ảnh minh họa do AI tạo (nếu có) được ghi chú ngay dưới ảnh."
   }
 };
 
@@ -30,7 +38,7 @@ export const home = {
   title: "AI Lành Nghề – làm việc nghề nhanh hơn với AI của chính bạn",
   description: "Chọn đúng việc, tải file, nhận kết quả theo mẫu kèm checklist. Dữ liệu nhạy cảm được che trước khi gửi lên AI.",
   hero: {
-    day: "Sáng thứ Hai của chị Lan",
+    day: "Ví dụ minh họa · Sáng thứ Hai của chị Lan",
     headline: "3 báo giá. Sếp cần đề xuất trước 10 giờ.",
     headlineDone: "Xong lúc 08:18. Chị vẫn là người quyết định.",
     lead: "Chị Lan làm mua hàng 22 năm. Sáng nay có ba nhà cung cấp gửi báo giá ba kiểu khác nhau. Kéo xuống để xem chị làm xong trước giờ họp như thế nào.",
@@ -75,10 +83,11 @@ export const home = {
     title: "Vì sao người làm nghề lâu năm cần làm ngay",
     lead: "Thị trường lao động văn phòng đang thay đổi nhanh hơn tốc độ học lại từ đầu.",
     stats: [
-      { value: 19, suffix: "%", label: "lao động văn phòng 40+ thuộc nhóm có nguy cơ cao" },
-      { value: 58, suffix: "%", label: "cần khoảng 12 tháng mới tìm được việc mới" }
+      { value: 19, suffix: "%", label: "số người bị cho nghỉ việc năm 2025 là lao động trên 40 tuổi" },
+      { value: 58, suffix: "%", label: "trong số đó cần khoảng 12 tháng mới tìm được việc mới" }
     ],
-    source: "Nguồn: TopCV, báo cáo thị trường lao động 2025–2026 (khảo sát lao động văn phòng 40+, 12 tháng gần nhất)."
+    source: "Nguồn: TopCV (2026), theo VnExpress, 01/2026.",
+    sourceLink: { label: "Lao động trên 40 tuổi bị cắt giảm việc nhiều nhất năm 2025", href: "https://vnexpress.net/lao-dong-tren-40-tuoi-bi-cat-giam-viec-nhieu-nhat-nam-2025-5002504.html" }
   },
   compare: {
     title: "Tự dùng ChatGPT khác gì AI Lành Nghề?",
@@ -96,8 +105,9 @@ export const home = {
   },
   numbers: {
     title: "Một lượt so sánh báo giá",
+    note: "Số phút là ước tính của nhóm và ví dụ minh họa, không phải số đo trên người dùng thật. Trong app, mỗi người sửa được số phút làm tay của mình để tính tiết kiệm.",
     items: [
-      { value: 45, suffix: " phút", label: "thường mất khi làm tay" },
+      { value: 45, suffix: " phút", label: "thường mất khi làm tay (ước tính của nhóm)" },
       { value: 18, suffix: " phút", label: "trong ví dụ minh họa của chị Lan, gồm cả tự kiểm" },
       { value: 0, suffix: " file", label: "được lưu trên máy chủ của chúng tôi" }
     ]
@@ -118,7 +128,7 @@ export const home = {
   },
   final: {
     title: "Thử với báo giá thật của bạn – 5 lượt miễn phí",
-    lead: "Không cần thẻ, không cần key AI cho lượt thử. Đăng nhập bằng email, mã gửi trong 10 giây.",
+    lead: "Không cần thẻ, không cần key AI cho lượt thử. Đăng nhập bằng email, mã gửi ngay vào hộp thư.",
     cta: "Bắt đầu dùng thử",
     cta2: "Xem bảng giá"
   }
@@ -160,7 +170,8 @@ export const how = {
       ["File PDF scan có dùng được không?", "Chưa. Hãy dùng file Excel hoặc PDF có thể chọn chữ. Bản scan cần nhận dạng chữ, sẽ có ở phiên bản sau."]
     ]
   },
-  cta: "Thử ngay với 5 lượt miễn phí"
+  cta: "Thử ngay với 5 lượt miễn phí",
+  allQa: "Xem tất cả câu hỏi"
 };
 
 export const packs = {
@@ -169,11 +180,12 @@ export const packs = {
   intro: { title: "Bạn làm nghề gì?", lead: "Mỗi gói nghề được dựng quanh những đầu việc thật của nghề đó. Bắt đầu từ Mua hàng." },
   open: "Đang mở",
   soon: "Sắp ra mắt",
-  minutes: "Thường mất ~{n} phút",
+  minutes: "Làm tay ~{n} phút (ước tính)",
   procurement: {
     name: "Mua hàng – Thu mua",
     lead: "Cho người làm mua hàng ở doanh nghiệp sản xuất, thương mại. Ba tình huống đầu tiên đã chạy được trong app.",
-    cta: "Dùng thử gói Mua hàng"
+    cta: "Dùng thử gói Mua hàng",
+    more: "Xem chi tiết gói Mua hàng"
   },
   includes: {
     title: "Mỗi gói nghề gồm",
@@ -210,19 +222,21 @@ export const pricing = {
       id: "personal", group: "personal", name: "Cá nhân", price: "690.000 đ", unit: "/năm",
       for: "Bạn dùng hằng tuần với AI của riêng mình.",
       items: ["Gói nghề Mua hàng đầy đủ", "Kết nối OpenRouter hoặc key Gemini", "Bảng điều khiển cá nhân, đo phút tiết kiệm", "Cập nhật quy trình trong năm"],
-      cta: "Chọn gói Cá nhân", href: "/app/dang-nhap/"
+      cta: "Chọn gói Cá nhân", href: "/dat-mua/?goi=personal"
     },
     {
       id: "business", group: "business", name: "Business", price: "690.000 đ", unit: "/người/năm",
       for: "Phòng mua hàng muốn cả nhóm làm cùng một chuẩn.",
       items: ["Mọi thứ trong gói Cá nhân", "Gắn key AI công ty một lần cho cả phòng", "Quản lý seat: mời, thu hồi, chuyển", "Bảng điều khiển doanh nghiệp: mức áp dụng theo người, theo tuần"],
-      cta: "Xem demo doanh nghiệp", href: "/app/dang-nhap/?demo=doanh-nghiep", featured: true
+      cta: "Đặt mua", href: "/dat-mua/?goi=business", featured: true,
+      cta2: "Xem demo doanh nghiệp", href2: "/app/dang-nhap/?demo=doanh-nghiep"
     },
     {
       id: "business_plus", group: "business", name: "Business Plus", price: "990.000 đ", unit: "/người/năm",
       for: "Doanh nghiệp cần mẫu kết quả theo biểu mẫu riêng.",
       items: ["Mọi thứ trong gói Business", "Mẫu kết quả theo biểu mẫu công ty", "Hỗ trợ ưu tiên", "Báo cáo tiết kiệm thời gian hằng quý"],
-      cta: "Xem demo doanh nghiệp", href: "/app/dang-nhap/?demo=doanh-nghiep"
+      cta: "Đặt mua", href: "/dat-mua/?goi=business_plus",
+      cta2: "Xem demo doanh nghiệp", href2: "/app/dang-nhap/?demo=doanh-nghiep"
     }
   ],
   addons: {
@@ -284,6 +298,450 @@ export const safety = {
     body: "Thiết kế theo tinh thần Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 và Nghị định 356/2025: tối thiểu hóa dữ liệu, minh bạch mục đích xử lý, người dùng kiểm soát dữ liệu gửi đi. Gói doanh nghiệp kèm mẫu đánh giá tác động xử lý dữ liệu (DPIA)."
   },
   cta: "Xem lớp che dữ liệu hoạt động"
+};
+
+export const order = {
+  title: "Đặt mua",
+  description: "Đặt mua gói nghề Mua hàng: chọn gói, điền thông tin hóa đơn, thanh toán (mô phỏng) và nhận license.",
+  heading: "Đặt mua gói nghề",
+  lead: "Bốn bước: chọn gói, thông tin hóa đơn, thanh toán, nhận license. Giá tính lại ở máy chủ theo bảng giá công khai.",
+  demoBanner: "Bản demo đồ án – không phát sinh giao dịch thật.",
+  steps: ["Chọn gói", "Thông tin & hóa đơn", "Thanh toán", "Hoàn tất"],
+  stepOf: "Bước {i}/{n}",
+  back: "Quay lại",
+  next: "Tiếp tục",
+  plans: {
+    personal: { name: "Cá nhân", price: "690.000 đ/năm", for: "Một người dùng, AI của riêng bạn." },
+    business: { name: "Business", price: "690.000 đ/người/năm", for: "Cả phòng dùng chung một chuẩn, key AI công ty." },
+    business_plus: { name: "Business Plus", price: "990.000 đ/người/năm", for: "Thêm mẫu kết quả theo biểu mẫu công ty, hỗ trợ ưu tiên." }
+  },
+  pack: "Gói nghề: <b>Mua hàng</b> (nghề đang mở bán). Giảng dạy, Hành chính – Nhân sự sắp ra mắt.",
+  seats: "Số người dùng (seat)",
+  seatsHint: "Tối thiểu 1. Ưu đãi quy mô tính theo tổng seat.",
+  minus: "Bớt 1 seat",
+  plus: "Thêm 1 seat",
+  tinhChinh: "Thêm Tinh chỉnh 1:1 (800.000 đ/lần)",
+  tinhChinhHint: "Một buổi kèm riêng, trả một lần, không thu lại khi gia hạn.",
+  tinhChinhDN: "Nhận báo giá Tinh chỉnh cho doanh nghiệp",
+  tinhChinhDNHint: "Liên hệ báo giá – không cộng vào đơn này. Nhóm gửi báo giá qua email nhận hóa đơn.",
+  custom: "Cần đóng gói quy trình riêng (Custom 25–80 triệu đ)? Ghi chú trong bước 2, nhóm gửi báo giá riêng.",
+  bill: {
+    title: "Hóa đơn tạm tính",
+    pack: "Gói nghề Mua hàng · {plan}",
+    tinhChinh: "Tinh chỉnh 1:1 (một lần)",
+    tinhChinhDN: "Tinh chỉnh doanh nghiệp",
+    quote: "Liên hệ báo giá",
+    listed: "Giá niêm yết",
+    discount: "Ưu đãi",
+    total: "Tổng thanh toán",
+    period: "Hiệu lực {from} – {to}",
+    renew: "Gia hạn năm sau dự kiến: {v}",
+    tax: "Thuế GTGT: bản demo chưa tính (chờ kế toán chốt).",
+    how: "Xem cách tính",
+    tiers: "Bậc ưu đãi quy mô",
+    tierRow: "{range} seat",
+    tierFrom: "từ {n}",
+    current: "đang áp"
+  },
+  info: {
+    title: "Thông tin người mua",
+    name: "Họ tên", namePh: "Nguyễn Thị Lan",
+    email: "Email", emailPh: "lan.nguyen@congty.vn", emailHint: "License và hướng dẫn đăng nhập gửi tới email này.",
+    phone: "Số điện thoại", phonePh: "0903 123 456",
+    company: "Tên công ty", companyPh: "Công ty TNHH Cơ khí Tân Phú",
+    tax: "Mã số thuế", taxPh: "0312345678", taxHint: "10 số, hoặc 10 số kèm 3 số chi nhánh (0312345678-001).",
+    address: "Địa chỉ xuất hóa đơn", addressPh: "12 Nguyễn Văn Bảo, P.4, Gò Vấp, TP.HCM",
+    invoiceEmail: "Email nhận hóa đơn điện tử", invoiceEmailPh: "ketoan@congty.vn",
+    note: "Ghi chú (không bắt buộc)", notePh: "Ví dụ: cần báo giá Custom cho quy trình duyệt nhà cung cấp",
+    errors: {
+      name: "Bạn nhập họ tên.",
+      email: "Email chưa đúng dạng, ví dụ lan.nguyen@congty.vn.",
+      phone: "Số điện thoại cần 10–11 chữ số.",
+      company: "Bạn nhập tên công ty.",
+      tax: "Mã số thuế gồm 10 số hoặc 10 số kèm 3 số chi nhánh (0312345678-001).",
+      address: "Bạn nhập địa chỉ xuất hóa đơn.",
+      invoiceEmail: "Email nhận hóa đơn chưa đúng dạng."
+    }
+  },
+  pay: {
+    title: "Chọn cách thanh toán",
+    methods: { bank: "Chuyển khoản", vnpay: "VNPay", momo: "MoMo" },
+    bankLead: "Quét mã hoặc chuyển khoản theo thông tin dưới đây. Ghi đúng nội dung để đơn được đối soát.",
+    bankName: "Ngân hàng", bankNameV: "Ngân hàng mẫu (demo)",
+    account: "Số tài khoản", accountV: "0000 0000 0000",
+    holder: "Chủ tài khoản", holderV: "AI LANH NGHE (DEMO)",
+    amount: "Số tiền",
+    content: "Nội dung chuyển khoản",
+    qr: "Mã QR minh họa – không quét được",
+    walletLead: "Bản thật sẽ chuyển sang cổng {m} để xác nhận. Bản demo dừng ở đây.",
+    confirm: "Tôi đã thanh toán (mô phỏng)",
+    confirming: "Đang ghi đơn…",
+    orderCode: "Mã đơn"
+  },
+  done: {
+    title: "Đặt mua thành công",
+    lead: "License đã cấp cho <b>{email}</b>. Đây là đơn mô phỏng, không có giao dịch thật.",
+    code: "Mã đơn",
+    plan: "Gói",
+    seats: "{n} seat",
+    period: "Hiệu lực",
+    total: "Đã thanh toán (mô phỏng)",
+    license: "License đã cấp",
+    next: "Bước tiếp theo: đăng nhập bằng email trên, kết nối AI của bạn rồi chọn mô hình.",
+    cta: "Vào app và kết nối AI",
+    print: "In hoặc lưu PDF"
+  },
+  errors: {
+    server: "Chưa ghi được đơn. Bạn thử lại sau ít phút."
+  }
+};
+
+export const trial = {
+  title: "Dùng thử",
+  description: "Bàn thử việc: giao cho AI một việc mẫu của nghề, xem dữ liệu được che, tự bắt lỗi bằng checklist. Không cần đăng nhập.",
+  heading: "Giao cho AI một việc thật của nghề bạn",
+  lead: "Chọn một việc bạn làm hằng tuần, xem dữ liệu được che trước khi gửi, rồi tự kiểm tra bản nháp bằng checklist của gói nghề.",
+  chip: "Bàn thử việc",
+  mock: "Kết quả soạn sẵn để minh họa, không gọi AI.",
+  noLogin: "Không cần tài khoản · không lưu dữ liệu",
+  steps: ["Chọn việc", "Đầu vào", "Kiểm tra", "Kết quả"],
+  choose: {
+    title: "Hôm nay bạn muốn giao cho AI việc gì?",
+    lead: "Chọn nghề và một việc quen thuộc. Tài liệu mẫu đã điền sẵn, bạn không cần nhập dữ liệu thật.",
+    preview: "Xem trước – sắp ra mắt",
+    guard: "Có bước che dữ liệu",
+    promise: ["Xong trong khoảng 2 phút", "Bạn kiểm tra trước khi dùng", "Không cần tài khoản"],
+    start: "Bắt đầu: {x}"
+  },
+  bench: {
+    back: "Chọn việc khác",
+    input: "Bạn đưa vào",
+    sample: "Dữ liệu mẫu",
+    ask: "Bạn yêu cầu",
+    note: "Ghi chú của bạn",
+    noteClean: "Ghi chú đã ẩn danh",
+    output: "AI Lành Nghề xử lý",
+    draftBadge: "Bản mẫu",
+    run: "Giao cho AI",
+    rerun: "Giao lại cho AI",
+    running: "AI đang xử lý…",
+    idle: "Bấm <b>Giao cho AI</b>: dữ liệu được che trước, rồi AI làm theo quy trình nghề.",
+    guardTitle: "AI dừng lại trước khi xử lý",
+    before: "Trước",
+    after: "Sau khi che",
+    later: "Để sau",
+    drafting: "Đang tạo bản nháp…",
+    draft: "Bản nháp",
+    draftHint: "AI tạo bản nháp. Người làm nghề kiểm tra trước khi dùng.",
+    check: "Kiểm tra trước khi dùng"
+  },
+  mask: {
+    preview: "Dữ liệu sẽ gửi lên AI",
+    previewLead: "Chạy bằng đúng lớp che dữ liệu của app, ngay trong trình duyệt của bạn.",
+    truncated: "…còn nữa",
+    counted: "Đã che {n} thông tin"
+  },
+  review: {
+    title: "Kiểm tra trước khi dùng",
+    lead: "Đây là checklist của gói nghề. Đọc bản nháp và tick từng mục như khi bạn xem lại việc của đồng nghiệp.",
+    back: "Chỉnh lại đầu vào",
+    draft: "Bản nháp của AI",
+    checklist: "Checklist",
+    issue: "Chưa tick được mục này",
+    use: "Dùng kết quả này",
+    ready: "Đủ checklist. Kết quả sẵn sàng để dùng.",
+    need: "Tick đủ {n} mục trước khi dùng. Mục nào chưa ổn thì bấm vào để xem gợi ý."
+  },
+  done: {
+    title: "Xong việc: {x}",
+    usual: "Việc này thường mất",
+    withPack: "→ {x} với gói nghề",
+    usualNote: "Ví dụ minh họa của nhóm, không phải số đo trên người dùng thật.",
+    caught: "Bạn vừa bắt được 1 lỗi trước khi dùng",
+    why: "Đây là lý do mỗi gói nghề đi kèm checklist: AI làm nhanh phần lặp lại, người làm nghề giữ quyền quyết định.",
+    mock: "Bạn vừa xem bản mô phỏng: kết quả soạn sẵn, không có AI thật xử lý. Trong app, bạn làm việc thật với tài liệu của mình trên AI bạn kết nối.",
+    next: "Bước tiếp theo",
+    cta: "Làm với tài liệu thật của bạn – 5 lượt miễn phí",
+    ctaLead: "Đăng nhập bằng email, không cần thẻ, không cần key AI cho lượt thử.",
+    buy: "Đặt mua gói Mua hàng",
+    buyLead: "690.000 đ/năm cho cá nhân, có gói cho doanh nghiệp.",
+    pack: "Xem gói nghề",
+    packLead: "Ba tình huống Mua hàng đang chạy trong app.",
+    soon: "Giảng dạy đang sắp ra mắt",
+    soonLead: "Tình huống Giảng dạy ở đây là bản xem trước. Bạn có thể thử ngay nghề Mua hàng.",
+    again: "Thử thêm",
+    otherJob: "Việc của nghề {x}"
+  }
+};
+
+export const qa = {
+  title: "Hỏi đáp",
+  description: "Câu hỏi thường gặp về AI Lành Nghề: sản phẩm, chi phí, dữ liệu, cách lấy key AI và checklist trước khi nhập dữ liệu.",
+  heading: "Bạn hỏi, chúng tôi trả lời thẳng",
+  lead: "Những câu hỏi chúng tôi nhận được nhiều nhất, viết lại theo lời người hỏi.",
+  chip: "Hỏi đáp",
+  jump: "Đi tới",
+  groups: [
+    {
+      id: "san-pham", title: "Sản phẩm",
+      items: [
+        ["Sao không dùng ChatGPT luôn cho xong?", "App dùng chính các mô hình AI đó qua key của bạn. Thứ được thêm vào: quy trình nghề Mua hàng đóng gói sẵn (chọn việc, điền ô, không viết câu lệnh), kết quả theo mẫu cố định kèm checklist tự kiểm, che thông tin nhạy cảm trước khi gửi, và đo thời gian tiết kiệm. Tự dùng AI dễ tin vào cảm giác: nghiên cứu của METR (2025) trên lập trình viên giàu kinh nghiệm ghi nhận họ làm chậm hơn 19% khi dùng AI nhưng lại tin rằng mình nhanh hơn 20%."],
+        ["Đây là khóa học hay phần mềm?", "Phần mềm làm việc. Không bán giờ học, không cấp chứng chỉ. Bạn dùng app để làm việc thật hằng tuần."],
+        ["Tôi có phải mở ChatGPT nữa không?", "Không. Mọi việc làm trong app; AI chạy phía sau bằng key bạn (hoặc công ty) kết nối một lần."],
+        ["Ai viết nội dung nghề?", "Người có kinh nghiệm trong nghề đóng gói quy trình, mẫu kết quả và checklist. Nội dung được cập nhật 2 lần mỗi năm."],
+        ["Nghề của tôi đã có chưa?", "Đang mở: Mua hàng. Sắp ra mắt: Giảng dạy, Hành chính – Nhân sự. Nghề khác: bạn đăng ký để nhóm ưu tiên. Xem <a href=\"/goi-nghe/\">Gói nghề</a>."]
+      ]
+    },
+    {
+      id: "chi-phi", title: "Chi phí",
+      items: [
+        ["690.000 đ/năm có đáng không?", "Bằng khoảng 3,2 giờ công của người có thâm niên (ước tính của nhóm theo lương bình quân khoảng 213.000 đ/giờ). Tiết kiệm khoảng 4 phút mỗi tuần là đủ bù. Bảng điều khiển trong app đo số phút bạn thực sự tiết kiệm."],
+        ["Phí AI ai trả, bao nhiêu?", "Bạn hoặc công ty trả thẳng cho nhà cung cấp AI theo lượng dùng. Ước tính của nhóm: một lượt so sánh 3 báo giá khoảng 300–900 đ với các mô hình phổ biến; giá mỗi lượt của từng mô hình hiện ngay khi bạn chọn. 5 lượt đầu do AI Lành Nghề trả."],
+        ["Nên chọn mô hình nào?", "Tùy ngân sách và yêu cầu chất lượng. Danh sách hiện giá mỗi lượt và mô hình nào đã qua bộ kiểm thử gói nghề để bạn so sánh. Tránh bậc miễn phí của nhà cung cấp nếu bậc đó cho phép dùng dữ liệu để huấn luyện. Bạn tự chọn mô hình trong tài khoản AI của mình, AI Lành Nghề không chọn thay."],
+        ["Công ty có nên mua cho nhân sự lớn tuổi? Sao không mua khóa học ngắn?", "Doanh nghiệp mua theo phòng ban, ai trong phòng cũng dùng được. Khóa học giúp biết, nhưng không để lại công cụ làm việc và không đo được kết quả. Theo Accenture (2024), 94% người lao động muốn học cách làm việc với AI tạo sinh, nhưng chỉ 5% tổ chức đào tạo được cho số đông."]
+      ]
+    },
+    {
+      id: "du-lieu", title: "Dữ liệu",
+      items: [
+        ["Lấy key AI ở đâu? Dùng mô hình nào?", "Doanh nghiệp: quản trị viên gắn key công ty (OpenRouter, Gemini hoặc OpenAI). Cá nhân: bấm “Kết nối AI một chạm” (OpenRouter) hoặc dán key Gemini / OpenAI (hướng dẫn <a href=\"#huong-dan\">bên dưới</a>). Kết nối được nhiều AI cùng lúc. <b>Bạn tự chọn mô hình</b>: danh sách hiện giá ước tính mỗi lượt, độ dài ngữ cảnh và mô hình nào đã qua bộ kiểm thử gói nghề; AI Lành Nghề không chọn thay, chỉ khóa mô hình không đủ điều kiện kỹ thuật. Lưu ý: bậc miễn phí của một số nhà cung cấp (ví dụ Gemini) cho phép dùng dữ liệu để cải thiện sản phẩm, nên không đưa tài liệu mật khi dùng bậc miễn phí."],
+        ["Dữ liệu có ra nước ngoài? An toàn 100%?", "Không ai cam kết 100% một cách trung thực. App che thông tin nhận diện trước khi gửi, mã hóa key, không lưu file, nội dung hay kết quả; máy chủ chỉ lưu số đếm và mốc thời gian. Bản đã che được gửi tới nhà cung cấp AI bạn chọn, có thể đặt máy chủ ở nước ngoài. Doanh nghiệp là bên kiểm soát dữ liệu, AI Lành Nghề là bên xử lý. Xem <a href=\"/chinh-sach-du-lieu/\">Chính sách dữ liệu</a>."],
+        ["Chia sẻ tài khoản được không?", "Không. Mỗi tài khoản gắn với một người; đăng nhập trên thiết bị mới phải xác thực mã. Doanh nghiệp quản lý theo seat: mời, thu hồi, chuyển seat cho người khác."]
+      ]
+    }
+  ],
+  guide: {
+    id: "huong-dan", title: "Hướng dẫn",
+    openai: {
+      title: "Lấy key OpenAI trong 3 bước",
+      open: "Mở trang key của OpenAI",
+      note: "Dán key ở mục <b>Kết nối AI</b> trong app. Tài khoản OpenAI cần có tín dụng; OpenAI không có bậc miễn phí cho API."
+    },
+    model: {
+      title: "Chọn mô hình trong app",
+      steps: [
+        "Vào <b>Kết nối AI</b>, kết nối một hoặc nhiều AI (OpenRouter, Gemini, OpenAI).",
+        "Ở <b>Bước 2 · Chọn mô hình</b>, danh sách gồm mô hình của mọi AI bạn đã kết nối, sắp theo tên. Lọc theo AI, giá mỗi lượt, độ dài ngữ cảnh hoặc “Đã kiểm thử với gói nghề”.",
+        "Bấm chọn một mô hình rồi <b>Lưu mô hình</b>. Mô hình bị khóa có ghi lý do (không trả dữ liệu dạng bảng ổn định, hoặc không đủ dài cho 3 báo giá).",
+        "Tùy chọn: ở mục <b>Khi mô hình quá tải</b>, chọn một mô hình dự phòng; app chỉ chuyển một lần khi mô hình chính quá tải."
+      ],
+      note: "AI Lành Nghề không chọn sẵn và không xếp hạng mô hình nào. Doanh nghiệp: chỉ quản trị viên đổi được mô hình."
+    },
+    gemini: {
+      title: "Lấy key Gemini trong 3 bước",
+      open: "Mở Google AI Studio",
+      note: "Dán key ở mục <b>Kết nối AI</b> trong app. Bậc miễn phí có hạn mức hằng ngày và cho phép Google dùng dữ liệu để cải thiện sản phẩm."
+    },
+    checklist: {
+      title: "Checklist trước khi nhập dữ liệu",
+      lead: "Làm theo trước mỗi lượt, nhất là khi tài liệu có thông tin của đối tác.",
+      items: [
+        "Dùng file Excel hoặc PDF có chữ, không dùng bản scan.",
+        "Bỏ bớt trang, sheet không cần cho việc này (tối đa khoảng 200 dòng mỗi file).",
+        "Ở bước “Che thông tin”, đánh dấu tên nhà cung cấp, tên công ty bạn và người liên hệ.",
+        "Đọc lại khung “Dữ liệu sẽ gửi lên AI”: không còn số CCCD, số tài khoản, số điện thoại cá nhân.",
+        "Bật “Che cả số tiền” khi việc không cần so sánh giá.",
+        "Không đưa tài liệu mà quy chế nội bộ cấm chia sẻ ra ngoài, kể cả khi đã che.",
+        "Đang dùng bậc miễn phí của nhà cung cấp AI thì không đưa tài liệu mật."
+      ]
+    }
+  },
+  more: { title: "Chưa thấy câu bạn cần?", lead: "Thử ngay một tình huống mẫu, không cần đăng nhập.", cta: "Mở Bàn thử việc", cta2: "Dùng thử với tài liệu thật" }
+};
+
+const legalDemo = "Bản demo cho đồ án môn Thương mại điện tử – UEH. Không phải văn bản pháp lý có hiệu lực.";
+
+export const terms = {
+  title: "Điều khoản dịch vụ",
+  description: "Điều khoản dịch vụ rút gọn của AI Lành Nghề (bản demo đồ án).",
+  demo: legalDemo,
+  updated: "Cập nhật 14/10/2026",
+  sections: [
+    { h: "1. Phạm vi dịch vụ", p: ["AI Lành Nghề là ứng dụng web làm việc theo nghề: quy trình nghề đóng gói sẵn, lớp che dữ liệu, mẫu kết quả, checklist tự kiểm và bảng điều khiển đo thời gian. AI chạy bằng tài khoản AI của chính khách hàng (key hoặc kết nối OpenRouter); AI Lành Nghề không bán và không thu phí sử dụng AI.", "Gói nghề đang bán: Mua hàng. Các nghề ghi “sắp ra mắt” chưa nằm trong phạm vi dịch vụ."] },
+    { h: "2. Gói và thời hạn", p: ["Gói Cá nhân, Business và Business Plus có thời hạn 1 năm kể từ ngày kích hoạt, gia hạn theo bảng giá công khai tại thời điểm gia hạn. Doanh nghiệp mua theo số người dùng (seat).", "Lượt dùng thử (5 lượt) chỉ để trải nghiệm, có thể thay đổi hoặc dừng mà không báo trước."] },
+    { h: "3. Tinh chỉnh 1:1", p: ["Tinh chỉnh là dịch vụ một lần (cá nhân 800.000 đ/lần; doanh nghiệp theo báo giá). Sau khi buổi tinh chỉnh đã diễn ra, phí này không hoàn lại và không thu lại khi gia hạn gói."] },
+    { h: "4. Thay đổi giữa kỳ", p: ["Thêm seat giữa kỳ: tính theo số ngày còn lại đến ngày hết hạn chung của gói. Ưu đãi quy mô áp theo tổng seat sau khi thêm, chỉ cho phần mua thêm.", "Giảm seat, bỏ hoặc đổi nghề: áp dụng từ kỳ gia hạn sau, không hoàn tiền cho kỳ hiện tại. Đổi người dùng của một seat: miễn phí, có hiệu lực ngay."] },
+    { h: "5. Trách nhiệm với kết quả AI", p: ["Kết quả do mô hình AI bên thứ ba tạo ra và có thể sai. Người dùng phải đọc, kiểm tra theo checklist và tự quyết định trước khi dùng hoặc gửi kết quả ra ngoài. AI Lành Nghề chịu trách nhiệm về quy trình, lớp che dữ liệu và phần mềm; không chịu trách nhiệm về quyết định kinh doanh dựa trên kết quả chưa được kiểm tra."] },
+    { h: "6. Sử dụng hợp lệ", p: ["Mỗi tài khoản gắn với một người; không chia sẻ thông tin đăng nhập. Không dùng dịch vụ để xử lý dữ liệu mà bạn không có quyền xử lý, hoặc dữ liệu mà quy chế nội bộ của bạn cấm đưa ra ngoài."] },
+    { h: "7. Chấm dứt", p: ["Khách hàng có thể ngừng gia hạn bất kỳ lúc nào; tài khoản dùng được đến hết kỳ đã thanh toán. AI Lành Nghề có thể tạm khóa tài khoản vi phạm mục 6 sau khi thông báo qua email. Khi chấm dứt, key AI đã lưu được xóa; số đếm sử dụng được xóa theo Chính sách dữ liệu."] },
+    { h: "8. Liên hệ", p: ["Mọi câu hỏi về điều khoản: gửi email tới <a href=\"mailto:hello@ailanhnghe.vn\">hello@ailanhnghe.vn</a>."] }
+  ]
+};
+
+export const privacy = {
+  title: "Chính sách dữ liệu",
+  description: "AI Lành Nghề lưu gì, không lưu gì, vai trò các bên và quyền của người dùng (bản demo đồ án).",
+  demo: legalDemo,
+  updated: "Cập nhật 14/10/2026",
+  intro: "Chúng tôi thiết kế theo nguyên tắc tối thiểu hóa dữ liệu: che thông tin nhận diện trước khi gửi lên AI, không lưu nội dung công việc trên máy chủ.",
+  kinds: {
+    h: "1. Hai loại dữ liệu cần bảo vệ",
+    items: [
+      { t: "Dữ liệu cá nhân", b: "Họ tên, số điện thoại, email, CCCD, số tài khoản… của người liên hệ, nhân viên, đối tác. Xử lý theo Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 và Nghị định 356/2025/NĐ-CP." },
+      { t: "Bí mật kinh doanh", b: "Báo giá, hợp đồng, điều kiện thương mại của doanh nghiệp. Do quy chế nội bộ của khách hàng quy định; AI Lành Nghề cung cấp công cụ che nhưng không thay quy chế đó." }
+    ]
+  },
+  store: { h: "2. Máy chủ lưu gì và không lưu gì" },
+  roles: {
+    h: "3. Vai trò các bên",
+    rows: [
+      ["Khách hàng (cá nhân hoặc doanh nghiệp)", "Bên kiểm soát dữ liệu", "Quyết định đưa tài liệu nào vào, chọn AI và mô hình, duyệt kết quả."],
+      ["AI Lành Nghề", "Bên xử lý dữ liệu", "Đọc file trong trình duyệt, che thông tin, ghép yêu cầu, chuyển tới AI khách đã kết nối, trả kết quả. Không lưu nội dung."],
+      ["Nhà cung cấp AI / OpenRouter", "Bên nhận dữ liệu đã che", "Xử lý yêu cầu theo điều khoản của chính nhà cung cấp mà khách hàng đã đồng ý khi tạo key."]
+    ],
+    head: ["Bên", "Vai trò", "Việc làm với dữ liệu"]
+  },
+  retention: {
+    h: "4. Thời gian lưu",
+    items: [
+      "Nội dung file, yêu cầu gửi AI, kết quả: không lưu. Bản đồ nhãn ↔ tên thật chỉ tồn tại trong bộ nhớ trong lúc xử lý một yêu cầu.",
+      "Số đếm mỗi lượt (mở, xong, xuất lúc nào; che bao nhiêu thông tin; lượng token; tên mô hình): lưu trong thời hạn gói và 12 tháng sau khi chấm dứt, rồi xóa.",
+      "Key AI (đã mã hóa AES-256-GCM): lưu đến khi bạn gỡ kết nối hoặc chấm dứt tài khoản.",
+      "Đơn đặt mua (bản demo): mã đơn, gói, số tiền, email, tên công ty và MST nếu có; không lưu họ tên, số điện thoại, số thẻ hay tài khoản ngân hàng."
+    ]
+  },
+  rights: {
+    h: "5. Quyền của người dùng",
+    items: ["Biết dữ liệu nào về mình đang được lưu.", "Yêu cầu sửa, xóa dữ liệu tài khoản và số đếm sử dụng.", "Rút lại đồng ý, gỡ kết nối AI bất kỳ lúc nào.", "Khiếu nại tới cơ quan có thẩm quyền theo quy định."],
+    how: "Gửi yêu cầu tới <a href=\"mailto:hello@ailanhnghe.vn\">hello@ailanhnghe.vn</a>; chúng tôi phản hồi trong thời hạn luật định."
+  },
+  incident: {
+    h: "6. Báo cáo sự cố",
+    p: "Khi phát hiện sự cố lộ lọt dữ liệu, AI Lành Nghề thông báo cho khách hàng bị ảnh hưởng và cơ quan có thẩm quyền trong vòng 72 giờ kể từ khi phát hiện, nêu rõ dữ liệu liên quan, mức độ và biện pháp khắc phục."
+  },
+  more: "Xem cách lớp che dữ liệu hoạt động ở trang <a href=\"/an-toan/\">An toàn</a>."
+};
+
+export const muaHang = {
+  title: "Gói nghề Mua hàng",
+  description: "Gói nghề Mua hàng – Thu mua: so sánh báo giá, thư thương lượng, hồ sơ nhà cung cấp. Che dữ liệu trước khi gửi lên AI, checklist trước khi xuất.",
+  heading: "Để AI làm phần việc lặp lại. Bạn giữ quyết định mua hàng.",
+  lead: "Quy trình nghề Mua hàng đóng gói sẵn trong app: chọn việc, điền vài ô, tải báo giá. Tên nhà cung cấp, mã số thuế, số điện thoại được che trước khi tới AI của bạn.",
+  chip: "Mua hàng – Thu mua · Đang mở",
+  cta: "Dùng thử với 5 lượt miễn phí",
+  cta2: "Đặt mua",
+  shotAlt: "Màn hình app: dữ liệu báo giá sau khi che, tên nhà cung cấp và số điện thoại đã thành nhãn",
+  shotCap: "Ảnh chụp app thật với bộ báo giá mẫu: dữ liệu sẽ gửi lên AI sau khi che.",
+  catalog: {
+    title: "25 tình huống của nghề Mua hàng",
+    lead: "Danh mục dự kiến, chia 5 nhóm việc. Ba tình huống đã chạy trong app; các tình huống còn lại được đóng gói dần và cập nhật 2 lần mỗi năm.",
+    live: "Đang chạy trong app",
+    soon: "Lộ trình",
+    groups: [
+      { name: "So sánh & đánh giá", items: [["So sánh báo giá nhà cung cấp", true], ["Tóm tắt và chấm hồ sơ năng lực nhà cung cấp", true], ["Đánh giá nhà cung cấp định kỳ theo chỉ tiêu", false], ["So sánh tổng chi phí sở hữu (giá, vận chuyển, bảo hành)", false], ["Lập tiêu chí chọn nhà cung cấp cho gói mua mới", false]] },
+      { name: "Soạn thảo & đàm phán", items: [["Soạn thư thương lượng giá", true], ["Chuẩn bị nội dung buổi đàm phán", false], ["Soạn yêu cầu báo giá gửi nhiều nhà cung cấp", false], ["Soạn thư từ chối nhà cung cấp giữ quan hệ", false], ["Soạn email nhắc giao hàng trễ hạn", false]] },
+      { name: "Rà soát rủi ro", items: [["Rà soát điều khoản hợp đồng mua bán", false], ["Kiểm tra hồ sơ pháp lý nhà cung cấp mới", false], ["Đối chiếu đơn hàng – hóa đơn – phiếu nhập kho", false], ["Phát hiện báo giá bất thường so với lịch sử", false], ["Đánh giá rủi ro phụ thuộc một nhà cung cấp", false]] },
+      { name: "Tổng hợp định kỳ", items: [["Báo cáo mua hàng tuần cho quản lý", false], ["Tổng hợp tiến độ giao hàng theo nhà cung cấp", false], ["Báo cáo tiết kiệm chi phí theo quý", false], ["Tổng hợp công nợ phải trả nhà cung cấp", false], ["Theo dõi hợp đồng khung sắp hết hạn", false]] },
+      { name: "Tra cứu nội bộ", items: [["Tra hạn mức phê duyệt mua hàng", false], ["Tra quy trình mua hàng nội bộ", false], ["Tra lịch sử giá của một mặt hàng", false], ["Tra điều khoản hợp đồng khung đang hiệu lực", false], ["Hỏi đáp quy định chứng từ thanh toán", false]] }
+    ]
+  },
+  detail: {
+    title: "Một tình huống từ đầu đến cuối: so sánh 3 báo giá",
+    lead: "Ba nhà cung cấp báo giá cùng một mặt hàng nhưng trình bày khác nhau về giá, thời gian giao, điều khoản thanh toán và hậu mãi.",
+    input: "Đầu vào",
+    files: ["Báo giá nhà cung cấp A (Excel)", "Báo giá nhà cung cấp B (Excel)", "Báo giá nhà cung cấp C (PDF có chữ)"],
+    ask: "Bạn điền: mặt hàng cần mua và ưu tiên (giá thấp nhất, giao nhanh, thanh toán linh hoạt hay cân bằng). Không viết câu lệnh.",
+    steps: ["Đọc 3 file ngay trong trình duyệt", "Che tên, MST, số điện thoại", "Đưa về cùng tiêu chí, cùng đơn vị", "So sánh và chỉ ra điểm khác biệt", "Đề xuất kèm lý do và gợi ý thương lượng", "Đổi nhãn về tên thật, bạn tự kiểm rồi xuất"],
+    stepsTitle: "App xử lý 6 bước",
+    result: "Kết quả mẫu",
+    head: ["Tiêu chí", "NCC A", "NCC B", "NCC C"],
+    rows: [["Giá đã gồm VAT (đ)", "120.000.000", "118.500.000", "125.000.000"], ["Thời gian giao", "14 ngày", "10 ngày", "12 ngày"], ["Thanh toán", "30% – 70%", "50% – 50%", "30% – 70%"], ["Hậu mãi", "12 tháng", "18 tháng", "12 tháng"], ["Nhận xét", "Phù hợp", "Tốt nhất", "Cân nhắc"]],
+    checklist: "Checklist trước khi xuất (nút Xuất chỉ bật khi tick đủ)",
+    try: "Thử tình huống này không cần đăng nhập",
+    timeline: { title: "Một buổi sáng làm việc", note: "Ví dụ minh họa, không phải số đo.", items: [["08:15", "Nhận 3 báo giá"], ["08:20", "App che dữ liệu, chuẩn hóa và so sánh"], ["08:27", "Kiểm tra điểm bất thường theo checklist"], ["08:35", "Chuẩn bị nội dung trao đổi với nhà cung cấp"], ["09:00", "Người mua hàng đưa ra quyết định"]] }
+  },
+  video: {
+    title: "Video giới thiệu (2 phút)",
+    caption: "Video giai đoạn 1 – cảnh dựng trên Gemini, theo mô hình cũ (cài gói vào trợ lý AI). Hiện gói nghề chạy trong Web App AI Lành Nghề với AI bạn kết nối.",
+    download: "Tải video (MP4)"
+  },
+  includes: {
+    title: "Gói nghề gồm gì",
+    items: [
+      { icon: "path", title: "Quy trình nghề trong app", body: "Mỗi tình huống là một quy trình đóng gói sẵn: vai trò, quy tắc, cách trình bày, giới hạn của AI. Bạn chỉ chọn việc và điền ô." },
+      { icon: "table", title: "Mẫu kết quả", body: "Bảng so sánh, thư, tóm tắt đúng khung; xuất Excel hoặc Word để gửi đi." },
+      { icon: "checks", title: "Checklist tự kiểm", body: "Những điểm người làm lâu năm luôn kiểm. Nút Xuất chỉ bật khi bạn tick đủ." },
+      { icon: "shield", title: "Lớp che dữ liệu", body: "Tên nhà cung cấp, công ty, người liên hệ, MST, CCCD, số tài khoản được che trước khi gửi lên AI." },
+      { icon: "clock", title: "Cập nhật và đo thời gian", body: "Nội dung cập nhật 2 lần mỗi năm. Bảng điều khiển đo số phút bạn tiết kiệm. Tinh chỉnh 1:1 khi cần." }
+    ]
+  },
+  fit: {
+    title: "Gói này dành cho ai",
+    yes: { title: "Phù hợp nếu bạn", items: ["Làm Mua hàng / Thu mua ở doanh nghiệp sản xuất, thương mại", "Đã có kinh nghiệm nghiệp vụ", "Thường xuyên xử lý báo giá, bảng biểu, email nhà cung cấp", "Muốn dùng AI nhưng không muốn học viết câu lệnh"] },
+    no: { title: "Chưa phù hợp nếu", items: ["Bạn đang tìm khóa học AI từ cơ bản", "Bạn muốn học lập trình AI", "Tài liệu của bạn chủ yếu là bản scan (chưa hỗ trợ nhận dạng chữ)"] }
+  },
+  price: {
+    title: "Giá gói Mua hàng",
+    items: [
+      { name: "Cá nhân", price: "690.000 đ", unit: "/năm", href: "/dat-mua/?goi=personal" },
+      { name: "Tinh chỉnh 1:1", price: "800.000 đ", unit: "/lần", href: "/dat-mua/?goi=personal" },
+      { name: "Doanh nghiệp", price: "690.000 đ", unit: "/người/năm · giảm tới 30% theo số seat", href: "/dat-mua/?goi=business" }
+    ],
+    buy: "Đặt mua",
+    all: "Xem bảng giá đầy đủ",
+    aiFee: "Chưa gồm phí AI: bạn trả thẳng cho nhà cung cấp AI qua tài khoản của mình."
+  },
+  faq: {
+    title: "Câu hỏi thường gặp",
+    items: [
+      ["Tôi cần tài khoản AI nào?", "Một trong ba cách: kết nối OpenRouter một chạm, dán key Gemini, hoặc dán key OpenAI. Doanh nghiệp: quản trị viên gắn key công ty một lần cho cả phòng. Bạn tự chọn mô hình trong tài khoản AI của mình."],
+      ["Có phải cài gì vào ChatGPT hay Gemini không?", "Không. Gói nghề chạy trong Web App AI Lành Nghề. AI chạy phía sau bằng key bạn kết nối; bạn không phải mở ChatGPT hay Gemini."],
+      ["Tôi có phải biết viết câu lệnh không?", "Không. Vai trò, quy trình, mẫu kết quả và giới hạn xử lý đã được đóng gói sẵn trong từng tình huống."],
+      ["Dữ liệu công ty có an toàn không?", "Thông tin nhận diện được che thành nhãn trước khi gửi; bạn xem trước đúng dữ liệu AI sẽ thấy. Máy chủ không lưu file, nội dung hay kết quả."],
+      ["Nếu AI trả lời sai thì sao?", "Mỗi kết quả có checklist tự kiểm; AI được yêu cầu ghi “Không có trong báo giá” khi thiếu dữ liệu. Quyền quyết định vẫn thuộc về bạn."],
+      ["Gói có được cập nhật không?", "Có, 2 lần mỗi năm theo thay đổi của nghề và của các mô hình AI."]
+    ],
+    more: "Xem tất cả câu hỏi"
+  }
+};
+
+export const business = {
+  title: "Doanh nghiệp",
+  description: "AI Lành Nghề cho phòng ban: mua theo vị trí công việc, đo được mức áp dụng, an toàn dữ liệu, quản lý seat; gói Custom đóng gói quy trình riêng.",
+  heading: "Cả phòng làm cùng một chuẩn, đo được từng tuần",
+  lead: "Mua theo phòng ban, không theo tuổi. Quản trị viên gắn key AI công ty một lần, mời người vào seat và theo dõi mức áp dụng thật.",
+  chip: "Giải pháp doanh nghiệp",
+  cta: "Xem demo doanh nghiệp",
+  cta2: "Yêu cầu báo giá",
+  why: {
+    title: "Vì sao doanh nghiệp mua",
+    items: [
+      { icon: "users", title: "Mua theo vị trí, không theo tuổi", body: "Ai trong phòng Mua hàng cũng dùng được. Người lâu năm giữ kinh nghiệm, AI làm phần lặp lại." },
+      { icon: "chart", title: "Đo được", body: "Số lượt, phút tiết kiệm, mức áp dụng theo người và theo tuần – lấy từ số đếm trong app, không phải khảo sát." },
+      { icon: "shield", title: "An toàn dữ liệu", body: "Che thông tin trước khi gửi, không lưu nội dung, key công ty mã hóa. Nhân viên không nhìn thấy key." },
+      { icon: "coins", title: "Chi phí khoảng 3,2 giờ công/người/năm", body: "690.000 đ/người/năm, giảm tới 30% theo số seat. Ước tính của nhóm theo lương bình quân khoảng 213.000 đ/giờ." }
+    ]
+  },
+  dash: {
+    title: "Bảng điều khiển doanh nghiệp",
+    lead: "Ảnh chụp app thật với dữ liệu mẫu của “Cơ khí Tân Phú” (15 seat). Đăng nhập tài khoản demo để tự xem và thao tác.",
+    alt: "Bảng điều khiển doanh nghiệp: giờ tiết kiệm, lượt hoàn thành, người dùng tích cực, seat; bảng mức áp dụng theo người và theo tuần",
+    sample: "Dữ liệu mẫu",
+    points: ["Mức áp dụng theo người và theo tuần", "Tình huống dùng nhiều nhất", "Lượt và chi phí AI ước tính theo mô hình", "Quản lý seat: mời, thu hồi, chuyển seat"]
+  },
+  seats: {
+    title: "Quản lý seat ngay trong app",
+    items: [["Mời", "Nhập email, người được mời đăng nhập là vào đúng seat của công ty."], ["Thu hồi", "Người nghỉ việc mất quyền dùng ngay, lịch sử số đếm vẫn giữ cho báo cáo."], ["Chuyển", "Đổi người dùng của một seat, không phát sinh phí."]]
+  },
+  custom: {
+    title: "Gói Custom: đóng gói quy trình riêng của bạn",
+    lead: "Khi doanh nghiệp có quy trình, biểu mẫu riêng cần đưa thành tình huống trong app. Báo giá 25–80 triệu đ theo số quy trình.",
+    steps: [["Khảo sát", "Làm việc với phòng ban, chọn quy trình đáng đóng gói và chỉ số đo."], ["Thiết kế", "Viết quy trình, mẫu kết quả, checklist và quy tắc che dữ liệu riêng."], ["Triển khai & đào tạo", "Đưa tình huống vào app, hướng dẫn quản trị viên và nhân viên."], ["Đồng hành 3 tháng", "Theo dõi mức áp dụng, chỉnh quy trình theo phản hồi thật."]]
+  },
+  form: {
+    title: "Yêu cầu báo giá",
+    lead: "Điền vài thông tin, ứng dụng email của bạn sẽ mở thư soạn sẵn gửi nhóm. Không lưu gì trên máy chủ.",
+    company: "Tên công ty", companyPh: "Công ty TNHH Cơ khí Tân Phú",
+    name: "Người liên hệ", namePh: "Nguyễn Thị Lan",
+    email: "Email", emailPh: "lan.nguyen@congty.vn",
+    seats: "Số người dùng dự kiến", seatsPh: "15",
+    need: "Bạn cần gì?", needs: ["Business / Business Plus", "Tinh chỉnh doanh nghiệp", "Gói Custom"],
+    note: "Ghi chú", notePh: "Ví dụ: muốn đóng gói quy trình duyệt nhà cung cấp mới",
+    send: "Mở thư yêu cầu báo giá",
+    sent: "Đã mở ứng dụng email. Nếu không thấy, gửi thư tới {email}.",
+    subject: "Yêu cầu báo giá AI Lành Nghề – {company}",
+    errors: { company: "Bạn nhập tên công ty.", email: "Email chưa đúng dạng." }
+  }
 };
 
 /* ======================= APP ======================= */
@@ -426,8 +884,8 @@ export const app = {
     title: "Chọn tình huống",
     description: "Chọn việc cần làm trong nghề Mua hàng.",
     heading: "Hôm nay bạn cần làm việc gì?",
-    lead: "Nghề Mua hàng · 3 tình huống. Mỗi việc ghi thời gian thường mất khi làm tay.",
-    usual: "Thường mất ~{n} phút",
+    lead: "Nghề Mua hàng · 3 tình huống. Mỗi việc ghi thời gian làm tay ước tính của nhóm.",
+    usual: "Làm tay ~{n} phút (ước tính)",
     start: "Bắt đầu",
     soon: "Sắp ra mắt",
     otherJobs: "Nghề khác",

@@ -1,0 +1,159 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import Icon from "../../components/Icon.astro";
+import { muaHang, ui } from "../../content/vi";
+import { getSkill } from "../../lib/skills";
+const t = muaHang;
+const checklist = getSkill("so-sanh-bao-gia")?.checklist ?? [];
+---
+<Base page="packs" title={`${t.title} · AI Lành Nghề`} description={t.description}>
+  <PageIntro title={t.heading} lead={t.lead} chip={t.chip}>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="/app/dang-nhap/" class="btn btn-accent">{t.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+      <a href="/dat-mua/?goi=personal" class="btn btn-line">{t.cta2}</a>
+    </div>
+  </PageIntro>
+
+  <section class="shell pb-20">
+    <figure class="mx-auto max-w-5xl">
+      <img src="/images/app-che-du-lieu.png" alt={t.shotAlt} width="1920" height="1140" class="w-full rounded-3xl shadow-[var(--shadow)] ring-1 ring-hair" />
+      <figcaption class="t-note mt-3 text-center">{t.shotCap}</figcaption>
+    </figure>
+  </section>
+
+  <section class="shell max-w-5xl pb-20" aria-labelledby="cat-h">
+    <h2 id="cat-h" class="t-title" data-reveal>{t.catalog.title}</h2>
+    <p class="t-sub mt-3">{t.catalog.lead}</p>
+    <div class="mt-8">
+      {t.catalog.groups.map((g, gi) => (
+        <details class="qa" open={gi === 0}>
+          <summary>
+            <span class="flex flex-wrap items-center gap-3">{g.name}<span class="chip chip-muted !py-0.5 text-[0.75rem]">{g.items.filter(([, on]) => on).length}/{g.items.length}</span></span>
+            <span class="plus" aria-hidden="true"><Icon name="plus" size={18} weight="bold" /></span>
+          </summary>
+          <ul class="grid gap-2 pb-6 sm:grid-cols-2">
+            {g.items.map(([name, on]) => (
+              <li class:list={["flex items-start gap-3 rounded-2xl px-4 py-3 text-[0.95rem]", on ? "bg-tint" : "bg-raised ring-1 ring-hair"]}>
+                <Icon name={on ? "ok" : "clock"} size={20} weight={on ? "fill" : "regular"} class:list={["mt-0.5 shrink-0", on ? "text-accent-2" : "text-ink-3"]} />
+                <span class="flex-1">{name}<span class:list={["mt-0.5 block text-[0.78rem] font-semibold", on ? "text-accent-2" : "text-ink-3"]}>{on ? t.catalog.live : t.catalog.soon}</span></span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-paper py-20" aria-labelledby="det-h">
+    <div class="shell max-w-5xl">
+      <h2 id="det-h" class="t-title" data-reveal>{t.detail.title}</h2>
+      <p class="t-sub mt-3">{t.detail.lead}</p>
+      <div class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.2fr]">
+        <div class="grid min-w-0 grid-cols-1 content-start gap-4">
+          <div class="panel p-6">
+            <h3 class="text-[1.05rem]">{t.detail.input}</h3>
+            <ul class="mt-3 grid gap-2">{t.detail.files.map((f) => <li class="flex items-center gap-2.5 text-[0.95rem]"><Icon name="file" size={20} class="shrink-0 text-accent" />{f}</li>)}</ul>
+            <p class="mt-4 text-[0.92rem] text-ink-2">{t.detail.ask}</p>
+          </div>
+          <div class="panel p-6">
+            <h3 class="text-[1.05rem]">{t.detail.stepsTitle}</h3>
+            <ol class="relative mt-4 grid gap-3">
+              <span aria-hidden="true" class="absolute bottom-3 left-[0.95rem] top-3 w-0.5 origin-top bg-accent/30" data-grow-y></span>
+              {t.detail.steps.map((s, i) => (
+                <li class="relative flex items-start gap-3 text-[0.95rem]"><span class="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-[0.82rem] font-bold text-on-accent">{i + 1}</span><span class="pt-1">{s}</span></li>
+              ))}
+            </ol>
+          </div>
+        </div>
+        <div class="grid min-w-0 grid-cols-1 content-start gap-4">
+          <div class="panel overflow-hidden p-6">
+            <h3 class="text-[1.05rem]">{t.detail.result}</h3>
+            <div class="mt-3 overflow-x-auto rounded-2xl ring-1 ring-hair">
+              <table class="w-full min-w-[26rem] text-[0.88rem]">
+                <thead class="bg-canvas"><tr>{t.detail.head.map((h, i) => <th scope="col" class:list={["px-3 py-2 font-semibold text-ink-2", i ? "text-right" : "text-left"]}>{h}</th>)}</tr></thead>
+                <tbody>{t.detail.rows.map((r) => <tr class="border-t border-hair">{r.map((c, i) => i ? <td class="px-3 py-2 text-right tabular-nums">{c}</td> : <th scope="row" class="px-3 py-2 text-left font-semibold">{c}</th>)}</tr>)}</tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel p-6">
+            <h3 class="text-[1.05rem]">{t.detail.checklist}</h3>
+            <ul class="mt-3 grid gap-2 sm:grid-cols-2">{checklist.map((c) => <li class="flex gap-2 text-[0.92rem]"><Icon name="check" size={18} weight="bold" class="mt-0.5 shrink-0 text-accent-2" />{c}</li>)}</ul>
+          </div>
+          <a href="/dung-thu/#mua-hang/bao-gia" class="btn btn-quiet justify-self-start !whitespace-normal py-3 text-left">{t.detail.try}<Icon name="arrow" size={18} weight="bold" /></a>
+        </div>
+      </div>
+
+      <h3 class="mt-14 text-[1.2rem]">{t.detail.timeline.title}</h3>
+      <ol class="mt-5 grid gap-3 sm:grid-cols-5">
+        {t.detail.timeline.items.map(([time, what]) => (
+          <li class="rounded-2xl bg-raised p-4 ring-1 ring-hair"><span class="font-bold tabular-nums text-accent-ink">{time}</span><span class="mt-1 block text-[0.9rem]">{what}</span></li>
+        ))}
+      </ol>
+      <p class="t-note mt-3">{t.detail.timeline.note}</p>
+    </div>
+  </section>
+
+  <section class="shell max-w-5xl py-20" aria-labelledby="vid-h">
+    <h2 id="vid-h" class="t-title !text-[clamp(1.4rem,1.1rem+1vw,1.9rem)]">{t.video.title}</h2>
+    <figure class="mt-6">
+      <video controls preload="none" poster="/video/video2-gioi-thieu-poster.jpg" class="aspect-video w-full rounded-3xl bg-deep shadow-[var(--shadow)]">
+        <source src="/video/video2-gioi-thieu.mp4" type="video/mp4" />
+        <track kind="captions" srclang="vi" label="Tiếng Việt" src="/video/video2-gioi-thieu.vi.vtt" default />
+      </video>
+      <figcaption class="t-note mt-3 flex flex-wrap items-center justify-between gap-3"><span>{t.video.caption}</span><a href="/video/video2-gioi-thieu.mp4" download>{t.video.download}</a></figcaption>
+    </figure>
+  </section>
+
+  <section class="shell max-w-5xl pb-20" aria-labelledby="inc-h">
+    <h2 id="inc-h" class="t-title" data-reveal>{t.includes.title}</h2>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {t.includes.items.map((x) => (
+        <li class="rounded-3xl bg-raised p-6 ring-1 ring-hair">
+          <span class="icon-tile"><Icon name={x.icon} size={26} /></span>
+          <h3 class="mt-4 text-[1.05rem]">{x.title}</h3>
+          <p class="mt-2 text-[0.92rem] text-ink-2">{x.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="shell max-w-5xl pb-20" aria-labelledby="fit-h">
+    <h2 id="fit-h" class="t-title">{t.fit.title}</h2>
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+      {[{ x: t.fit.yes, ok: true }, { x: t.fit.no, ok: false }].map(({ x, ok }) => (
+        <div class:list={["rounded-3xl p-6", ok ? "bg-tint" : "bg-raised ring-1 ring-hair"]}>
+          <h3 class="text-[1.05rem]">{x.title}</h3>
+          <ul class="mt-3 grid gap-2">{x.items.map((i) => <li class="flex gap-2.5 text-[0.95rem]"><Icon name={ok ? "check" : "x"} size={20} weight="bold" class:list={["mt-0.5 shrink-0", ok ? "text-accent-2" : "text-ink-3"]} />{i}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="shell max-w-5xl pb-20" aria-labelledby="price-h">
+    <h2 id="price-h" class="t-title">{t.price.title}</h2>
+    <ul class="mt-8 grid gap-4 md:grid-cols-3">
+      {t.price.items.map((x) => (
+        <li class="panel flex flex-col p-6">
+          <h3 class="text-[1.05rem]">{x.name}</h3>
+          <p class="mt-3"><b class="text-[1.8rem] tabular-nums tracking-tight">{x.price}</b> <span class="text-[0.9rem] text-ink-2">{x.unit}</span></p>
+          <a href={x.href} class="btn btn-accent mt-6 self-start">{t.price.buy}</a>
+        </li>
+      ))}
+    </ul>
+    <p class="t-note mt-4">{t.price.aiFee} <a href="/bang-gia/">{t.price.all}</a></p>
+  </section>
+
+  <section class="shell max-w-4xl pb-24" aria-labelledby="faq-h">
+    <h2 id="faq-h" class="t-title">{t.faq.title}</h2>
+    <div class="mt-6">
+      {t.faq.items.map(([q, a]) => (
+        <details class="qa">
+          <summary>{q}<span class="plus" aria-hidden="true"><Icon name="plus" size={18} weight="bold" /></span></summary>
+          <p class="max-w-[68ch] pb-6 text-ink-2">{a}</p>
+        </details>
+      ))}
+    </div>
+    <a href="/hoi-dap/" class="btn btn-line mt-8">{t.faq.more}</a>
+  </section>
+</Base>
