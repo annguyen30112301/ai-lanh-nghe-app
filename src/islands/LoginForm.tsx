@@ -19,6 +19,7 @@ export default function LoginForm({ t }: { t: T }) {
   useEffect(() => {
     const q = new URLSearchParams(location.search);
     if (q.get("demo") === "doanh-nghiep") setEmail(t.demo.items[0].email);
+    else if (q.get("email")) setEmail(q.get("email")!.slice(0, 120));
   }, [t]);
   useEffect(() => { if (wait <= 0) return; const id = setTimeout(() => setWait(wait - 1), 1000); return () => clearTimeout(id); }, [wait]);
 

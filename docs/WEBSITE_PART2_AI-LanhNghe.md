@@ -110,8 +110,8 @@ Không làm chậm Web App: thử nghiệm A/B dùng app từ 21/10, không depl
 ## 9. Xong khi
 
 - [x] Câu 19% đúng nghĩa báo cáo, có link nguồn.
-- [ ] Luồng Bảng giá → Đặt mua 4 bước → mã đơn → vào app chạy hết; giá đúng mục 2; Tinh chỉnh DN hiện “Liên hệ báo giá”; Giảng dạy không vào được đơn.
-- [ ] `npm test` qua cả test che dữ liệu và test bộ tính tiền.
+- [x] Luồng Bảng giá → Đặt mua 4 bước → mã đơn → vào app chạy hết; giá đúng mục 2; Tinh chỉnh DN hiện “Liên hệ báo giá”; Giảng dạy không vào được đơn.
+- [x] `npm test` qua cả test che dữ liệu và test bộ tính tiền.
 - [ ] `/dung-thu/` chạy 3 tình huống Mua hàng; checklist chỉ tick khi đã sửa lỗi; Giảng dạy có nhãn “Xem trước”.
 - [ ] Hỏi đáp 11 câu; Điều khoản và Chính sách dữ liệu có link ở chân trang mọi trang.
 - [ ] Không còn: số người dùng/đánh giá giả, “Connector”, “Custom GPT/Gem”, “không phải phần mềm riêng”, giá nghề chưa mở.
