@@ -344,11 +344,11 @@ export const app = {
     geminiSteps: [
       "Mở <b>aistudio.google.com/apikey</b> và đăng nhập Google.",
       "Bấm <b>Create API key</b>, chọn một dự án bất kỳ.",
-      "Sao chép key (bắt đầu bằng AIza…) rồi dán vào ô dưới."
+      "Sao chép key (bắt đầu bằng AIza… hoặc AQ.…) rồi dán vào ô dưới."
     ],
     geminiOpen: "Mở Google AI Studio",
     keyLabel: "Dán key vào đây",
-    keyPh: "AIza…",
+    keyPh: "AIza… hoặc AQ.…",
     save: "Kiểm tra và lưu key",
     saving: "Đang kiểm tra key…",
     company: "Gắn key công ty",
