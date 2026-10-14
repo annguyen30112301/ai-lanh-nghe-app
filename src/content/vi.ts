@@ -160,7 +160,8 @@ export const how = {
       ["File PDF scan có dùng được không?", "Chưa. Hãy dùng file Excel hoặc PDF có thể chọn chữ. Bản scan cần nhận dạng chữ, sẽ có ở phiên bản sau."]
     ]
   },
-  cta: "Thử ngay với 5 lượt miễn phí"
+  cta: "Thử ngay với 5 lượt miễn phí",
+  allQa: "Xem tất cả câu hỏi"
 };
 
 export const packs = {
@@ -284,6 +285,66 @@ export const safety = {
     body: "Thiết kế theo tinh thần Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 và Nghị định 356/2025: tối thiểu hóa dữ liệu, minh bạch mục đích xử lý, người dùng kiểm soát dữ liệu gửi đi. Gói doanh nghiệp kèm mẫu đánh giá tác động xử lý dữ liệu (DPIA)."
   },
   cta: "Xem lớp che dữ liệu hoạt động"
+};
+
+export const qa = {
+  title: "Hỏi đáp",
+  description: "Câu hỏi thường gặp về AI Lành Nghề: sản phẩm, chi phí, dữ liệu, cách lấy key AI và checklist trước khi nhập dữ liệu.",
+  heading: "Bạn hỏi, chúng tôi trả lời thẳng",
+  lead: "Những câu hỏi chúng tôi nhận được nhiều nhất, viết lại theo lời người hỏi.",
+  chip: "Hỏi đáp",
+  jump: "Đi tới",
+  groups: [
+    {
+      id: "san-pham", title: "Sản phẩm",
+      items: [
+        ["Sao không dùng ChatGPT luôn cho xong?", "App dùng chính các mô hình AI đó qua key của bạn. Thứ được thêm vào: quy trình nghề Mua hàng đóng gói sẵn (chọn việc, điền ô, không viết câu lệnh), kết quả theo mẫu cố định kèm checklist tự kiểm, che thông tin nhạy cảm trước khi gửi, và đo thời gian tiết kiệm. Tự dùng AI dễ tin vào cảm giác: nghiên cứu của METR (2025) trên lập trình viên giàu kinh nghiệm ghi nhận họ làm chậm hơn 19% khi dùng AI nhưng lại tin rằng mình nhanh hơn 20%."],
+        ["Đây là khóa học hay phần mềm?", "Phần mềm làm việc. Không bán giờ học, không cấp chứng chỉ. Bạn dùng app để làm việc thật hằng tuần."],
+        ["Tôi có phải mở ChatGPT nữa không?", "Không. Mọi việc làm trong app; AI chạy phía sau bằng key bạn (hoặc công ty) kết nối một lần."],
+        ["Ai viết nội dung nghề?", "Người có kinh nghiệm trong nghề đóng gói quy trình, mẫu kết quả và checklist. Nội dung được cập nhật 2 lần mỗi năm."],
+        ["Nghề của tôi đã có chưa?", "Đang mở: Mua hàng. Sắp ra mắt: Giảng dạy, Hành chính – Nhân sự. Nghề khác: bạn đăng ký để nhóm ưu tiên. Xem <a href=\"/goi-nghe/\">Gói nghề</a>."]
+      ]
+    },
+    {
+      id: "chi-phi", title: "Chi phí",
+      items: [
+        ["690.000 đ/năm có đáng không?", "Bằng khoảng 3,2 giờ công của người có thâm niên (ước tính của nhóm theo lương bình quân khoảng 213.000 đ/giờ). Tiết kiệm khoảng 4 phút mỗi tuần là đủ bù. Bảng điều khiển trong app đo số phút bạn thực sự tiết kiệm."],
+        ["Phí AI ai trả, bao nhiêu?", "Bạn hoặc công ty trả thẳng cho nhà cung cấp AI theo lượng dùng. Ước tính của nhóm: một lượt so sánh 3 báo giá khoảng 300–900 đ tùy mô hình. Khi chọn mô hình trong app, mỗi mô hình hiện giá ước tính mỗi lượt. 5 lượt đầu do AI Lành Nghề trả."],
+        ["Nên chọn mô hình nào?", "Tùy ngân sách và yêu cầu chất lượng. Danh sách hiện giá mỗi lượt và mô hình nào đã qua bộ kiểm thử gói nghề để bạn so sánh. Tránh bậc miễn phí của nhà cung cấp nếu bậc đó cho phép dùng dữ liệu để huấn luyện. Bạn tự chọn mô hình trong tài khoản AI của mình, AI Lành Nghề không chọn thay."],
+        ["Công ty có nên mua cho nhân sự lớn tuổi? Sao không mua khóa học ngắn?", "Doanh nghiệp mua theo phòng ban, ai trong phòng cũng dùng được. Khóa học giúp biết, nhưng không để lại công cụ làm việc và không đo được kết quả. Theo Accenture (2024), 94% người lao động muốn học cách làm việc với AI tạo sinh, nhưng chỉ 5% tổ chức đào tạo được cho số đông."]
+      ]
+    },
+    {
+      id: "du-lieu", title: "Dữ liệu",
+      items: [
+        ["Lấy key AI ở đâu?", "Doanh nghiệp: quản trị viên gắn key công ty một lần cho cả phòng. Cá nhân: bấm “Kết nối AI một chạm” (OpenRouter), dán key Gemini (hướng dẫn 3 bước <a href=\"#huong-dan\">bên dưới</a>) hoặc dán key OpenAI. Bạn kết nối được nhiều AI cùng lúc. Lưu ý: key Gemini bậc miễn phí cho phép Google dùng dữ liệu để cải thiện sản phẩm, nên không đưa tài liệu mật khi dùng bậc miễn phí."],
+        ["Dữ liệu có ra nước ngoài? An toàn 100%?", "Không ai cam kết 100% một cách trung thực. App che thông tin nhận diện trước khi gửi, mã hóa key, không lưu file, nội dung hay kết quả; máy chủ chỉ lưu số đếm và mốc thời gian. Bản đã che được gửi tới nhà cung cấp AI bạn chọn, có thể đặt máy chủ ở nước ngoài. Doanh nghiệp là bên kiểm soát dữ liệu, AI Lành Nghề là bên xử lý. Xem trang <a href=\"/an-toan/\">An toàn</a>."],
+        ["Chia sẻ tài khoản được không?", "Không. Mỗi tài khoản gắn với một người; đăng nhập trên thiết bị mới phải xác thực mã. Doanh nghiệp quản lý theo seat: mời, thu hồi, chuyển seat cho người khác."]
+      ]
+    }
+  ],
+  guide: {
+    id: "huong-dan", title: "Hướng dẫn",
+    gemini: {
+      title: "Lấy key Gemini trong 3 bước",
+      open: "Mở Google AI Studio",
+      note: "Dán key ở mục <b>Kết nối AI</b> trong app. Bậc miễn phí có hạn mức hằng ngày và cho phép Google dùng dữ liệu để cải thiện sản phẩm."
+    },
+    checklist: {
+      title: "Checklist trước khi nhập dữ liệu",
+      lead: "Làm theo trước mỗi lượt, nhất là khi tài liệu có thông tin của đối tác.",
+      items: [
+        "Dùng file Excel hoặc PDF có chữ, không dùng bản scan.",
+        "Bỏ bớt trang, sheet không cần cho việc này (tối đa khoảng 200 dòng mỗi file).",
+        "Ở bước “Che thông tin”, đánh dấu tên nhà cung cấp, tên công ty bạn và người liên hệ.",
+        "Đọc lại khung “Dữ liệu sẽ gửi lên AI”: không còn số CCCD, số tài khoản, số điện thoại cá nhân.",
+        "Bật “Che cả số tiền” khi việc không cần so sánh giá.",
+        "Không đưa tài liệu mà quy chế nội bộ cấm chia sẻ ra ngoài, kể cả khi đã che.",
+        "Đang dùng bậc miễn phí của nhà cung cấp AI thì không đưa tài liệu mật."
+      ]
+    }
+  },
+  more: { title: "Chưa thấy câu bạn cần?", lead: "Thử ngay một tình huống mẫu, không cần đăng nhập.", cta: "Mở Bàn thử việc", cta2: "Dùng thử với tài liệu thật" }
 };
 
 /* ======================= APP ======================= */

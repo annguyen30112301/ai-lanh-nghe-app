@@ -1,0 +1,68 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Icon from "../components/Icon.astro";
+import { app, qa } from "../content/vi";
+const t = qa;
+const steps = app.connect.geminiSteps;
+---
+<Base page="qa" title={`${t.title} · AI Lành Nghề`} description={t.description}>
+  <PageIntro title={t.heading} lead={t.lead} chip={t.chip}>
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label={t.jump}>
+      {[...t.groups, t.guide].map((g) => <a href={`#${g.id}`} class="chip !min-h-11 !px-4 !text-[0.92rem] no-underline">{g.title}</a>)}
+    </nav>
+  </PageIntro>
+
+  <div class="shell max-w-4xl pb-10">
+    {t.groups.map((g) => (
+      <section id={g.id} class="scroll-mt-28 pb-12" aria-labelledby={`${g.id}-h`}>
+        <h2 id={`${g.id}-h`} class="t-title !text-[clamp(1.4rem,1.1rem+1vw,1.9rem)]" data-reveal>{g.title}</h2>
+        <div class="mt-4">
+          {g.items.map(([q, a]) => (
+            <details class="qa">
+              <summary>{q}<span class="plus" aria-hidden="true"><Icon name="plus" size={18} weight="bold" /></span></summary>
+              <p class="max-w-[68ch] pb-6 text-ink-2" set:html={a} />
+            </details>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section id={t.guide.id} class="scroll-mt-28 pb-12" aria-labelledby="guide-h">
+      <h2 id="guide-h" class="t-title !text-[clamp(1.4rem,1.1rem+1vw,1.9rem)]" data-reveal>{t.guide.title}</h2>
+      <div class="mt-6 grid gap-5 md:grid-cols-2">
+        <div class="panel p-6 sm:p-7">
+          <h3 class="flex items-center gap-3 text-[1.15rem]"><span class="icon-tile"><Icon name="key" size={22} /></span>{t.guide.gemini.title}</h3>
+          <ol class="mt-5 grid gap-3">
+            {steps.map((s, i) => (
+              <li class="flex gap-3 text-[0.95rem]">
+                <span class="grid size-8 shrink-0 place-items-center rounded-full bg-tint text-[0.85rem] font-bold text-accent-ink">{i + 1}</span>
+                <span class="pt-1" set:html={s.replace("dán vào ô dưới", "dán vào mục Kết nối AI")} />
+              </li>
+            ))}
+          </ol>
+          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="btn btn-quiet mt-5">{t.guide.gemini.open}<Icon name="arrow" size={18} weight="bold" /></a>
+          <p class="t-note mt-4" set:html={t.guide.gemini.note} />
+        </div>
+        <div class="panel p-6 sm:p-7">
+          <h3 class="flex items-center gap-3 text-[1.15rem]"><span class="icon-tile"><Icon name="checks" size={22} /></span>{t.guide.checklist.title}</h3>
+          <p class="mt-2 text-[0.92rem] text-ink-2">{t.guide.checklist.lead}</p>
+          <ul class="mt-4 grid gap-2.5">
+            {t.guide.checklist.items.map((x) => (
+              <li class="flex gap-2.5 text-[0.95rem]"><Icon name="check" size={20} weight="bold" class="mt-0.5 shrink-0 text-accent-2" />{x}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="rounded-3xl bg-tint p-7 sm:p-9">
+      <h2 class="text-[1.3rem]">{t.more.title}</h2>
+      <p class="mt-2 text-ink-2">{t.more.lead}</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/dung-thu/" class="btn btn-accent">{t.more.cta}<Icon name="arrow" size={18} weight="bold" /></a>
+        <a href="/app/dang-nhap/" class="btn btn-line">{t.more.cta2}</a>
+      </div>
+    </section>
+  </div>
+</Base>

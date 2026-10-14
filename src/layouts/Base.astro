@@ -4,12 +4,12 @@ import "../styles/global.css";
 import Icon from "../components/Icon.astro";
 import { site, ui } from "../content/vi";
 
-export type PageKey = "home" | "how" | "packs" | "pricing" | "safety";
+export type PageKey = "home" | "how" | "packs" | "pricing" | "safety" | "qa";
 interface Props { page: PageKey; title: string; description: string }
 const { page, title, description } = Astro.props;
 
-const href: Record<PageKey, string> = { home: "/", how: "/cach-hoat-dong/", packs: "/goi-nghe/", pricing: "/bang-gia/", safety: "/an-toan/" };
-const desktop: PageKey[] = ["home", "how", "packs", "pricing", "safety"];
+const href: Record<PageKey, string> = { home: "/", how: "/cach-hoat-dong/", packs: "/goi-nghe/", pricing: "/bang-gia/", safety: "/an-toan/", qa: "/hoi-dap/" };
+const desktop = ["home", "how", "packs", "pricing", "safety"] as const;
 const tabs: { k: PageKey; icon: string }[] = [{ k: "home", icon: "home" }, { k: "how", icon: "path" }, { k: "packs", icon: "briefcase" }, { k: "pricing", icon: "coins" }];
 const moreActive = page === "safety";
 ---
