@@ -43,7 +43,13 @@ export default function HeroDay({ h }: { h: H }) {
               <motion.p aria-hidden className="mt-3 font-bold leading-none tracking-[-0.05em] tabular-nums text-accent text-[clamp(2.2rem,1.4rem+4.5vw,5.6rem)]">
                 {reduce ? hhmm(END) : <motion.span>{clock}</motion.span>}
               </motion.p>
-              <h1 className="t-display mt-3 max-w-[16ch] !text-[clamp(1.55rem,1rem+2.2vw,2.9rem)]">{h.headline}</h1>
+              <h1 className="t-display relative mt-3 max-w-[16ch] !text-[clamp(1.55rem,1rem+2.2vw,2.9rem)]">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span key={stage === last ? "done" : "start"} className="block" initial={{ opacity: 0, y: 18, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -14 }}>
+                    {stage === last ? h.headlineDone : h.headline}
+                  </motion.span>
+                </AnimatePresence>
+              </h1>
               <div className="relative mt-3 min-h-[4.5rem] lg:mt-4" aria-live="polite">
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.div key={stage} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>

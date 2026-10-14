@@ -31,7 +31,8 @@ export const home = {
   description: "Chọn đúng việc, tải file, nhận kết quả theo mẫu kèm checklist. Dữ liệu nhạy cảm được che trước khi gửi lên AI.",
   hero: {
     day: "Sáng thứ Hai của chị Lan",
-    headline: "Ba báo giá, một bảng so sánh, mười tám phút.",
+    headline: "3 báo giá. Sếp cần đề xuất trước 10 giờ.",
+    headlineDone: "Xong lúc 08:18. Chị vẫn là người quyết định.",
     lead: "Chị Lan làm mua hàng 22 năm. Sáng nay có ba nhà cung cấp gửi báo giá ba kiểu khác nhau. Kéo xuống để xem chị làm xong trước giờ họp như thế nào.",
     cta: { label: "Dùng thử với báo giá của bạn", href: "/app/dang-nhap/" },
     cta2: { label: "Xem cách hoạt động", href: "/cach-hoat-dong/" },
@@ -74,9 +75,8 @@ export const home = {
     title: "Vì sao người làm nghề lâu năm cần làm ngay",
     lead: "Thị trường lao động văn phòng đang thay đổi nhanh hơn tốc độ học lại từ đầu.",
     stats: [
-      { value: 19, suffix: "%", label: "lao động văn phòng 40+ thuộc nhóm có nguy cơ cao bị thay thế" },
-      { value: 4, suffix: "%", label: "người 40+ đã mất việc tìm lại được việc đúng chuyên môn" },
-      { value: 12, suffix: " tháng", label: "trung bình để tìm được việc mới" }
+      { value: 19, suffix: "%", label: "lao động văn phòng 40+ thuộc nhóm có nguy cơ cao" },
+      { value: 58, suffix: "%", label: "cần khoảng 12 tháng mới tìm được việc mới" }
     ],
     source: "Nguồn: TopCV, báo cáo thị trường lao động 2025–2026 (khảo sát lao động văn phòng 40+, 12 tháng gần nhất)."
   },
@@ -98,7 +98,7 @@ export const home = {
     title: "Một lượt so sánh báo giá",
     items: [
       { value: 45, suffix: " phút", label: "thường mất khi làm tay" },
-      { value: 18, suffix: " phút", label: "trong ví dụ của chị Lan, gồm cả tự kiểm" },
+      { value: 18, suffix: " phút", label: "trong ví dụ minh họa của chị Lan, gồm cả tự kiểm" },
       { value: 0, suffix: " file", label: "được lưu trên máy chủ của chúng tôi" }
     ]
   },
@@ -233,7 +233,7 @@ export const pricing = {
   },
   aiFee: {
     title: "Phí AI tính thế nào?",
-    body: "Bạn trả trực tiếp cho nhà cung cấp AI (OpenRouter, Google Gemini hoặc nhà cung cấp công ty đang dùng). Ước tính một lượt so sánh 3 báo giá dùng khoảng 5.000–8.000 token (đang đo lại trong demo). Key Gemini có hạn mức miễn phí hằng ngày."
+    body: "Bạn trả trực tiếp cho nhà cung cấp AI (OpenRouter, Google Gemini hoặc nhà cung cấp công ty đang dùng), tính theo lượng dùng. Ước tính của nhóm: một lượt so sánh 3 báo giá tốn vài trăm đồng (đang đo lại trong demo). Key Gemini có hạn mức miễn phí hằng ngày. 5 lượt dùng thử đầu tiên do AI Lành Nghề trả."
   },
   note: "Giá niêm yết bằng đồng Việt Nam, chưa gồm phí AI. Bản demo: chưa có thanh toán thật."
 };
@@ -270,7 +270,7 @@ export const safety = {
   },
   store: {
     title: "Máy chủ lưu gì và không lưu gì",
-    yes: { title: "Có lưu", items: ["Email đăng nhập", "Gói, seat, vai trò", "Số đếm mỗi lượt: mở, xong, xuất lúc nào; che bao nhiêu thông tin; số token", "Key AI đã mã hóa AES-256-GCM"] },
+    yes: { title: "Có lưu", items: ["Email đăng nhập", "Gói, seat, vai trò", "Số đếm mỗi lượt: mở, xong, xuất lúc nào; che bao nhiêu thông tin; lượng dùng AI", "Key AI đã mã hóa AES-256-GCM"] },
     no: { title: "Không lưu", items: ["File bạn tải lên", "Nội dung báo giá, thư, hồ sơ", "Kết quả AI trả về", "Câu lệnh gửi AI, key dạng chữ thường"] }
   },
   human: {
@@ -280,7 +280,7 @@ export const safety = {
   },
   law: {
     title: "Tham chiếu pháp lý",
-    body: "Thiết kế theo tinh thần Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15: tối thiểu hóa dữ liệu, minh bạch mục đích xử lý, người dùng kiểm soát dữ liệu gửi đi. Gói doanh nghiệp kèm mẫu đánh giá tác động xử lý dữ liệu (DPIA)."
+    body: "Thiết kế theo tinh thần Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 và Nghị định 356/2025: tối thiểu hóa dữ liệu, minh bạch mục đích xử lý, người dùng kiểm soát dữ liệu gửi đi. Gói doanh nghiệp kèm mẫu đánh giá tác động xử lý dữ liệu (DPIA)."
   },
   cta: "Xem lớp che dữ liệu hoạt động"
 };

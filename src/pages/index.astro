@@ -74,7 +74,7 @@ const scenarios = publicScenarios();
     <div class="shell">
       <h2 class="t-title max-w-[26ch]">{h.why.title}</h2>
       <p class="t-sub mt-4">{h.why.lead}</p>
-      <dl class="mt-10 grid gap-6 sm:grid-cols-3">
+      <dl class="mt-10 grid gap-6 sm:grid-cols-2">
         {h.why.stats.map((s) => (
           <div>
             <dd class="text-[clamp(2.2rem,1.6rem+2vw,3.2rem)] font-bold leading-none text-accent"><Counter value={s.value} suffix={s.suffix} /></dd>

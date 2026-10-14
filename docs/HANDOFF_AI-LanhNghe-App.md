@@ -200,7 +200,7 @@ Không: nền kem phủ toàn trang, serif tiêu đề, eyebrow chữ in hoa, th
 - **Trang chủ:** hero kể chuyện theo cuộn “Sáng thứ Hai của chị Lan” (khuôn `HeroDay`: đồng hồ 08:00 → 08:18; 3 báo giá → che dữ liệu → bảng → xuất) – **khoảnh khắc chủ đạo duy nhất** của trang; `ComparePanel` “ChatGPT tự dùng ↔ AI Lành Nghề”; `Counter` cho số liệu.
 - Chuyển trang: View Transitions + `nav-pill`. Tôn trọng `prefers-reduced-motion`. Không fade-up cho mọi khối.
 
-**Marketing pages:** Trang chủ, Cách hoạt động, Gói nghề (Mua hàng; Giảng dạy & HC-NS “sắp ra mắt”), Bảng giá (đúng giá ở mục 0), An toàn & Tuân thủ. Nội dung lấy từ site cũ, viết lại gọn. Website cũ giữ nguyên; nút “Dùng thử” ở site cũ trỏ sang app.
+**Website (marketing + TMĐT):** làm theo file **`WEBSITE_PLAN_AI-LanhNghe.md`** (sơ đồ trang, nội dung từng trang, lỗi nội dung site cũ phải sửa, mốc riêng). Website cũ giữ nguyên, thêm banner chuyển hướng sang website mới.
 
 ## 11. Definition of Done (kiểm 20/10)
 
@@ -237,7 +237,7 @@ Phát triển MVP (tuần công × đơn giá) · Cloudflare (gói trả phí kh
 5. Màn hình làm việc: form, đọc file, đánh dấu tên, mask preview (+ hiệu ứng che).
 6. Execute + kết quả + checklist + xuất.
 7. Telemetry + Personal Dashboard; seed + Business Dashboard + seats.
-8. Trang chủ (hero kể chuyện), Cách hoạt động, Gói nghề, Bảng giá, An toàn.
+8. Website theo `WEBSITE_PLAN_AI-LanhNghe.md` (khung + Bảng giá làm sớm 14–16/10; các trang còn lại 21–25/10).
 9. Màn hình SMS OTP (UI), dọn dẹp, kiểm DoD, chụp 8 màn hình.
 
 Sau mỗi bước: commit nhỏ, push để Actions deploy, mở link kiểm tra.
