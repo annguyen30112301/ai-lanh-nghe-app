@@ -14,7 +14,7 @@
   > AI Lành Nghề là ứng dụng web làm việc theo nghề. Người lao động chọn đúng việc cần làm, điền vài thông tin, tải file lên; app dùng **AI của chính doanh nghiệp/người dùng** (kết nối một lần) để làm theo quy trình nghề do chuyên gia đóng gói, trả kết quả theo mẫu kèm checklist tự kiểm, và đo được thời gian tiết kiệm.
 - Hướng cũ “Connector cắm skill vào ChatGPT” **đã bỏ**. Không viết chữ “Connector” ở bất kỳ đâu trong UI.
 - Khách **tự trả phí AI** (qua key/tài khoản của họ). AI Lành Nghề thu phí gói nghề: Business 690.000 đ, Business Plus 990.000 đ /người/năm; Cá nhân 0 đ (dùng thử) / 690.000 đ/năm; Tinh chỉnh 1:1: 800.000 đ/lần; Custom 25–80 triệu đ.
-- Website cũ (HTML thuần, GitHub Pages): `https://annguyen30112301.github.io/ai-lanh-nghe/`, mã nguồn trên máy Royan ở `TMĐT/source code website/ai-lanh-nghe/` (các trang: index, goi-nghe, nghe-mua-hang, nghe-giang-day, bang-gia, gio-hang, thanh-toan, an-toan, tai-nguyen, dung-thu, do-gio, bang-dieu-khien). Dùng làm **nguồn nội dung**; giao diện làm mới theo skill.
+- Website cũ (HTML thuần, GitHub Pages): `https://annguyen30112301.github.io/ai-lanh-nghe/`, mã nguồn ở repo https://github.com/annguyen30112301/ai-lanh-nghe nhánh `main` (bản trên máy Royan đã cũ, dừng 16/09) (các trang: index, goi-nghe, nghe-mua-hang, nghe-giang-day, bang-gia, gio-hang, thanh-toan, an-toan, tai-nguyen, dung-thu, do-gio, bang-dieu-khien). Dùng làm **nguồn nội dung**; giao diện làm mới theo skill.
 
 ## 1. Mốc thời gian (cứng)
 
