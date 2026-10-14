@@ -4,6 +4,7 @@ import { randomDigits } from "../../../lib/crypto";
 import { otpHash } from "../../../lib/otp";
 import { db, now } from "../../../lib/db";
 import { fail, json, readJson, route } from "../../../lib/http";
+import { mailConfigured, sendMail } from "../../../lib/mail";
 
 export const prerender = false;
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z0-9-]{2,}$/i;
@@ -22,21 +23,21 @@ export const POST: APIRoute = route(async ({ request, url }) => {
 
   const isDemo = email.endsWith("@" + env.DEMO_EMAIL_DOMAIN);
   const isLocal = url.hostname === "localhost" || url.hostname === "127.0.0.1";
-  if (isDemo || (isLocal && !env.RESEND_API_KEY)) {
+  if (isDemo || (isLocal && !mailConfigured())) {
     if (isLocal) console.log(`[OTP] ${email}: ${code}`);
     return json({ ok: true, demo_code: code });
   }
-  if (!env.RESEND_API_KEY) fail(503, "Hệ thống chưa cấu hình gửi email. Bạn dùng tài khoản demo hoặc báo nhóm phát triển.");
+  if (!mailConfigured()) fail(503, "Hệ thống chưa cấu hình gửi email. Bạn dùng tài khoản demo hoặc báo nhóm phát triển.");
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, "content-type": "application/json" },
-    body: JSON.stringify({
-      from: env.MAIL_FROM, to: [email], subject: `Mã đăng nhập AI Lành Nghề: ${code}`,
+  try {
+    await sendMail({
+      fromName: "AI Lành Nghề", to: email, subject: `Mã đăng nhập AI Lành Nghề: ${code}`,
       text: `Mã đăng nhập của bạn là ${code}. Mã có hiệu lực 10 phút. Nếu bạn không yêu cầu, hãy bỏ qua email này.`,
       html: `<div style="font-family:system-ui,sans-serif;font-size:18px;color:#201F1D"><p>Mã đăng nhập AI Lành Nghề của bạn:</p><p style="font-size:34px;font-weight:700;letter-spacing:8px;color:#5A3B0A">${code}</p><p>Mã có hiệu lực 10 phút. Nếu bạn không yêu cầu, hãy bỏ qua email này.</p></div>`
-    })
-  });
-  if (!res.ok) fail(502, "Chưa gửi được email. Bạn kiểm tra lại địa chỉ hoặc thử lại sau 1 phút.");
+    });
+  } catch (e) {
+    console.error("otp_mail_failed", String(e));
+    fail(502, "Chưa gửi được email. Bạn kiểm tra lại địa chỉ hoặc thử lại sau 1 phút.");
+  }
   return json({ ok: true });
 });

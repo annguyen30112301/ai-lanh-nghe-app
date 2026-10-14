@@ -42,7 +42,8 @@ GitHub → Settings → Secrets and variables → Actions:
 | `CLOUDFLARE_API_TOKEN` | token quyền *Workers Scripts: Edit* + *D1: Edit* |
 | `CLOUDFLARE_ACCOUNT_ID` | |
 | `KEY_ENC_SECRET`, `SESSION_SECRET` | `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
-| `RESEND_API_KEY` | không bắt buộc (không có thì chỉ đăng nhập được bằng tài khoản demo) |
+| `SMTP_USER`, `SMTP_PASS` | Gmail của nhóm + mật khẩu ứng dụng 16 ký tự. Có thì mã OTP gửi qua Gmail tới **mọi** địa chỉ email (ưu tiên hơn Resend) |
+| `RESEND_API_KEY` | không bắt buộc. Với `onboarding@resend.dev` Resend chỉ gửi tới email chủ tài khoản Resend; muốn gửi cho mọi người phải xác minh tên miền. Không có cả SMTP lẫn Resend thì chỉ đăng nhập được bằng tài khoản demo |
 | `TRIAL_API_KEY` | key cho 5 lượt dùng thử: key Gemini miễn phí (AIza…) hoặc key OpenRouter |
 
 Variable `TRIAL_PROVIDER` = `gemini` nếu `TRIAL_API_KEY` là key Gemini (mặc định `openrouter`). Variable `TRIAL_MODEL` = mô hình cho **5 lượt dùng thử** (mặc định: `gemini-3.8-flash` khi `TRIAL_PROVIDER=gemini`, nếu không thì `OPENROUTER_MODEL` cũ hoặc giá trị trong `wrangler.jsonc`). Tùy chọn `TRIAL_FALLBACK_MODEL` (mô hình thử lại một lần khi quá tải, chỉ cho lượt thử).
