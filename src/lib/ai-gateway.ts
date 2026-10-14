@@ -68,7 +68,7 @@ async function gemini(key: string, system: string, user: string): Promise<AIRepl
   const models = [...new Set([env.GEMINI_MODEL || "gemini-3.8-flash", ...GEMINI_FALLBACKS])];
   let res: Response | null = null;
   for (const [i, model] of models.entries()) {
-    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`, {
       method: "POST",
       headers: { "x-goog-api-key": key, "content-type": "application/json" },
       body: JSON.stringify({
@@ -84,11 +84,26 @@ async function gemini(key: string, system: string, user: string): Promise<AIRepl
   }
   res = res!;
   if (!res.ok) await upstreamFail("gemini", res);
-  const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
-  return {
-    text: j.candidates?.[0]?.content?.parts?.filter((p) => !p.thought).map((p) => p.text ?? "").join("") ?? "",
-    tokens_in: j.usageMetadata?.promptTokenCount ?? 0, tokens_out: j.usageMetadata?.candidatesTokenCount ?? 0
-  };
+  // Đọc SSE: ghép phần chữ (bỏ phần "thought"), lấy usage ở gói cuối.
+  type Chunk = { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
+  const reader = res.body!.pipeThrough(new TextDecoderStream()).getReader();
+  let buf = "", text = "", tin = 0, tout = 0;
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (value) buf += value;
+    let i: number;
+    while ((i = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+      if (!line.startsWith("data:")) continue;
+      try {
+        const c = JSON.parse(line.slice(5)) as Chunk;
+        for (const p of c.candidates?.[0]?.content?.parts ?? []) if (!p.thought && p.text) text += p.text;
+        if (c.usageMetadata) { tin = c.usageMetadata.promptTokenCount ?? tin; tout = c.usageMetadata.candidatesTokenCount ?? tout; }
+      } catch { /* gói lỗi, bỏ qua */ }
+    }
+    if (done) break;
+  }
+  return { text, tokens_in: tin, tokens_out: tout };
 }
 
 export async function callAI(k: AIKey, system: string, user: string, mock: () => unknown): Promise<AIReply> {
