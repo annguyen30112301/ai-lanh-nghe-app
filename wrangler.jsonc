@@ -4,6 +4,9 @@
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@astrojs/cloudflare/entrypoints/server",
+  // Chạy Worker ở Singapore: Cloudflare hay đưa người dùng Việt Nam vào trạm Hong Kong (HKG),
+  // mà Gemini API và OpenAI API không phục vụ yêu cầu xuất phát từ Hong Kong ("User location is not supported").
+  "placement": { "region": "gcp:asia-southeast1" },
   "observability": { "enabled": true, "logs": { "invocation_logs": false } },
   "d1_databases": [
     {
