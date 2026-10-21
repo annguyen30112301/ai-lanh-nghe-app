@@ -8,7 +8,7 @@ const EMAIL = process.argv[4] || "thu2@ailanhnghe.demo";
 const SC = process.env.SC || "so-sanh-bao-gia";
 mkdirSync(OUT, { recursive: true });
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-const browser = await puppeteer.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", headless: true, args: ["--no-sandbox"] });
+const browser = await puppeteer.launch({ executablePath: process.env.CHROME || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", headless: true, args: ["--no-sandbox"] });
 const page = await browser.newPage();
 await page.setViewport({ width: Number(process.env.W || 1440), height: Number(process.env.H || 900) });
 page.on("pageerror", (e) => console.log("PAGEERROR", e.message));

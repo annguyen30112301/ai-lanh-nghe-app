@@ -1,0 +1,12 @@
+---
+import AppShell from "../../../layouts/AppShell.astro";
+import Account from "../../../islands/Account";
+import { app } from "../../../content/vi";
+const t = app.account;
+---
+<AppShell page="account" title={t.title} description={t.description}>
+  <div class="shell max-w-4xl py-10 sm:py-14">
+    <h1 class="t-title">{t.heading}</h1>
+    <div class="mt-8"><Account client:load t={t} /></div>
+  </div>
+</AppShell>

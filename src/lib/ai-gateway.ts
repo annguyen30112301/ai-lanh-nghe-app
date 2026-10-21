@@ -23,7 +23,15 @@ export async function useTrial(userId: string) {
 }
 
 /** Chọn nguồn AI: AI khách đã kết nối (bắt buộc đã chọn mô hình) → lượt dùng thử → (local) mô phỏng. */
-export async function resolveKey(orgId: string, userId: string): Promise<AIKey> {
+/**
+ * Chưa có license (hoặc đã hết hạn): chỉ chạy bằng lượt thử của hệ thống, kể cả khi tổ chức đã kết nối AI riêng.
+ * Có license: dùng AI của khách như trước.
+ */
+export async function resolveKey(orgId: string, userId: string, licensed = true): Promise<AIKey> {
+  if (!licensed) {
+    const k = await trialKey(userId);
+    return k ?? fail(402, `Bạn đã dùng hết ${TRIAL_LIMIT} lượt thử. Mua gói Mua hàng để dùng tiếp với AI của bạn.`, "no_license");
+  }
   const keys = (await db().prepare("SELECT provider, key_ciphertext, key_iv FROM ai_keys WHERE org_id = ?").bind(orgId)
     .all<{ provider: Provider; key_ciphertext: string; key_iv: string }>()).results;
   if (keys.length) {
@@ -39,17 +47,23 @@ export async function resolveKey(orgId: string, userId: string): Promise<AIKey> 
       ? await target(c.fallback_provider, c.fallback_model) : null;
     return { ...(await target(c.provider, c.model))!, via_trial: false, fallback: fb };
   }
-  if ((await trialLeft(userId)) > 0) {
-    if (env.TRIAL_API_KEY) {
-      const model = env.TRIAL_MODEL || fail(500, "Thiếu cấu hình TRIAL_MODEL cho lượt dùng thử.");
-      const provider = (env.TRIAL_PROVIDER as Provider) || "openrouter";
-      const fallback = env.TRIAL_FALLBACK_MODEL ? { provider, key: env.TRIAL_API_KEY, model: env.TRIAL_FALLBACK_MODEL } : null;
-      return { provider, key: env.TRIAL_API_KEY, via_trial: true, model, fallback };
-    }
-    if (mockEnabled()) return { provider: "mock", key: "", via_trial: true, model: "mock", fallback: null };
-  }
+  const trial = await trialKey(userId);
+  if (trial) return trial;
   if (mockEnabled()) return { provider: "mock", key: "", via_trial: false, model: "mock", fallback: null };
   return fail(402, "Bạn đã dùng hết 5 lượt thử. Kết nối AI của bạn để làm tiếp – chỉ mất 1 phút.", "no_ai");
+}
+
+/** Key cho lượt thử của hệ thống; null khi đã hết lượt hoặc chưa cấu hình. */
+async function trialKey(userId: string): Promise<AIKey | null> {
+  if ((await trialLeft(userId)) <= 0) return null;
+  if (env.TRIAL_API_KEY) {
+    const model = env.TRIAL_MODEL || fail(500, "Thiếu cấu hình TRIAL_MODEL cho lượt dùng thử.");
+    const provider = (env.TRIAL_PROVIDER as Provider) || "openrouter";
+    const fallback = env.TRIAL_FALLBACK_MODEL ? { provider, key: env.TRIAL_API_KEY, model: env.TRIAL_FALLBACK_MODEL } : null;
+    return { provider, key: env.TRIAL_API_KEY, via_trial: true, model, fallback };
+  }
+  if (mockEnabled()) return { provider: "mock", key: "", via_trial: true, model: "mock", fallback: null };
+  return null;
 }
 
 const ERR: Record<number, string> = {

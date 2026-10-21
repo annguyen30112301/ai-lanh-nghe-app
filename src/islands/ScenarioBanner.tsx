@@ -16,6 +16,18 @@ export default function ScenarioBanner({ t, connectLabel }: { t: T; connectLabel
     getMe(true).then(setMe).catch(() => {});
   }, []);
   if (!me) return <div className="h-16" />;
+  if (!me.license.active) {
+    const left = me.trial_left > 0, admin = me.org.role === "admin";
+    const msg = !admin ? t.banner.expired.replace("{org}", me.org.name) : left ? t.banner.noLicense.replace("{n}", String(me.trial_left)) : t.banner.noLicenseNone;
+    const href = `/dat-mua/?goi=${me.org.plan}${me.org.plan === "personal" ? "" : `&seat=${me.org.seats}`}`;
+    return (
+      <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} role="status"
+        className={`flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-3.5 text-[0.92rem] ${left && admin ? "bg-raised ring-1 ring-hair" : "bg-urgent-soft text-urgent"}`}>
+        <span className="flex items-center gap-2.5 font-medium"><SparkleIcon size={22} weight="fill" className="text-accent" />{msg}</span>
+        {admin && <a href={href} className="btn btn-accent !min-h-10 !px-5">{t.banner.buy}</a>}
+      </motion.div>
+    );
+  }
   const tone = me.ai ? (me.ai.choice ? "ok" : "model") : me.trial_left > 0 ? "trial" : "none";
   return (
     <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} role="status"

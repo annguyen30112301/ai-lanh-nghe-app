@@ -356,6 +356,7 @@ function ErrorBox({ error, t }: { error: { msg: string; code?: string }; t: T })
   return (
     <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="err flex flex-wrap items-center justify-between gap-3" role="alert">
       <span>{error.msg}</span>
+      {error.code === "no_license" && <a href="/dat-mua/?goi=personal" className="btn btn-accent !min-h-10">{t.noLicenseCta}</a>}
       {error.code === "no_ai" && <a href="/app/ket-noi-ai/" className="btn btn-accent !min-h-10"><PlugIcon size={18} weight="bold" />{t.noAICta}</a>}
       {error.code === "no_model" && <a href="/app/ket-noi-ai/?buoc=mo-hinh" className="btn btn-accent !min-h-10"><PlugIcon size={18} weight="bold" />{t.noModelCta}</a>}
     </motion.div>

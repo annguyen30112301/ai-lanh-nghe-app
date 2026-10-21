@@ -7,11 +7,17 @@ const pick = (a) => a[Math.floor(rnd() * a.length)];
 const q = (v) => (v === null ? "NULL" : typeof v === "number" ? String(v) : `'${String(v).replace(/'/g, "''")}'`);
 const D = "ailanhnghe.demo";
 const now = Date.now();
-const out = ["-- Sinh tự động bởi scripts/make-seed.mjs. Dữ liệu giả.", "DELETE FROM runs; DELETE FROM members; DELETE FROM organizations WHERE id IN ('org_tanphu','org_demo'); DELETE FROM trial_usage;"];
+const out = ["-- Sinh tự động bởi scripts/make-seed.mjs. Dữ liệu giả.", "DELETE FROM runs; DELETE FROM members; DELETE FROM organizations WHERE id IN ('org_tanphu','org_demo'); DELETE FROM trial_usage;",
+  "DELETE FROM licenses WHERE org_id IN ('org_tanphu','org_demo') OR org_id LIKE 'org_thu%';"];
 const ins = (t, row) => out.push(`INSERT OR REPLACE INTO ${t} (${Object.keys(row).join(",")}) VALUES (${Object.values(row).map(q).join(",")});`);
 
 ins("organizations", { id: "org_tanphu", name: "Cơ khí Tân Phú", plan: "business", seats: 15, expires_at: now + 300 * 864e5 });
-ins("organizations", { id: "org_demo", name: "Cá nhân – Demo", plan: "personal", seats: 1, expires_at: null });
+ins("organizations", { id: "org_demo", name: "Cá nhân – Demo", plan: "personal", seats: 1, expires_at: now + 300 * 864e5 });
+// license có sẵn cho 2 tổ chức demo (khớp expires_at ở trên; ngày theo giờ Việt Nam)
+const vnDate = (t) => new Date(t + 7 * 36e5).toISOString().slice(0, 10);
+for (const [org, plan, seats] of [["org_tanphu", "business", 15], ["org_demo", "personal", 1]]) {
+  ins("licenses", { id: `lic_seed_${org}`, org_id: org, order_id: null, plan, seats, valid_from: vnDate(now), valid_to: vnDate(now + 300 * 864e5), created_at: now });
+}
 
 const staff = [
   ["lan", "Nguyễn Thị Lan", "admin"], ["hung", "Trần Văn Hùng"], ["mai", "Lê Thị Mai"], ["tuan", "Phạm Minh Tuấn"],

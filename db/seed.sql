@@ -1,7 +1,10 @@
 -- Sinh tự động bởi scripts/make-seed.mjs. Dữ liệu giả.
 DELETE FROM runs; DELETE FROM members; DELETE FROM organizations WHERE id IN ('org_tanphu','org_demo'); DELETE FROM trial_usage;
+DELETE FROM licenses WHERE org_id IN ('org_tanphu','org_demo') OR org_id LIKE 'org_thu%';
 INSERT OR REPLACE INTO organizations (id,name,plan,seats,expires_at) VALUES ('org_tanphu','Cơ khí Tân Phú','business',15,1817831298025);
-INSERT OR REPLACE INTO organizations (id,name,plan,seats,expires_at) VALUES ('org_demo','Cá nhân – Demo','personal',1,NULL);
+INSERT OR REPLACE INTO organizations (id,name,plan,seats,expires_at) VALUES ('org_demo','Cá nhân – Demo','personal',1,1817831298025);
+INSERT OR REPLACE INTO licenses (id,org_id,order_id,plan,seats,valid_from,valid_to,created_at) VALUES ('lic_seed_org_tanphu','org_tanphu',NULL,'business',15,'2026-10-14','2027-08-10',1791911298025);
+INSERT OR REPLACE INTO licenses (id,org_id,order_id,plan,seats,valid_from,valid_to,created_at) VALUES ('lic_seed_org_demo','org_demo',NULL,'personal',1,'2026-10-14','2027-08-10',1791911298025);
 INSERT OR REPLACE INTO users (id,email,name,created_at) VALUES ('u_tp_lan','lan@ailanhnghe.demo','Nguyễn Thị Lan',1788455298025);
 INSERT OR REPLACE INTO members (org_id,user_id,role,status) VALUES ('org_tanphu','u_tp_lan','admin','active');
 INSERT OR REPLACE INTO users (id,email,name,created_at) VALUES ('u_tp_hung','hung@ailanhnghe.demo','Trần Văn Hùng',1788455298025);
