@@ -17,6 +17,7 @@ const items: { k: AppKey; href: string; icon: string; label: string; admin?: boo
   { k: "account", href: "/app/tai-khoan/", icon: "id", label: n.account, tab: false }
 ];
 const active = page === "work" ? "scenarios" : page;
+// Trang chưa đăng nhập (bare): logo và "Về trang giới thiệu" quay về website giới thiệu (repo ai-lanh-nghe), nơi có nút Dùng thử / Đăng nhập.
 ---
 <!doctype html>
 <html lang="vi">
@@ -35,7 +36,7 @@ const active = page === "work" ? "scenarios" : page;
 
   <header class="sticky top-0 z-50 border-b border-hair bg-raised/95 backdrop-blur" style="view-transition-name: site-nav">
     <div class="shell flex h-16 items-center justify-between gap-4">
-      <a href={bare ? "/" : "/app/tinh-huong/"} class="flex shrink-0 items-center gap-2.5 font-bold text-ink no-underline" aria-label={site.name}>
+      <a href={bare ? site.oldSite : "/app/tinh-huong/"} class="flex shrink-0 items-center gap-2.5 font-bold text-ink no-underline" aria-label={site.name}>
         <img src="/logo.png" alt="" width="288" height="228" class="h-8 w-auto" />
         <span class="hidden text-[1rem] tracking-tight sm:inline">{site.name}</span>
       </a>
@@ -62,7 +63,7 @@ const active = page === "work" ? "scenarios" : page;
           </button>
         </div>
       ) : (
-        <a href="/" class="text-[0.85rem] font-semibold no-underline">{n.site}</a>
+        <a href={site.oldSite} class="text-[0.85rem] font-semibold no-underline">{n.site}</a>
       )}
     </div>
   </header>
