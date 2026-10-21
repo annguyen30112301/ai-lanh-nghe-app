@@ -4,15 +4,17 @@ import "../styles/global.css";
 import Icon from "../components/Icon.astro";
 import { app, site, ui } from "../content/vi";
 
-export type AppKey = "scenarios" | "work" | "dashboard" | "admin" | "connect" | "login" | "device";
+export type AppKey = "scenarios" | "work" | "dashboard" | "admin" | "connect" | "account" | "login" | "device";
 interface Props { page: AppKey; title: string; description: string; bare?: boolean }
 const { page, title, description, bare = false } = Astro.props;
 const n = app.nav;
-const items: { k: AppKey; href: string; icon: string; label: string; admin?: boolean }[] = [
+// tab: false = không đặt ở thanh dưới trên điện thoại (đã có nút ở header)
+const items: { k: AppKey; href: string; icon: string; label: string; admin?: boolean; tab?: false }[] = [
   { k: "scenarios", href: "/app/tinh-huong/", icon: "briefcase", label: n.scenarios },
   { k: "dashboard", href: "/app/bang-dieu-khien/", icon: "chart", label: n.dashboard },
   { k: "admin", href: "/app/quan-tri/", icon: "users", label: n.admin, admin: true },
-  { k: "connect", href: "/app/ket-noi-ai/", icon: "plug", label: n.connect }
+  { k: "connect", href: "/app/ket-noi-ai/", icon: "plug", label: n.connect },
+  { k: "account", href: "/app/tai-khoan/", icon: "id", label: n.account, tab: false }
 ];
 const active = page === "work" ? "scenarios" : page;
 ---
@@ -51,6 +53,10 @@ const active = page === "work" ? "scenarios" : page;
       {!bare ? (
         <div class="flex min-w-0 items-center gap-2">
           <span data-me-email class="hidden max-w-[16rem] truncate text-[0.82rem] text-ink-3 md:inline"></span>
+          <a href="/app/tai-khoan/" aria-label={n.account} title={n.account} aria-current={page === "account" ? "page" : undefined}
+            class:list={["inline-flex h-11 w-11 items-center justify-center rounded-full no-underline hover:bg-tint lg:hidden", page === "account" ? "bg-tint text-accent-ink" : "text-ink-2"]}>
+            <Icon name="id" size={22} />
+          </a>
           <button type="button" data-logout class="inline-flex h-11 items-center gap-2 rounded-full px-3 text-[0.85rem] font-semibold text-ink-2 hover:bg-tint hover:text-accent-ink">
             <Icon name="logout" size={20} /><span class="hidden sm:inline">{n.logout}</span>
           </button>
@@ -76,7 +82,7 @@ const active = page === "work" ? "scenarios" : page;
   {!bare && (
     <nav class="no-print fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 lg:hidden" aria-label="Thanh điều hướng" style="view-transition-name: tabbar">
       <ul class="flex rounded-[1.75rem] border border-hair/70 bg-raised/95 p-1.5 shadow-[var(--shadow)] backdrop-blur">
-        {items.map((it) => (
+        {items.filter((it) => it.tab !== false).map((it) => (
           <li class="flex-1" data-admin={it.admin ? "" : undefined} hidden={it.admin}>
             <a href={it.href} aria-current={it.k === active ? "page" : undefined}
               class:list={["relative flex flex-col items-center gap-0.5 rounded-[1.4rem] py-2 text-[0.62rem] font-semibold no-underline", it.k === active ? "text-accent-ink" : "text-ink-3"]}>

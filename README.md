@@ -64,9 +64,17 @@ src/skills/       procurement/*.json – định nghĩa tình huống + prompt (
 src/lib/          mask.ts (che/bỏ che), crypto.ts, session.ts, ai-gateway.ts, openrouter.ts, run.ts, stats.ts…
                   files.ts, export.ts, client.ts (chạy ở trình duyệt)
 src/pages/api/    auth/*, ai/*, run/*, dashboard/*, admin/seats, me, scenarios, baseline
-src/pages/app/    dang-nhap, ket-noi-ai, tinh-huong, lam-viec, bang-dieu-khien, quan-tri, xac-thuc-thiet-bi
+src/pages/app/    dang-nhap, ket-noi-ai, tinh-huong, lam-viec, bang-dieu-khien, quan-tri, tai-khoan, xac-thuc-thiet-bi
 src/islands/      WorkSession, MaskPreview, ResultView, Checklist, ConnectAI, Dashboard, Business, HeroDay…
-migrations/       0001_init.sql   ·   db/seed.sql
+migrations/       0001_init.sql … 0005_license.sql   ·   db/seed.sql
 ```
+
+## License, đặt mua, chống chia sẻ
+
+- Website giới thiệu (repo `ai-lanh-nghe`): nút **Dùng thử** → `/app/dang-nhap/?from=site` (đã đăng nhập thì vào thẳng app); giỏ hàng → `/dat-mua/?goi=&seat=&tinh_chinh=1`.
+- `/dat-mua/`: phải đăng nhập (license gắn với tài khoản). Thanh toán là **mô phỏng**: bấm Thanh toán → màn hình xử lý → thành công; máy chủ (`/api/orders`) tính lại giá, ghi đơn `paid`, cấp license (`licenses`) và cập nhật `organizations.plan / seats / expires_at`. Còn hạn thì kỳ mới nối tiếp sau ngày hết hạn. Doanh nghiệp: người mua chưa quản trị doanh nghiệp nào thì tạo tổ chức mới, người mua là quản trị viên, mời nhân viên ở `/app/quan-tri/`.
+- Chưa có license (hoặc hết hạn): chỉ chạy được 5 lượt thử của hệ thống (`resolveKey`, mã lỗi `no_license`), kể cả khi đã kết nối AI riêng.
+- Mỗi tài khoản tối đa **2 thiết bị** (`DEVICE_LIMIT` trong `src/lib/license.ts`): đăng nhập thiết bị thứ 3 thì phiên dùng lâu nhất bị đăng xuất và thấy lý do. Tài khoản `@ailanhnghe.demo` không giới hạn. Xem/đăng xuất thiết bị ở `/app/tai-khoan/`.
+- `node scripts/e2e-mua.mjs [baseUrl] [outDir] [email] [goi]` – chạy thử luồng mua (đặt `CHROME=` đường dẫn Chrome/Chromium).
 
 Không lưu file, nội dung hay kết quả: bảng `runs` chỉ có mốc thời gian và số đếm. Prompt hệ thống và key không bao giờ trả về trình duyệt.

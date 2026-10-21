@@ -15,7 +15,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const j = (await res.json().catch(() => ({}))) as { error?: string; code?: string };
   if (!res.ok) {
     if (res.status === 401 && !location.pathname.startsWith("/app/dang-nhap")) {
-      location.href = "/app/dang-nhap/?next=" + encodeURIComponent(location.pathname + location.search);
+      location.href = "/app/dang-nhap/?next=" + encodeURIComponent(location.pathname + location.search) + (j.code === "auth_device" ? "&ly-do=thiet-bi" : "");
     }
     throw new ApiError(res.status, j.error ?? "Có lỗi xảy ra. Bạn thử lại nhé.", j.code);
   }

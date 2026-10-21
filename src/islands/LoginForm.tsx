@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { ArrowLeftIcon, CircleNotchIcon, EnvelopeSimpleIcon, KeyIcon, UserCircleIcon } from "@phosphor-icons/react";
 import type { app } from "../content/vi";
-import { errText, post } from "../lib/client";
+import { errText, getMe, post } from "../lib/client";
 import OtpBoxes from "./OtpBoxes";
 
 type T = typeof app.login;
+
+/** Chỉ quay lại trang trong app hoặc trang đặt mua (không nhận URL ngoài). */
+const safeNext = (n: string | null) => (n && !n.startsWith("//") && (n.startsWith("/app/") || n.startsWith("/dat-mua/")) ? n : null);
 
 export default function LoginForm({ t }: { t: T }) {
   const [email, setEmail] = useState("");
@@ -15,11 +18,15 @@ export default function LoginForm({ t }: { t: T }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [wait, setWait] = useState(0);
+  const [note, setNote] = useState<"site" | "kicked" | null>(null);
 
   useEffect(() => {
     const q = new URLSearchParams(location.search);
     if (q.get("demo") === "doanh-nghiep") setEmail(t.demo.items[0].email);
     else if (q.get("email")) setEmail(q.get("email")!.slice(0, 120));
+    setNote(q.get("ly-do") === "thiet-bi" ? "kicked" : q.get("from") === "site" ? "site" : null);
+    // đã đăng nhập (vào từ nút Dùng thử ở website) thì đi thẳng vào app
+    if (!q.get("demo") && q.get("ly-do") !== "thiet-bi") getMe(true).then(() => { location.href = safeNext(q.get("next")) ?? "/app/tinh-huong/"; }).catch(() => {});
   }, [t]);
   useEffect(() => { if (wait <= 0) return; const id = setTimeout(() => setWait(wait - 1), 1000); return () => clearTimeout(id); }, [wait]);
 
@@ -38,13 +45,13 @@ export default function LoginForm({ t }: { t: T }) {
     setBusy(true); setErr(null);
     try {
       const r = await post<{ next: string }>("/api/auth/verify-otp", { email, code: c });
-      const next = new URLSearchParams(location.search).get("next");
-      location.href = next && next.startsWith("/app/") ? next : r.next;
+      location.href = safeNext(new URLSearchParams(location.search).get("next")) ?? r.next;
     } catch (x) { setErr(errText(x)); setBusy(false); }
   }
 
   return (
     <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 260, damping: 28 }}>
+      {note && <p className={`mb-5 rounded-2xl px-4 py-3 text-[0.92rem] ${note === "kicked" ? "bg-urgent-soft font-semibold text-urgent" : "bg-tint text-accent-ink"}`} role="status">{note === "kicked" ? t.kicked : t.fromSite}</p>}
       <div className="panel overflow-hidden p-6 sm:p-9">
         <AnimatePresence mode="wait" initial={false}>
           {stage === "email" ? (

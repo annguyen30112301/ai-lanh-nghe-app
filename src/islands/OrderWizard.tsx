@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { ArrowLeftIcon, ArrowRightIcon, BankIcon, CheckCircleIcon, CircleNotchIcon, InfoIcon, MinusIcon, PlusIcon, PrinterIcon, SealCheckIcon, WalletIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, ArrowRightIcon, BankIcon, LockKeyIcon, CheckCircleIcon, CircleNotchIcon, InfoIcon, MinusIcon, PlusIcon, PrinterIcon, SealCheckIcon, WalletIcon } from "@phosphor-icons/react";
 import type { order } from "../content/vi";
 import { errText, post } from "../lib/client";
 import { checkBuyer, isBusiness, orderCode, type Buyer, type BuyerErrors } from "../lib/order";
@@ -8,6 +8,8 @@ import { CAU_HINH, dinhDang, donDatMua, type GoiDatMua } from "../lib/pricing";
 
 type T = typeof order;
 type Pay = "bank" | "vnpay" | "momo";
+interface Done { id: string; total: number; valid_from: string; valid_to: string; org_name: string; next: string }
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const PLANS: GoiDatMua[] = ["personal", "business", "business_plus"];
 const vnd = (n: number) => `${dinhDang(n)} đ`;
 const viDate = (iso: string) => iso.split("-").reverse().join("/");
@@ -30,13 +32,26 @@ export default function OrderWizard({ t }: { t: T }) {
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [done, setDone] = useState<{ id: string; total: number; valid_from: string; valid_to: string } | null>(null);
+  const [done, setDone] = useState<Done | null>(null);
+  /** email tài khoản đang đăng nhập; null = chưa đăng nhập; undefined = đang kiểm tra */
+  const [account, setAccount] = useState<string | null | undefined>(undefined);
+  const [stage, setStage] = useState(0);
   const top = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const g = new URLSearchParams(location.search).get("goi") as GoiDatMua | null;
+    const q = new URLSearchParams(location.search);
+    const g = q.get("goi") as GoiDatMua | null;
     if (g && PLANS.includes(g)) setGoi(g);
+    const s = Math.floor(Number(q.get("seat")));
+    if (s >= 1 && s <= 10000) setSeat(s);
+    if (q.get("tinh_chinh") === "1") setTinhChinh(true);
     setCode(orderCode());
+    // gọi thẳng fetch: chưa đăng nhập thì ở lại trang, không bị chuyển sang trang đăng nhập
+    fetch("/api/me", { credentials: "same-origin" }).then((r) => (r.ok ? r.json() : null))
+      .then((m: { user: { email: string } } | null) => {
+        setAccount(m?.user.email ?? null);
+        if (m) setBuyer((b) => ({ ...b, email: m.user.email }));
+      }).catch(() => setAccount(null));
   }, []);
 
   const biz = isBusiness(goi);
@@ -49,7 +64,9 @@ export default function OrderWizard({ t }: { t: T }) {
     setDir(n > step ? 1 : -1); setStep(n); setErr(null);
     top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+  const loginHref = () => "/app/dang-nhap/?next=" + encodeURIComponent(`/dat-mua/?goi=${goi}${biz ? `&seat=${seat}` : ""}${tinhChinh ? "&tinh_chinh=1" : ""}`);
   const next = () => {
+    if (step === 0 && !account) { location.href = loginHref(); return; }
     if (step === 1) {
       const e = checkBuyer(goi, buyer);
       setErrs(e);
@@ -61,12 +78,18 @@ export default function OrderWizard({ t }: { t: T }) {
     go(step + 1);
   };
 
+  /** Thanh toán mô phỏng: hiện các bước xử lý của cổng thanh toán rồi máy chủ ghi đơn và cấp license. */
   async function confirm() {
-    setBusy(true); setErr(null);
+    setBusy(true); setErr(null); setStage(0);
+    const timer = setInterval(() => setStage((x) => Math.min(x + 1, t.pay.processing.length - 1)), 900);
     try {
-      const r = await post<{ id: string; total: number; valid_from: string; valid_to: string }>("/api/orders", { goi, seat: biz ? seat : 1, tinh_chinh: tinhChinh, pay, code, buyer });
+      const [r] = await Promise.all([
+        post<Done>("/api/orders", { goi, seat: biz ? seat : 1, tinh_chinh: tinhChinh, pay, code, buyer }),
+        wait(2700)
+      ]);
       setDone(r); go(3);
     } catch (e) { setErr(errText(e) || t.errors.server); }
+    clearInterval(timer);
     setBusy(false);
   }
 
@@ -128,6 +151,13 @@ export default function OrderWizard({ t }: { t: T }) {
                       </span>
                     </label>
                     {biz && <p className="t-note">{t.custom}</p>}
+                    {account === null && (
+                      <div className="flex items-start gap-3 rounded-2xl bg-tint p-4 text-accent-ink">
+                        <LockKeyIcon size={22} weight="duotone" className="mt-0.5 shrink-0" />
+                        <span><b className="block">{t.gate.title}</b><span className="text-[0.88rem]">{t.gate.lead}</span></span>
+                      </div>
+                    )}
+                    {account && <p className="t-note" dangerouslySetInnerHTML={{ __html: t.gate.as.replace("{email}", escapeHtml(account)) }} />}
                   </div>
                 )}
 
@@ -136,7 +166,7 @@ export default function OrderWizard({ t }: { t: T }) {
                     <h2 className="text-[1.15rem] sm:col-span-2">{t.info.title}</h2>
                     <Field id="name" label={t.info.name} ph={t.info.namePh} value={buyer.name} onChange={setB("name")} err={errs.name && t.info.errors.name} auto="name" />
                     <Field id="phone" label={t.info.phone} ph={t.info.phonePh} value={buyer.phone} onChange={setB("phone")} err={errs.phone && t.info.errors.phone} auto="tel" type="tel" />
-                    <Field id="email" label={t.info.email} ph={t.info.emailPh} value={buyer.email} onChange={setB("email")} err={errs.email && t.info.errors.email} hint={t.info.emailHint} auto="email" type="email" wide />
+                    <Field id="email" label={t.info.email} ph={t.info.emailPh} value={buyer.email} onChange={setB("email")} err={errs.email && t.info.errors.email} hint={t.info.emailHint} auto="email" type="email" wide readOnly />
                     {biz && <>
                       <Field id="company" label={t.info.company} ph={t.info.companyPh} value={buyer.company ?? ""} onChange={setB("company")} err={errs.company && t.info.errors.company} auto="organization" wide />
                       <Field id="tax" label={t.info.tax} ph={t.info.taxPh} value={buyer.tax_code ?? ""} onChange={setB("tax_code")} err={errs.tax && t.info.errors.tax} hint={t.info.taxHint} mode="numeric" />
@@ -191,20 +221,31 @@ export default function OrderWizard({ t }: { t: T }) {
                   </div>
                 )}
 
+                {step === 2 && busy && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 z-10 grid place-items-center bg-raised/90 backdrop-blur-sm" role="status" aria-live="polite">
+                    <div className="grid justify-items-center gap-3 px-6 text-center">
+                      <CircleNotchIcon size={44} className="spin text-accent" />
+                      <motion.p key={stage} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="font-semibold">{t.pay.processing[stage]}</motion.p>
+                      <p className="t-note tabular-nums">{vnd(total)}</p>
+                    </div>
+                  </motion.div>
+                )}
+
                 {step === 3 && done && (
                   <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="mt-4" aria-live="polite">
                     <p className="flex items-center gap-3 text-[1.3rem] font-bold"><SealCheckIcon size={32} weight="fill" className="text-accent-2" />{t.done.title}</p>
                     <p className="mt-2 text-ink-2" dangerouslySetInnerHTML={{ __html: t.done.lead.replace("{email}", escapeHtml(buyer.email)) }} />
                     <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 rounded-2xl bg-canvas p-5 text-[0.95rem] ring-1 ring-hair">
                       <dt className="text-ink-3">{t.done.code}</dt><dd className="font-mono font-bold">{done.id}</dd>
+                      <dt className="text-ink-3">{t.done.org}</dt><dd>{done.org_name}</dd>
                       <dt className="text-ink-3">{t.done.plan}</dt><dd>{t.plans[goi].name}{biz && ` · ${t.done.seats.replace("{n}", String(seat))}`}</dd>
                       <dt className="text-ink-3">{t.done.period}</dt><dd>{viDate(done.valid_from)} – {viDate(done.valid_to)}</dd>
                       <dt className="text-ink-3">{t.done.total}</dt><dd className="font-bold tabular-nums">{vnd(done.total)}</dd>
                       <dt className="text-ink-3">{t.done.license}</dt><dd><span className="chip chip-ok">✓ {t.done.license}</span></dd>
                     </dl>
-                    <p className="mt-4 text-[0.92rem] text-ink-2">{t.done.next}</p>
+                    <p className="mt-4 text-[0.92rem] text-ink-2">{biz ? t.done.nextBiz : t.done.next}</p>
                     <div className="mt-5 flex flex-wrap gap-3">
-                      <a href={`/app/dang-nhap/?email=${encodeURIComponent(buyer.email.trim())}`} className="btn btn-accent">{t.done.cta}<ArrowRightIcon size={18} weight="bold" /></a>
+                      <a href={done.next} className="btn btn-accent">{biz ? t.done.ctaBiz : t.done.cta}<ArrowRightIcon size={18} weight="bold" /></a>
                       <button type="button" className="btn btn-line" onClick={() => print()}><PrinterIcon size={18} />{t.done.print}</button>
                     </div>
                   </motion.div>
@@ -220,8 +261,8 @@ export default function OrderWizard({ t }: { t: T }) {
                   ? <button type="button" onClick={() => go(step - 1)} className="inline-flex min-h-12 items-center gap-1.5 px-2 text-[0.9rem] font-semibold text-accent-ink hover:underline"><ArrowLeftIcon size={18} weight="bold" />{t.back}</button>
                   : <span />}
                 {step < 2
-                  ? <button type="button" onClick={next} disabled={!don} className="btn btn-accent">{t.next}<ArrowRightIcon size={18} weight="bold" /></button>
-                  : <button type="button" onClick={confirm} disabled={busy || !don} className="btn btn-accent">{busy && <CircleNotchIcon size={20} className="spin" />}{busy ? t.pay.confirming : t.pay.confirm}</button>}
+                  ? <button type="button" onClick={next} disabled={!don || account === undefined} className="btn btn-accent">{step === 0 && account === null ? t.gate.cta : t.next}<ArrowRightIcon size={18} weight="bold" /></button>
+                  : <button type="button" onClick={confirm} disabled={busy || !don} className="btn btn-accent">{busy && <CircleNotchIcon size={20} className="spin" />}{busy ? t.pay.confirming : t.pay.confirm.replace("{total}", vnd(total))}</button>}
               </div>
             )}
           </div>
@@ -233,15 +274,15 @@ export default function OrderWizard({ t }: { t: T }) {
   );
 }
 
-function Field({ id, label, ph, value, onChange, err, hint, auto, type = "text", mode, wide }: {
+function Field({ id, label, ph, value, onChange, err, hint, auto, type = "text", mode, wide, readOnly }: {
   id: string; label: string; ph: string; value: string; onChange: (e: { target: { value: string } }) => void;
-  err?: string | false | undefined; hint?: string; auto?: string; type?: string; mode?: "numeric"; wide?: boolean;
+  err?: string | false | undefined; hint?: string; auto?: string; type?: string; mode?: "numeric"; wide?: boolean; readOnly?: boolean;
 }) {
   const desc = err ? `${id}-err` : hint ? `${id}-hint` : undefined;
   return (
     <div className={wide ? "sm:col-span-2" : undefined}>
       <label className="label" htmlFor={id}>{label}</label>
-      <input id={id} type={type} inputMode={mode} autoComplete={auto} className={`field ${err ? "!border-urgent" : ""}`} placeholder={ph} value={value} onChange={onChange}
+      <input id={id} type={type} inputMode={mode} autoComplete={auto} className={`field ${err ? "!border-urgent" : ""} ${readOnly ? "bg-canvas text-ink-2" : ""}`} placeholder={ph} value={value} onChange={onChange} readOnly={readOnly}
         aria-invalid={err ? true : undefined} aria-describedby={desc} maxLength={200} />
       {err ? <p id={`${id}-err`} className="mt-1.5 text-[0.85rem] font-medium text-urgent">{err}</p> : hint && <p id={`${id}-hint`} className="t-note mt-1.5">{hint}</p>}
     </div>

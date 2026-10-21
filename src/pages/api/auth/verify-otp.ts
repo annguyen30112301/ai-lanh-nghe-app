@@ -4,6 +4,7 @@ import { db, now } from "../../../lib/db";
 import { fail, json, readJson, route } from "../../../lib/http";
 import { createSession } from "../../../lib/session";
 import { otpHash } from "../../../lib/otp";
+import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
@@ -40,10 +41,11 @@ export const POST: APIRoute = route(async ({ request, cookies, url }) => {
     // người được mời: kích hoạt seat ở lần đăng nhập đầu
     await db().prepare("UPDATE members SET status = 'active' WHERE user_id = ? AND status = 'invited'").bind(user.id).run();
   }
-  await createSession(cookies, user.id, request.headers.get("user-agent") ?? "", url.protocol === "https:");
+  // tài khoản demo dùng chung cho người chấm nên không giới hạn thiết bị
+  const kicked = await createSession(cookies, user.id, request.headers.get("user-agent") ?? "", url.protocol === "https:", email.endsWith("@" + env.DEMO_EMAIL_DOMAIN));
 
   const ai = await db().prepare(
     "SELECT 1 AS ok FROM members m JOIN ai_keys c ON c.org_id = m.org_id WHERE m.user_id = ? AND m.status = 'active' LIMIT 1"
   ).bind(user.id).first();
-  return json({ ok: true, is_new: isNew, next: ai ? "/app/tinh-huong/" : "/app/ket-noi-ai/" });
+  return json({ ok: true, is_new: isNew, devices_signed_out: kicked, next: ai ? "/app/tinh-huong/" : "/app/ket-noi-ai/" });
 });

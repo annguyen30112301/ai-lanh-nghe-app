@@ -49,6 +49,8 @@ export interface ExecuteResponse {
 export interface MeResponse {
   user: { id: string; email: string; name: string | null };
   org: { id: string; name: string; plan: string; role: "admin" | "member"; seats: number };
+  /** license của tổ chức đang dùng; active = false thì chỉ chạy được lượt thử */
+  license: { active: boolean; expires_at: number | null };
   /** null khi chưa kết nối AI nào */
   ai: {
     keys: { source: string; provider: string; key_last4: string; verified_at: number | null }[];

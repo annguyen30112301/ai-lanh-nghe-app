@@ -346,7 +346,7 @@ export const order = {
   info: {
     title: "Thông tin người mua",
     name: "Họ tên", namePh: "Nguyễn Thị Lan",
-    email: "Email", emailPh: "lan.nguyen@congty.vn", emailHint: "License và hướng dẫn đăng nhập gửi tới email này.",
+    email: "Email", emailPh: "lan.nguyen@congty.vn", emailHint: "License gắn với tài khoản đang đăng nhập (email này).",
     phone: "Số điện thoại", phonePh: "0903 123 456",
     company: "Tên công ty", companyPh: "Công ty TNHH Cơ khí Tân Phú",
     tax: "Mã số thuế", taxPh: "0312345678", taxHint: "10 số, hoặc 10 số kèm 3 số chi nhánh (0312345678-001).",
@@ -373,23 +373,33 @@ export const order = {
     amount: "Số tiền",
     content: "Nội dung chuyển khoản",
     qr: "Mã QR minh họa – không quét được",
-    walletLead: "Bản thật sẽ chuyển sang cổng {m} để xác nhận. Bản demo dừng ở đây.",
-    confirm: "Tôi đã thanh toán (mô phỏng)",
-    confirming: "Đang ghi đơn…",
+    walletLead: "Bấm Thanh toán để mô phỏng chuyển sang cổng {m} và xác nhận giao dịch.",
+    confirm: "Thanh toán {total}",
+    confirming: "Đang xử lý…",
+    processing: ["Đang kết nối cổng thanh toán (mô phỏng)…", "Đang xác nhận giao dịch…", "Đang cấp license…"],
     orderCode: "Mã đơn"
   },
   done: {
     title: "Đặt mua thành công",
-    lead: "License đã cấp cho <b>{email}</b>. Đây là đơn mô phỏng, không có giao dịch thật.",
+    lead: "License đã cấp cho tài khoản <b>{email}</b> và có hiệu lực ngay. Đây là thanh toán mô phỏng, không có giao dịch thật.",
     code: "Mã đơn",
     plan: "Gói",
     seats: "{n} seat",
     period: "Hiệu lực",
     total: "Đã thanh toán (mô phỏng)",
     license: "License đã cấp",
-    next: "Bước tiếp theo: đăng nhập bằng email trên, kết nối AI của bạn rồi chọn mô hình.",
-    cta: "Vào app và kết nối AI",
+    org: "Tài khoản nhận license",
+    next: "Bước tiếp theo: kết nối AI của bạn, chọn mô hình rồi bắt đầu làm việc.",
+    nextBiz: "Bước tiếp theo: mời nhân viên vào seat ở mục Quản trị, rồi kết nối AI của công ty.",
+    cta: "Vào app",
+    ctaBiz: "Mời nhân viên vào seat",
     print: "In hoặc lưu PDF"
+  },
+  gate: {
+    title: "Đăng nhập để mua",
+    lead: "License gắn với tài khoản của bạn. Đăng nhập bằng email (không cần mật khẩu) rồi quay lại đây, lựa chọn của bạn được giữ nguyên.",
+    cta: "Đăng nhập để tiếp tục",
+    as: "Đang đăng nhập: <b>{email}</b>. License sẽ cấp cho tài khoản này."
   },
   errors: {
     server: "Chưa ghi được đơn. Bạn thử lại sau ít phút."
@@ -751,7 +761,7 @@ const usage = {
   empty: "Chưa có lượt nào ghi tên mô hình."
 };
 export const app = {
-  nav: { scenarios: "Tình huống", dashboard: "Bảng điều khiển", admin: "Quản trị", connect: "Kết nối AI", logout: "Đăng xuất", site: "Về trang giới thiệu" },
+  nav: { scenarios: "Tình huống", dashboard: "Bảng điều khiển", admin: "Quản trị", connect: "Kết nối AI", account: "Tài khoản", logout: "Đăng xuất", site: "Về trang giới thiệu" },
   loading: "Đang tải…",
   needLogin: "Bạn cần đăng nhập để tiếp tục.",
   login: {
@@ -781,6 +791,8 @@ export const app = {
         { email: "thu1@ailanhnghe.demo", label: "Người thử mới – 5 lượt dùng thử" }
       ]
     },
+    fromSite: "Dùng thử thật trên Web App: chọn một tài khoản demo có sẵn bên dưới, hoặc đăng nhập bằng email của bạn (lần đầu là tạo tài khoản mới, có 5 lượt thử).",
+    kicked: "Thiết bị này đã bị đăng xuất vì tài khoản vừa đăng nhập ở thiết bị khác (mỗi tài khoản tối đa 2 thiết bị).",
     privacy: "Đăng nhập là bạn đồng ý để chúng tôi lưu email và số đếm sử dụng. Chúng tôi không lưu nội dung công việc."
   },
   device: {
@@ -891,7 +903,10 @@ export const app = {
     otherJobs: "Nghề khác",
     others: ["Giảng dạy", "Hành chính – Nhân sự", "Kế toán – Tài chính"],
     connected: "Đã kết nối AI. Bạn chọn việc để bắt đầu.",
-    banner: { trial: "Bạn đang dùng thử: còn {n} lượt.", none: "Bạn đã hết lượt thử.", connect: "Kết nối AI", noModel: "Đã kết nối AI nhưng chưa chọn mô hình nên chưa chạy được.", pickModel: "Chọn mô hình" }
+    banner: {
+      noLicense: "Bạn chưa có gói: còn {n} lượt dùng thử.", noLicenseNone: "Bạn đã hết lượt thử. Mua gói Mua hàng để dùng tiếp với AI của bạn.",
+      expired: "Gói của {org} đã hết hạn. Liên hệ quản trị viên để gia hạn.", buy: "Mua gói",
+      trial: "Bạn đang dùng thử: còn {n} lượt.", none: "Bạn đã hết lượt thử.", connect: "Kết nối AI", noModel: "Đã kết nối AI nhưng chưa chọn mô hình nên chưa chạy được.", pickModel: "Chọn mô hình" }
   },
   work: {
     title: "Làm việc",
@@ -949,6 +964,7 @@ export const app = {
     editHint: "Bạn có thể sửa trực tiếp nội dung trước khi xuất.",
     noAI: "Bạn đã dùng hết lượt thử.",
     noAICta: "Kết nối AI",
+    noLicenseCta: "Mua gói",
     noModelCta: "Chọn mô hình",
     model: {
       label: "Mô hình: {m}",
@@ -983,6 +999,33 @@ export const app = {
     models: "Lượt theo mô hình",
     usage,
     howCalc: "Phút tiết kiệm = (thời gian làm tay của bạn − thời gian thực tế từ lúc mở tới lúc xuất), cộng dồn mọi lượt."
+  },
+  account: {
+    title: "Tài khoản",
+    description: "Gói, license và thiết bị đang đăng nhập.",
+    heading: "Gói & thiết bị",
+    plan: { personal: "Cá nhân", business: "Business", business_plus: "Business Plus" },
+    license: "License",
+    active: "Đang hiệu lực",
+    inactive: "Chưa có gói",
+    expired: "Đã hết hạn",
+    until: "Hiệu lực đến {d}",
+    seats: "{n} seat",
+    org: "Tổ chức",
+    role: { admin: "Quản trị", member: "Thành viên" },
+    buy: "Mua gói",
+    renew: "Gia hạn thêm 1 năm",
+    memberNote: "Gói do quản trị viên doanh nghiệp quản lý.",
+    noLicenseNote: "Chưa có gói thì chỉ chạy được lượt dùng thử. Mua gói để dùng không giới hạn với AI của bạn.",
+    history: "Lịch sử license",
+    historyEmpty: "Chưa có license nào.",
+    col: { order: "Mã đơn", plan: "Gói", period: "Hiệu lực" },
+    devices: "Thiết bị đang đăng nhập",
+    devicesLead: "Mỗi tài khoản đăng nhập tối đa {n} thiết bị. Đăng nhập ở thiết bị thứ {m} thì thiết bị dùng lâu nhất sẽ bị đăng xuất. Tài khoản demo không giới hạn.",
+    current: "Thiết bị này",
+    lastSeen: "Dùng lần cuối {t}",
+    signout: "Đăng xuất thiết bị",
+    seedOrder: "Tạo sẵn (demo)"
   },
   admin: {
     title: "Quản trị doanh nghiệp",

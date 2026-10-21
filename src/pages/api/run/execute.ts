@@ -8,6 +8,7 @@ import { filesText, maskAll, type RunBody } from "../../../lib/run";
 import { requireAuth } from "../../../lib/session";
 import { buildPrompt, getSkill, parseJson, validateResult, type RunResult } from "../../../lib/skills";
 import { ownRun } from "../../../lib/telemetry";
+import { isLicensed } from "../../../lib/license";
 import type { ExecuteResponse } from "../../../content/types";
 
 export const prerender = false;
@@ -18,7 +19,7 @@ export const POST: APIRoute = route(async ({ request, cookies }) => {
   const run = await ownRun(b.run_id ?? "", user.id);
   const skill = getSkill(run.scenario_id) ?? fail(404, "Tình huống không tồn tại.");
   const m = maskAll(skill, b);
-  const key = await resolveKey(org.org_id, user.id);
+  const key = await resolveKey(org.org_id, user.id, isLicensed(org.expires_at));
   const submitted = now();
   await db().prepare("UPDATE runs SET submitted_at = ?, status = 'submitted', masked_items = ? WHERE id = ?").bind(submitted, m.summary.total, run.id).run();
 
